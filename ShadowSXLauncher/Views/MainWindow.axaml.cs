@@ -8,20 +8,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
-using AvaloniaApplicationDemo;
+using ShadowSXLauncher.Classes;
 
 namespace ShadowSXLauncher.Views;
 
 public partial class MainWindow : Window
 {
-    private string appStart
-    {
-        get
-        {
-            return AppContext.BaseDirectory.Replace("net6.0\\", "").Replace("net6.0/", "");
-        }
-    }
-
     private string dolphinPath
     {
         get { return Configuration.Instance.DolphinLocation; }
@@ -29,39 +21,34 @@ public partial class MainWindow : Window
         
     private string savePath
     {
-        get { return dolphinPath + @"User\GC\USA\Card A\"; }
+        get { return Path.Combine(dolphinPath, "User", "GC", "USA", "Card A"); }
     }
         
     private string gameSettingsFilePath
     {
-        get { return dolphinPath + @"User\GameSettings\GUPX8P.ini"; }
+        get { return Path.Combine(dolphinPath, "User", "GameSettings", "GUPX8P.ini"); }
     }
 
     private string customTexturesPath
     {
-        get { return dolphinPath + @"User\Load\Textures\GUPX8P\"; }
+        get { return Path.Combine(dolphinPath ,"User","Load","Textures","GUPX8P"); }
     }
 
     private string sxResourcesPath
     {
-        get { return appStart + @"ShadowSXResources\"; }
+        get { return Path.Combine(Configuration.AppStart, "ShadowSXResources"); }
     }
         
     private string sxResourcesCustomTexturesPath
     {
-        get { return sxResourcesPath + @"CustomTextures\GUPX8P\"; }
+        get { return Path.Combine(sxResourcesPath + @"CustomTextures","GUPX8P"); }
     }
         
     private string sxResourcesISOPatchingPath
     {
-        get { return sxResourcesPath + @"PatchingFiles\"; }
+        get { return Path.Combine(sxResourcesPath + @"PatchingFiles"); }
     }
 
-    private OperatingSystemType currentOS
-    {
-        get { return AvaloniaLocator.Current.GetService<IRuntimePlatform>().GetRuntimeInfo().OperatingSystem; }
-    }
-    
     public MainWindow()
     {
         InitializeComponent();
@@ -180,7 +167,7 @@ public partial class MainWindow : Window
         var ofd = new OpenFileDialog();
         ofd.Title = title;
         ofd.Filters = new List<FileDialogFilter>() { filter };
-        ofd.Directory = appStart;
+        ofd.Directory = Configuration.AppStart;
         ofd.AllowMultiple = false;
         return await ofd.ShowAsync(this);
     }
@@ -190,7 +177,7 @@ public partial class MainWindow : Window
         var sfd = new SaveFileDialog();
         sfd.Title = title;
         sfd.Filters = new List<FileDialogFilter>() { filter };
-        sfd.Directory = appStart;
+        sfd.Directory = Configuration.AppStart;
         return await sfd.ShowAsync(this);
     }
 
@@ -204,13 +191,13 @@ public partial class MainWindow : Window
     {
         var ofd = new OpenFolderDialog();
         ofd.Title = "Set Path to Dolphin";
-        ofd.Directory = appStart; 
+        ofd.Directory = Configuration.AppStart; 
         return await ofd.ShowAsync(this);
     }
 
     private void OpenGameLocationButtonPressed(object? sender, RoutedEventArgs e)
     {
-        OpenFolder(appStart);
+        OpenFolder(Configuration.AppStart);
     }
 
     private void OnSaveFileButtonPressed(object? sender, RoutedEventArgs e)
@@ -247,7 +234,7 @@ public partial class MainWindow : Window
     
     private string GetExplorerPath()
     {
-        switch (currentOS)
+        switch (Configuration.Instance.CurrentOS)
         {
             case OperatingSystemType.WinNT:
                 return "explorer.exe";
@@ -270,13 +257,13 @@ public partial class MainWindow : Window
     
     private async void CreateRomButton_Click(object? sender, EventArgs e)
     {
-        var xdeltaExePath = sxResourcesISOPatchingPath + @"\xdelta-3.1.0-x86_64.exe";
-        var vcdiffPath = sxResourcesISOPatchingPath + @".\vcdiff\ShadowSX.vcdiff";
-        var patchBatPath = sxResourcesISOPatchingPath + @"\Patch ISO.bat";
+        var xdeltaBinPath = Path.Combine(sxResourcesISOPatchingPath, PatchingFiles.Bin);
+        var vcdiffPath = Path.Combine(sxResourcesISOPatchingPath, PatchingFiles.PatchFile);
+        var patchScriptPath = Path.Combine(sxResourcesISOPatchingPath, PatchingFiles.PathScript);
                 
-        var allPatchFilesFound = File.Exists(xdeltaExePath);
+        var allPatchFilesFound = File.Exists(xdeltaBinPath);
         allPatchFilesFound &= File.Exists(vcdiffPath);
-        allPatchFilesFound &= File.Exists(patchBatPath);
+        allPatchFilesFound &= File.Exists(patchScriptPath);
         
         if (allPatchFilesFound)
         {
@@ -312,9 +299,9 @@ public partial class MainWindow : Window
             if (!string.IsNullOrEmpty(patchedRomDestination))
             {
                 var batArguments = string.Format("\"{0}\" \"{1}\" \"{2}\" \"{3}\"", gupe8pLocation, patchedRomDestination,
-                        xdeltaExePath, vcdiffPath);
+                        xdeltaBinPath, vcdiffPath);
                     
-                var processResult = Process.Start("\"" + patchBatPath + "\"", batArguments);
+                var processResult = Process.Start("\"" + patchScriptPath + "\"", batArguments);
                 if (processResult != null)
                 {
                     processResult.WaitForExit();

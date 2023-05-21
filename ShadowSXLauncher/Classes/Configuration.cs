@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Avalonia;
+using Avalonia.Platform;
 
-namespace AvaloniaApplicationDemo;
+namespace ShadowSXLauncher.Classes;
 
 public class Configuration
 {
@@ -19,7 +21,20 @@ public class Configuration
     public int GlossAdjustmentIndex;
     public bool RaceMode;
     
-    private string fileLocation = AppContext.BaseDirectory + @"\Config.xml";
+    public OperatingSystemType CurrentOS
+    {
+        get { return AvaloniaLocator.Current.GetService<IRuntimePlatform>().GetRuntimeInfo().OperatingSystem; }
+    }
+    
+    public static string AppStart
+    {
+        get
+        {
+            return AppContext.BaseDirectory.Replace("net6.0\\", "").Replace("net6.0/", "");
+        }
+    }
+    
+    private string fileLocation = Path.Combine(AppStart, "Config.xml");
 
     public static readonly Dictionary<string, string> UiButtonStyles = new Dictionary<string, string>()
     {
@@ -130,7 +145,7 @@ public class Configuration
         var mainNode = configurationXml.CreateElement("Settings");
 
         var xmlElementDolphinLocation = configurationXml.CreateElement("DolphinLocation");
-        xmlElementDolphinLocation.InnerText = RomLocation;
+        xmlElementDolphinLocation.InnerText = DolphinLocation;
         
         var xmlElementRomLocation = configurationXml.CreateElement("RomLocation");
         xmlElementRomLocation.InnerText = RomLocation;
@@ -151,6 +166,7 @@ public class Configuration
         xmlElementRaceMode.InnerText = RaceMode.ToString();
 
         configurationXml.AppendChild(mainNode);
+        mainNode.AppendChild(xmlElementDolphinLocation);
         mainNode.AppendChild(xmlElementRomLocation);
         mainNode.AppendChild(xmlElementUseModernUIControl);
         mainNode.AppendChild(xmlElementUiButtonDisplayIndex);
