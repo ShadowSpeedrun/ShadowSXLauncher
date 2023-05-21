@@ -1,0 +1,46 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:ShadowSXLauncher.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="200"
+        Width="450" Height="200"
+        x:Class="ShadowSXLauncher.Views.MessageBox"
+        x:DataType="viewModels:MessageBoxViewModel"
+        CanResize="False"
+        Title="{Binding Title}"
+	    Background="#202020">
+    
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <viewModels:MessageBoxViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*, Auto" Margin="10">
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Name="MessageTextBlock"
+                   Text="{Binding MessageText}"/>
+        <Grid Grid.Row="1" HorizontalAlignment="Stretch" ColumnDefinitions="*, *, *" IsVisible="{Binding Is3Button}">
+            <Button Grid.Column="0" HorizontalAlignment="Stretch" Name="Button3_1">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Button1Text}"/>
+            </Button>
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" Name="Button3_2">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Button2Text}"/>
+            </Button>
+            <Button Grid.Column="2" HorizontalAlignment="Stretch" Name="Button3_3">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Button3Text}"/>
+            </Button>
+        </Grid>
+        <Grid Grid.Row="1" HorizontalAlignment="Stretch" ColumnDefinitions="*, *" IsVisible="{Binding Is2Button}">
+            <Button Grid.Column="0" HorizontalAlignment="Stretch" Name="Button2_1">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Button1Text}"/>
+            </Button>
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" Name="Button2_2">
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Button2Text}"/>
+            </Button>
+        </Grid>
+        <Button Grid.Row="1" HorizontalAlignment="Stretch" Name="Button1" IsVisible="{Binding Is1Button}">
+            <TextBlock HorizontalAlignment="Center" Text="{Binding Button1Text}"/>
+        </Button>
+    </Grid>
+</Window>
