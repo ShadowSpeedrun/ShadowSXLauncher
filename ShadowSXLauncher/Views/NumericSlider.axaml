@@ -1,0 +1,20 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:ShadowSXLauncher.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="60"
+             x:Class="ShadowSXLauncher.Views.NumericSlider">
+    
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <viewModels:NumericSliderViewModel/>
+    </Design.DataContext>
+    
+    <Grid ColumnDefinitions="Auto,*,Auto">
+        <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Label}"/>
+        <Slider Grid.Column="1" Minimum="0" Maximum="255" Margin="10,0,20,0" Value="{Binding Value}"/>
+        <NumericUpDown Grid.Column="2" Width="120" Height="30" Value="{Binding Value}"/>
+    </Grid>
+</UserControl>
