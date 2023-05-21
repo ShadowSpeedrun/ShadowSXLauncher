@@ -1,0 +1,52 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="290"
+        Width="450" Height="290"
+        CanResize="False"
+        x:Class="ShadowSXLauncher.Views.SettingsWindow"
+        Icon="/Assets/S-SX.ico"
+        Title="Settings"
+        Background="#202020">
+    
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto" Margin="10">
+        <Grid Grid.Row ="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,5">
+            <TextBlock Grid.Column="0" Padding="0, 0, 10,0">SX ROM Location</TextBlock>
+            <TextBox Grid.Column="1" Name="RomLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
+            <Button Grid.Column="2" Name="SetRomLocationButton"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">...</Button>
+        </Grid>
+        <Grid Grid.Row ="1" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,5">
+            <TextBlock Grid.Column="0" Padding="0, 0, 14,0">Dolphin Location</TextBlock>
+            <TextBox Grid.Column="1" Name="DolphinLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
+            <Button Grid.Column="2" Name="SetDolphinLocationButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">...</Button>
+        </Grid>
+        <TextBlock Grid.Row="2" Margin="0,5,0,10">Dolphin Graphics Settings</TextBlock>
+        <Grid Grid.Row="3" ColumnDefinitions="Auto,*" Margin="0,5,0,5">
+            <TextBlock Grid.Column="0" Padding="0, 0, 10,0">UI Button Display</TextBlock>
+            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0">
+                <ComboBoxItem>Default (GC)</ComboBoxItem>
+                <ComboBoxItem>Xbox</ComboBoxItem>
+                <ComboBoxItem>Xbox One</ComboBoxItem>
+                <ComboBoxItem>Steam Deck</ComboBoxItem>
+                <ComboBoxItem>PS2</ComboBoxItem>
+                <ComboBoxItem>PS3</ComboBoxItem>
+                <ComboBoxItem>Nintendo Switch</ComboBoxItem>
+            </ComboBox>
+        </Grid>
+        <Grid Grid.Row="4" ColumnDefinitions="Auto,*" Margin="0,5,0,10">
+            <TextBlock Grid.Column="0" Padding="0, 0, 10,0">Glossy Effect on Characters</TextBlock>
+            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0">
+                <ComboBoxItem>Original</ComboBoxItem>
+                <ComboBoxItem>Reduced</ComboBoxItem>
+                <ComboBoxItem>Removed</ComboBoxItem>
+            </ComboBox>
+        </Grid>
+        <Button Grid.Row="5" HorizontalAlignment="Stretch" Margin="0,0,0,10">
+            <TextBlock HorizontalAlignment="Center">Open Dolphin Interface</TextBlock>
+        </Button>
+        <Button Grid.Row="6" HorizontalAlignment="Stretch">
+            <TextBlock HorizontalAlignment="Center">Customize Shadow Color</TextBlock>
+        </Button>
+    </Grid>
+</Window>

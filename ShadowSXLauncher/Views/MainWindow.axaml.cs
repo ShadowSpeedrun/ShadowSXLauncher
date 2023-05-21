@@ -80,6 +80,7 @@ public partial class MainWindow : Window
         CreateROMButton.Click += CreateRomButton_Click;
         OpenGameLocationButton.Click += OpenGameLocationButtonPressed;
         OpenSaveFileLocationButton.Click += OnSaveFileButtonPressed;
+        SettingsButton.Click += SettingsButton_Click;
     }
 
     private void EnableButtons(bool enable)
@@ -259,10 +260,12 @@ public partial class MainWindow : Window
         }
     }
 
-    private void SettingsButton_Click(object sender, EventArgs e)
+    private void SettingsButton_Click(object? sender, EventArgs e)
     {
-        //var settingsDialog = new SettingsDialog();
-        //settingsDialog.ShowDialog();
+        EnableButtons(false);
+        var settingsDialog = new SettingsWindow();
+        settingsDialog.ShowDialog(this);
+        EnableButtons(true);
     }
     
     private async void CreateRomButton_Click(object? sender, EventArgs e)
