@@ -1,16 +1,18 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Platform;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Avalonia.Platform;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 using ShadowSXLauncher.Classes;
-
-namespace ShadowSXLauncher.Views;
+namespace ShadowSXLauncher;
 
 public partial class MainWindow : Window
 {
@@ -102,7 +104,9 @@ public partial class MainWindow : Window
                 //Double check if the provided path has a file, if not re-prompt for a ROM.
                 if (!File.Exists(Configuration.Instance.RomLocation))
                 {
-                    ShowMessageBox("ROM not found", "ROM file not found. Please provide ROM location again.", new []{"OK"});
+                    var message = MessageBoxManager
+                        .GetMessageBoxStandard("ROM not found", "ROM file not found. Please provide ROM location again.");
+                    var result = await message.ShowAsync();
                     //OpenRomDialog();
                 }
 
@@ -121,35 +125,14 @@ public partial class MainWindow : Window
                 }
                 else
                 {
-                    ShowMessageBox("Dolphin not found","Could not find dolphin.exe. Please double check directory files.", new []{"OK"});
+                    var message = MessageBoxManager
+                        .GetMessageBoxStandard("Dolphin not found", "Could not find Dolphin. Please double check directory files.");
+                    var result = await message.ShowAsync();
                 }
             }
         }
-        
         EnableButtons(true);
     }
-
-    private void ShowMessageBox(string title, string message, string?[] options, 
-        Action<object?, EventArgs> Button1ClickedAction = null,
-        Action<object?, EventArgs> Button2ClickedAction = null,
-        Action<object?, EventArgs> Button3ClickedAction = null)
-    {
-        var mb = new MessageBox(title, message, options);
-        if (Button1ClickedAction != null)
-        {
-            mb.Button1Clicked += Button1ClickedAction;
-        }
-        if (Button2ClickedAction != null)
-        {
-            mb.Button2Clicked += Button2ClickedAction;
-        }
-        if (Button3ClickedAction != null)
-        {
-            mb.Button3Clicked += Button3ClickedAction;
-        }
-        mb.ShowDialog(this);
-    }
-
     private async Task OpenSetRomDialog()
     {
         var result = await SetOpenFilePath("Set Path to SX ROM", 
@@ -200,13 +183,14 @@ public partial class MainWindow : Window
         OpenFolder(Configuration.AppStart);
     }
 
-    private void OnSaveFileButtonPressed(object? sender, RoutedEventArgs e)
+    private async void OnSaveFileButtonPressed(object? sender, RoutedEventArgs e)
     {
         var success = OpenFolder(savePath);
         if (!success)
         {
-            ShowMessageBox("Save folder not found", "Please launch game to generate the save directory.",
-                new[] { "OK" });
+            var message = MessageBoxManager
+                .GetMessageBoxStandard("Save folder not found", "Please launch game to generate the save directory.");
+            var result = await message.ShowAsync();
         }
     }
 
@@ -234,7 +218,8 @@ public partial class MainWindow : Window
     
     private string GetExplorerPath()
     {
-        switch (Configuration.Instance.CurrentOS)
+        return "explorer.exe";
+        /*switch (Configuration.Instance.CurrentOS)
         {
             case OperatingSystemType.WinNT:
                 return "explorer.exe";
@@ -244,7 +229,7 @@ public partial class MainWindow : Window
                 return "open";
             default:
                 throw new Exception("Unsupported Operating System");
-        }
+        }*/
     }
 
     private void SettingsButton_Click(object? sender, EventArgs e)
@@ -291,7 +276,9 @@ public partial class MainWindow : Window
             }
             else
             {
-                ShowMessageBox("Operation Cancelled", "Operation Cancelled", new []{"OK"});
+                var message = MessageBoxManager
+                    .GetMessageBoxStandard("Operation Cancelled", "Operation Cancelled.");
+                var result = await message.ShowAsync();
                 return;
             }
             
@@ -310,43 +297,52 @@ public partial class MainWindow : Window
                     {
                         case 0:
                             //MessageBox by default doesnt have alignment options. Hack it to look nice to avoid needing to create a new control dialog.
-                            //var messageResult = 
-                                ShowMessageBox("ROM Patch Successful",
-                                "ROM Created Successfully." + Environment.NewLine + Environment.NewLine
-                                + "Would you like to set the location of this ROM as the " + Environment.NewLine
-                                + "location this launcher will use to launch the game?", new[] { "Yes", "No" },
-                                delegate(object? o, EventArgs args)
-                                {
-                                    Configuration.Instance.RomLocation = patchedRomDestination;
-                                    Configuration.Instance.SaveSettings();
-                                });
+                            var messageSuccess = MessageBoxManager
+                                .GetMessageBoxStandard("ROM Patch Successful",
+                                    "ROM Created Successfully." + Environment.NewLine + Environment.NewLine
+                                       + "Would you like to set the location of this ROM as the " + Environment.NewLine
+                                       + "location this launcher will use to launch the game?", ButtonEnum.YesNo);
+                            var result = await messageSuccess.ShowAsync();
+                            if (result == ButtonResult.Yes)
+                            {
+                                Configuration.Instance.RomLocation = patchedRomDestination;
+                                Configuration.Instance.SaveSettings();
+                            }
                             break;
                         default:
                             //MessageBox by default doesnt have alignment options. Hack it to look nice to avoid needing to create a new control dialog.
-                            ShowMessageBox("ROM Patch Failed",
-                                "ROM Patching Failed." + Environment.NewLine + Environment.NewLine
-                                + "Please ensure that provided paths are valid and that " + Environment.NewLine
-                                + "the Shadow ROM provided is a full size clean rip. " + Environment.NewLine + Environment.NewLine
-                                + "Expected ROM CRC32: F582CF1E", new []{"OK"});
+                            var messageFailed = MessageBoxManager
+                                .GetMessageBoxStandard("ROM Patch Failed",
+                                    "ROM Patching Failed." + Environment.NewLine + Environment.NewLine
+                                       + "Please ensure that provided paths are valid and that " + Environment.NewLine
+                                       + "the Shadow ROM provided is a full size clean rip. " + Environment.NewLine + Environment.NewLine
+                                       + "Expected ROM CRC32: F582CF1E");
+                            await messageFailed.ShowAsync();
                             break;
                     }
                 }
                 else
                 {
-                    ShowMessageBox("Patching Failed","ROM Patching failed to launch.", new []{"OK"});
+                    var message = MessageBoxManager
+                        .GetMessageBoxStandard("Patching Failed", "ROM Patching failed to launch.");
+                    var result = await message.ShowAsync();
                 }
             }
             else
             {
-                ShowMessageBox("Operation Cancelled", "Operation Cancelled", new []{"OK"});
+                var message = MessageBoxManager
+                    .GetMessageBoxStandard("Operation Cancelled", "Operation Cancelled");
+                var result = await message.ShowAsync();
             }
         }
         else
         {
-            ShowMessageBox("Missing Files",
-                "One or more files needed to complete" + Environment.NewLine +
-                       "the ROM patching were missing." + Environment.NewLine + Environment.NewLine +
-                       "Please double check directory files.", new []{"OK"});
+            var message = MessageBoxManager
+                .GetMessageBoxStandard("Missing Files", 
+                    "One or more files needed to complete" + Environment.NewLine +
+                        "the ROM patching were missing." + Environment.NewLine + Environment.NewLine +
+                        "Please double check directory files.");
+            var result = await message.ShowAsync();
         }
     }
     

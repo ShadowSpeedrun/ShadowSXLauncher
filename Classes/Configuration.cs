@@ -21,10 +21,10 @@ public class Configuration
     public int GlossAdjustmentIndex;
     public bool RaceMode;
     
-    public OperatingSystemType CurrentOS
+    /*public OperatingSystemType CurrentOS
     {
         get { return AvaloniaLocator.Current.GetService<IRuntimePlatform>().GetRuntimeInfo().OperatingSystem; }
-    }
+    }*/
     
     public static string AppStart
     {

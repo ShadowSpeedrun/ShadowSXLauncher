@@ -11,11 +11,11 @@ public static class PatchingFiles
     {
         get
         {
-            switch (Configuration.Instance.CurrentOS)
+            /*switch (Configuration.Instance.CurrentOS)
             {
                 case OperatingSystemType.WinNT:
                     return "xdelta-3.1 .0 - x86_64.exe";
-            }
+            }*/
 
             return string.Empty;
         }
@@ -33,11 +33,11 @@ public static class PatchingFiles
     {
         get
         {
-            switch (Configuration.Instance.CurrentOS)
+            /*switch (Configuration.Instance.CurrentOS)
             {
                 case OperatingSystemType.WinNT:
                     return "Patch ISO.bat";
-            }
+            }*/
 
             return string.Empty;
         }

@@ -3,23 +3,26 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="290"
+        x:Class="ShadowSXLauncher.SettingsWindow"
         Width="450" Height="290"
         CanResize="False"
-        x:Class="ShadowSXLauncher.Views.SettingsWindow"
-        Icon="/Assets/S-SX.ico"
-        Title="Settings"
-        Background="#202020">
-    
+        Title="Settings">
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto" Margin="10">
-        <Grid Grid.Row ="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,5">
+        <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,5">
             <TextBlock Grid.Column="0" Padding="0, 0, 10,0">SX ROM Location</TextBlock>
             <TextBox Grid.Column="1" Name="RomLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
-            <Button Grid.Column="2" Name="SetRomLocationButton"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">...</Button>
+            <Button Grid.Column="2" Name="SetRomLocationButton" HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+                ...
+            </Button>
         </Grid>
-        <Grid Grid.Row ="1" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,5">
+        <Grid Grid.Row="1" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,5">
             <TextBlock Grid.Column="0" Padding="0, 0, 14,0">Dolphin Location</TextBlock>
             <TextBox Grid.Column="1" Name="DolphinLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
-            <Button Grid.Column="2" Name="SetDolphinLocationButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">...</Button>
+            <Button Grid.Column="2" Name="SetDolphinLocationButton" HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+                ...
+            </Button>
         </Grid>
         <TextBlock Grid.Row="2" Margin="0,5,0,10">Dolphin Graphics Settings</TextBlock>
         <Grid Grid.Row="3" ColumnDefinitions="Auto,*" Margin="0,5,0,5">
