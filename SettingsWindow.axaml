@@ -27,7 +27,7 @@
         <TextBlock Grid.Row="2" Margin="0,5,0,10">Dolphin Graphics Settings</TextBlock>
         <Grid Grid.Row="3" ColumnDefinitions="Auto,*" Margin="0,5,0,5">
             <TextBlock Grid.Column="0" Padding="0, 0, 10,0">UI Button Display</TextBlock>
-            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0">
+            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" Name="CustomButtonComboBox">
                 <ComboBoxItem>Default (GC)</ComboBoxItem>
                 <ComboBoxItem>Xbox</ComboBoxItem>
                 <ComboBoxItem>Xbox One</ComboBoxItem>
@@ -39,16 +39,16 @@
         </Grid>
         <Grid Grid.Row="4" ColumnDefinitions="Auto,*" Margin="0,5,0,10">
             <TextBlock Grid.Column="0" Padding="0, 0, 10,0">Glossy Effect on Characters</TextBlock>
-            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0">
+            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" Name="GlossLevelComboBox">
                 <ComboBoxItem>Original</ComboBoxItem>
                 <ComboBoxItem>Reduced</ComboBoxItem>
                 <ComboBoxItem>Removed</ComboBoxItem>
             </ComboBox>
         </Grid>
-        <Button Grid.Row="5" HorizontalAlignment="Stretch" Margin="0,0,0,10">
+        <Button Grid.Row="5" HorizontalAlignment="Stretch" Margin="0,0,0,10" Name="OpenDolphin">
             <TextBlock HorizontalAlignment="Center">Open Dolphin Interface</TextBlock>
         </Button>
-        <Button Grid.Row="6" HorizontalAlignment="Stretch">
+        <Button Grid.Row="6" HorizontalAlignment="Stretch" Name="CustomShadowColorButton">
             <TextBlock HorizontalAlignment="Center">Customize Shadow Color</TextBlock>
         </Button>
     </Grid>
