@@ -89,6 +89,13 @@ public partial class ColorPicker : UserControl
         }
     }
 
+    public Color GetColor
+    {
+        get { return (PickedColor.Background as SolidColorBrush).Color; }
+    }
+
+    public EventHandler ColorChanged { get; set; }
+
     private void UpdateColorHexString()
     {
         var r = (PickedColor.Background as SolidColorBrush).Color.R.ToString("X2");
@@ -119,5 +126,15 @@ public partial class ColorPicker : UserControl
         NumSliderV.NumericUpDownValue.Value = (decimal)colorAsHSV.V;
 
         changeAllowed = true;
+
+        RaiseColorChangedEvent();
+    }
+
+    private void RaiseColorChangedEvent()
+    {
+        if (ColorChanged != null)
+        {
+            ColorChanged.Invoke(this, null);
+        }
     }
 }

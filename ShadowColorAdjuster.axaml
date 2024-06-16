@@ -11,7 +11,7 @@
         CanResize="False">
     <Grid ColumnDefinitions="200, 800">
         <Grid Grid.Column="0" RowDefinitions="*, Auto">
-            <Image Grid.Row="0" Source="../Assets/ShadowColorReferences/ShadowColorBase1.png"/>
+            <Image Grid.Row="0" Name="PreviewImage"/>
             <Button Grid.Row="1" HorizontalAlignment="Stretch">
                 <TextBlock HorizontalAlignment="Center">Set Shadow Color</TextBlock>
             </Button>
