@@ -6,20 +6,22 @@
         mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="400"
         x:Class="ShadowSXLauncher.Views.ShadowColorAdjuster"
         Title="Shadow Color Adjuster"
-        Width="1000"
+        Width="1300"
         Height="400"
         CanResize="False">
-    <Grid ColumnDefinitions="200, 800">
-        <Grid Grid.Column="0" RowDefinitions="*, Auto">
+    <Grid ColumnDefinitions="300, 1000">
+        <Grid Grid.Column="0" RowDefinitions="*, *, Auto">
             <Image Grid.Row="0" Name="PreviewImage"/>
-            <Button Grid.Row="1" HorizontalAlignment="Stretch">
-                <TextBlock HorizontalAlignment="Center">Set Shadow Color</TextBlock>
+            <Button Grid.Row="1" HorizontalAlignment="Stretch" Name="ExportButton">
+                <TextBlock HorizontalAlignment="Center">Export Textures</TextBlock>
+            </Button>
+            <Button Grid.Row="2" HorizontalAlignment="Stretch" Name="OpenTextureFolderButton">
+                <TextBlock HorizontalAlignment="Center">Open Custom Texture Folder</TextBlock>
             </Button>
         </Grid>
         <Grid Grid.Column="1" RowDefinitions="*,*">
             <userControls:ColorPicker Name="MainColorPicker" Grid.Row="0"/>
             <userControls:ColorPicker Name="AccentColorPicker" Grid.Row="1"/>
         </Grid>
-
     </Grid>
 </Window>

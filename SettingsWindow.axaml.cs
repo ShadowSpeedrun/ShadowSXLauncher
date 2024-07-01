@@ -24,19 +24,11 @@ public partial class SettingsWindow : Window
     private void RegisterEvents()
     {
         CustomShadowColorButton.Click += OnCustomShadowColorButtonPressed;
-        
     }
 
     private void OnCustomShadowColorButtonPressed(object? sender, RoutedEventArgs e)
     {
-        EnableButtons(false);
         var shadowColorDialog = new ShadowColorAdjuster();
         shadowColorDialog.ShowDialog(this);
-        EnableButtons(true);
-    }
-
-    private void EnableButtons(bool p0)
-    {
-        //throw new System.NotImplementedException();
     }
 }
