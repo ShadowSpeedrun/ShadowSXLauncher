@@ -15,16 +15,8 @@ public class Configuration
 
     public string DolphinLocation;
     public string RomLocation;
-    public bool UseModernUiControl;
-    public bool DisableSkipCutscenes;
     public int UiButtonDisplayIndex;
     public int GlossAdjustmentIndex;
-    public bool RaceMode;
-    
-    /*public OperatingSystemType CurrentOS
-    {
-        get { return AvaloniaLocator.Current.GetService<IRuntimePlatform>().GetRuntimeInfo().OperatingSystem; }
-    }*/
     
     public static string AppStart
     {
@@ -59,11 +51,8 @@ public class Configuration
 
         DolphinLocation = "";
         RomLocation = "";
-        UseModernUiControl = false;
-        DisableSkipCutscenes = false;
         UiButtonDisplayIndex = 0;
         GlossAdjustmentIndex = 0;
-        RaceMode = false;
     }
 
     public static Configuration Instance
@@ -110,30 +99,15 @@ public class Configuration
             {
                 RomLocation = node.InnerText;
             }
-            
-            if (node.Name == "UseModernUIControl")
-            {
-                UseModernUiControl = bool.Parse(node.InnerText);
-            }
 
             if (node.Name == "UiButtonDisplayIndex")
             {
                 UiButtonDisplayIndex = int.Parse(node.InnerText);
             }
             
-            if (node.Name == "DisableSkipCutscenes")
-            {
-                DisableSkipCutscenes = bool.Parse(node.InnerText);
-            }
-            
             if (node.Name == "GlossAdjustment")
             {
                 GlossAdjustmentIndex = int.Parse(node.InnerText);
-            }
-            
-            if (node.Name == "RaceMode")
-            {
-                RaceMode = bool.Parse(node.InnerText);
             }
         }
     }
@@ -149,30 +123,18 @@ public class Configuration
         
         var xmlElementRomLocation = configurationXml.CreateElement("RomLocation");
         xmlElementRomLocation.InnerText = RomLocation;
-        
-        var xmlElementUseModernUIControl = configurationXml.CreateElement("UseModernUIControl");
-        xmlElementUseModernUIControl.InnerText = UseModernUiControl.ToString();
 
         var xmlElementUiButtonDisplayIndex = configurationXml.CreateElement("UiButtonDisplayIndex");
         xmlElementUiButtonDisplayIndex.InnerText = UiButtonDisplayIndex.ToString();
         
-        var xmlElementSkipCutscenes = configurationXml.CreateElement("DisableSkipCutscenes");
-        xmlElementSkipCutscenes.InnerText = DisableSkipCutscenes.ToString();
-        
         var xmlElementGlossAdjustment = configurationXml.CreateElement("GlossAdjustment");
         xmlElementGlossAdjustment.InnerText = GlossAdjustmentIndex.ToString();
-        
-        var xmlElementRaceMode = configurationXml.CreateElement("RaceMode");
-        xmlElementRaceMode.InnerText = RaceMode.ToString();
 
         configurationXml.AppendChild(mainNode);
         mainNode.AppendChild(xmlElementDolphinLocation);
         mainNode.AppendChild(xmlElementRomLocation);
-        mainNode.AppendChild(xmlElementUseModernUIControl);
         mainNode.AppendChild(xmlElementUiButtonDisplayIndex);
-        mainNode.AppendChild(xmlElementSkipCutscenes);
         mainNode.AppendChild(xmlElementGlossAdjustment);
-        mainNode.AppendChild(xmlElementRaceMode);
         
         configurationXml.Save(fileLocation);
     }
