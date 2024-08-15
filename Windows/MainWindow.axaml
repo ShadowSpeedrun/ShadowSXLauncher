@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="488" d:DesignHeight="468"
-        x:Class="ShadowSXLauncher.MainWindow"
+        x:Class="ShadowSXLauncher.Windows.MainWindow"
         Title="Shadow SX Launcher"
         Width="488" Height="468">
     <Grid RowDefinitions="*,Auto,Auto,Auto,Auto,Auto" Margin="10">

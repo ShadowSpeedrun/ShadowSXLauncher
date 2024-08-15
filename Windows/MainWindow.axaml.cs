@@ -12,7 +12,8 @@ using System.Threading.Tasks;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using ShadowSXLauncher.Classes;
-namespace ShadowSXLauncher;
+
+namespace ShadowSXLauncher.Windows;
 
 public partial class MainWindow : Window
 {
@@ -242,6 +243,15 @@ public partial class MainWindow : Window
     
     private async void CreateRomButton_Click(object? sender, EventArgs e)
     {
+        EnableButtons(false);
+        var chooseROMPatchDialog = new ChooseROMPatchWindow();
+        await chooseROMPatchDialog.ShowDialog(this);
+        await CreateROMWindows();
+        EnableButtons(true);
+    }
+
+    private async Task CreateROMWindows()
+    {
         var xdeltaBinPath = Path.Combine(sxResourcesISOPatchingPath, PatchingFiles.Bin);
         var vcdiffPath = Path.Combine(sxResourcesISOPatchingPath, PatchingFiles.PatchFile);
         var patchScriptPath = Path.Combine(sxResourcesISOPatchingPath, PatchingFiles.PathScript);
@@ -345,7 +355,7 @@ public partial class MainWindow : Window
             var result = await message.ShowAsync();
         }
     }
-    
+
     private void UpdateCustomAssets()
     {
         #region UI Display Textures

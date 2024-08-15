@@ -1,0 +1,19 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="450"
+        x:Class="ShadowSXLauncher.Windows.ChooseROMPatchWindow"
+        Title="Create SX ROM">
+        <Grid RowDefinitions="Auto, Auto" Margin="10">
+                <Grid Grid.Row="0" ColumnDefinitions="Auto, *" Margin="0, 0,0,10">
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="0,0,10,0">Choose SX Patch</TextBlock>
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"  Name="PatchComboBox"></ComboBox>
+                </Grid>
+                <Grid Grid.Row="1" ColumnDefinitions="*">
+                        <Button HorizontalAlignment="Stretch">
+                                <TextBlock HorizontalAlignment="Center">Apply Patch</TextBlock>
+                        </Button>
+                </Grid>
+        </Grid>
+</Window>

@@ -10,7 +10,7 @@ using Avalonia.Platform;
 using ShadowSXLauncher.Classes;
 using ColorPicker = ShadowSXLauncher.UserControls.ColorPicker;
 
-namespace ShadowSXLauncher.Views;
+namespace ShadowSXLauncher.Windows;
 
 public partial class ShadowColorAdjuster : Window
 {

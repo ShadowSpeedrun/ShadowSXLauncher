@@ -3,9 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using ShadowSXLauncher.Classes;
-using ShadowSXLauncher.Views;
 
-namespace ShadowSXLauncher;
+namespace ShadowSXLauncher.Windows;
 
 public partial class SettingsWindow : Window
 {

@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:userControls="clr-namespace:ShadowSXLauncher.UserControls"
         mc:Ignorable="d" d:DesignWidth="1300" d:DesignHeight="400"
-        x:Class="ShadowSXLauncher.Views.ShadowColorAdjuster"
+        x:Class="ShadowSXLauncher.Windows.ShadowColorAdjuster"
         Title="Shadow Color Adjuster"
         Width="1300"
         Height="400"
