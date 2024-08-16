@@ -245,12 +245,15 @@ public partial class MainWindow : Window
     {
         EnableButtons(false);
         var chooseROMPatchDialog = new ChooseROMPatchWindow();
-        await chooseROMPatchDialog.ShowDialog(this);
-        await CreateROMWindows();
+        var result = await chooseROMPatchDialog.ShowDialog<PatchData?>(this);
+        if (result != null)
+        {
+            await CreateROMWindows(result);   
+        }
         EnableButtons(true);
     }
 
-    private async Task CreateROMWindows()
+    private async Task CreateROMWindows(PatchData patch)
     {
         var xdeltaBinPath = Path.Combine(sxResourcesISOPatchingPath, PatchingFiles.Bin);
         var vcdiffPath = Path.Combine(sxResourcesISOPatchingPath, PatchingFiles.PatchFile);

@@ -4,15 +4,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="450"
         x:Class="ShadowSXLauncher.Windows.ChooseROMPatchWindow"
-        Title="Create SX ROM">
-        <Grid RowDefinitions="Auto, Auto" Margin="10">
+        Title="Create SX ROM"
+        Width="450" CanResize="False" SizeToContent="Height">
+        <Grid RowDefinitions="Auto, Auto, Auto, Auto" Margin="10">
                 <Grid Grid.Row="0" ColumnDefinitions="Auto, *" Margin="0, 0,0,10">
                         <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="0,0,10,0">Choose SX Patch</TextBlock>
-                        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"  Name="PatchComboBox"></ComboBox>
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"  Name="PatchComboBox"/>
                 </Grid>
-                <Grid Grid.Row="1" ColumnDefinitions="*">
-                        <Button HorizontalAlignment="Stretch">
+                <Grid Grid.Row="1" ColumnDefinitions="*" Margin="0,0,0,10">
+                        <TextBlock Height="150" Background="#151515" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="DescriptionTextBlock" TextWrapping="Wrap"></TextBlock>
+                </Grid>
+                <Grid Grid.Row="2" ColumnDefinitions="*" Margin="0, 0,0, 5">
+                        <Button HorizontalAlignment="Stretch" Name="ApplyButton">
                                 <TextBlock HorizontalAlignment="Center">Apply Patch</TextBlock>
+                        </Button>
+                </Grid>
+                <Grid Grid.Row="3" ColumnDefinitions="*">
+                        <Button HorizontalAlignment="Stretch" Name="CloseButton">
+                                <TextBlock HorizontalAlignment="Center">Close</TextBlock>
                         </Button>
                 </Grid>
         </Grid>
