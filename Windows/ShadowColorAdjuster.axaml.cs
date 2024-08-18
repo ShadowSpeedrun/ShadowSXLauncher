@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using Avalonia;
 using Avalonia.Controls;
@@ -16,11 +17,6 @@ public partial class ShadowColorAdjuster : Window
 {
     private ColorPicker mainColorPicker => GetColorPicker("MainColorPicker");
     private ColorPicker accentColorPicker => GetColorPicker("AccentColorPicker");
-
-    private string customTexturesPath
-    {
-        get { return Configuration.Instance.DolphinLocation + @"\User\Load\Textures\GUPX8P"; }
-    }
     
     private ColorPicker GetColorPicker(string pickerName)
     {
@@ -49,6 +45,7 @@ public partial class ShadowColorAdjuster : Window
         accentColorPicker.ColorChanged += (sender, args) => { GeneratePreview(); };
         GeneratePreview();
         ExportButton.Click += OnExportButtonPressed;
+        OpenTextureFolderButton.Click += OpenTextureFolderButtonOnClick;
     }
 
     private void OnExportButtonPressed(object? sender, RoutedEventArgs e)
@@ -97,7 +94,7 @@ public partial class ShadowColorAdjuster : Window
         // Image newImage6 = ApplyColorWithMask(true,  baseImage5, colorMask6, AccentColorPreview.BackColor);
         var exportImage6 = ApplyColorMaskToBitmap(base5Image, mask6Image, accentColorPicker.GetColor);
         
-        var filePathToShadowTextures = customTexturesPath + @"\Shadow";
+        var filePathToShadowTextures = Path.Combine(CommonFilePaths.CustomTexturesPath, "Shadow");
         if (Directory.Exists(filePathToShadowTextures))
         {
             Directory.Delete(filePathToShadowTextures, true);
@@ -112,6 +109,20 @@ public partial class ShadowColorAdjuster : Window
         SaveBitmapAsPng(exportImage6,filePathToShadowTextures + @"\" + Image6Name);
     }
 
+    private void OpenTextureFolderButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Directory.Exists(CommonFilePaths.CustomTexturesPath))
+        {
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = "explorer.exe",
+                Arguments = CommonFilePaths.CustomTexturesPath,
+                UseShellExecute = true
+            };
+            Process.Start(psi);
+        }
+    }
+    
     private void GeneratePreview()
     {
         var baseImage = bitmapToWriteable(new Bitmap(AssetLoader.Open(new Uri("avares://ShadowSXLauncher/Assets/ShadowColorReferences/ShadowPreviewBase.png"))));
