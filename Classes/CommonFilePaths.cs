@@ -54,4 +54,35 @@ public static class CommonFilePaths
     {
         get { return Path.Combine(SxResourcesISOPatchingPath, "Patches"); }
     }
+    
+    public static string SxResourcesPatchBinsFolderPath
+    {
+        get { return Path.Combine(SxResourcesISOPatchingPath, "PatchingScriptsAndBins"); }
+    }
+    
+    public static string xdeltaBinPath
+    {
+        get
+        {
+            if(OperatingSystem.IsWindows())
+            {
+                return Path.Combine(SxResourcesPatchBinsFolderPath, "xdelta-3.1.0-x86_64.exe");
+            }
+
+            return string.Empty;
+        }
+    }
+    
+    public static string PatchingScriptPath
+    {
+        get
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch ISO.bat");
+            }
+
+            return string.Empty;
+        }
+    }
 }

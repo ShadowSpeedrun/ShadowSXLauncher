@@ -222,9 +222,9 @@ public partial class MainWindow : Window
 
     private async Task CreateROMWindows(PatchData patch)
     {
-        var xdeltaBinPath = Path.Combine(CommonFilePaths.SxResourcesISOPatchingPath, PatchingFiles.Bin);
-        var vcdiffPath = Path.Combine(CommonFilePaths.SxResourcesISOPatchingPath, PatchingFiles.PatchFile);
-        var patchScriptPath = Path.Combine(CommonFilePaths.SxResourcesISOPatchingPath, PatchingFiles.PathScript);
+        var vcdiffPath = patch.PatchFilePath;
+        var xdeltaBinPath = CommonFilePaths.xdeltaBinPath;
+        var patchScriptPath = CommonFilePaths.PatchingScriptPath;
                 
         var allPatchFilesFound = File.Exists(xdeltaBinPath);
         allPatchFilesFound &= File.Exists(vcdiffPath);
@@ -232,40 +232,40 @@ public partial class MainWindow : Window
         
         if (allPatchFilesFound)
         {
-            var gupe8pLocation = "";
+            var baseIdLocation = "";
             var patchedRomDestination = "";
 
-            var resultGUPE = await SetOpenFilePath("Select Original ROM (GUPE8P)", 
+            var resultBaseId = await SetOpenFilePath("Select Original ROM (" + patch.OriginalGameId + ")", 
                 new FileDialogFilter()
                 {
                     Name = "ROM File",
                     Extensions = new List<string>() {"iso"}
                 });
         
-            gupe8pLocation = resultGUPE == null ? "" : resultGUPE.First();
+            baseIdLocation = resultBaseId == null ? "" : resultBaseId.First();
 
-            if (!string.IsNullOrEmpty(gupe8pLocation))
+            if (!string.IsNullOrEmpty(baseIdLocation))
             {
-                var resultGUPX = await SetSaveFilePath("Save Patched ROM (GUPX8P)", 
+                var resultNewId = await SetSaveFilePath("Save Patched ROM (" + patch.NewGameId + ")", 
                     new FileDialogFilter()
                     {
                         Name = "ROM File",
                         Extensions = new List<string>() {"iso"}
                     });
-                patchedRomDestination = resultGUPX ?? "";
+                patchedRomDestination = resultNewId ?? "";
             }
             else
             {
                 var message = MessageBoxManager
                     .GetMessageBoxStandard("Operation Cancelled", "Operation Cancelled.");
-                var result = await message.ShowAsync();
+                await message.ShowAsync();
                 return;
             }
             
             //We can assume that gupe8pLocation is not empty or null. 
             if (!string.IsNullOrEmpty(patchedRomDestination))
             {
-                var batArguments = string.Format("\"{0}\" \"{1}\" \"{2}\" \"{3}\"", gupe8pLocation, patchedRomDestination,
+                var batArguments = string.Format("\"{0}\" \"{1}\" \"{2}\" \"{3}\"", baseIdLocation, patchedRomDestination,
                         xdeltaBinPath, vcdiffPath);
                     
                 var processResult = Process.Start("\"" + patchScriptPath + "\"", batArguments);
@@ -276,7 +276,7 @@ public partial class MainWindow : Window
                     switch (processResult.ExitCode)
                     {
                         case 0:
-                            //MessageBox by default doesnt have alignment options. Hack it to look nice to avoid needing to create a new control dialog.
+                            //MessageBox by default doesn't have alignment options. Hack it to look nice to avoid needing to create a new control dialog.
                             var messageSuccess = MessageBoxManager
                                 .GetMessageBoxStandard("ROM Patch Successful",
                                     "ROM Created Successfully." + Environment.NewLine + Environment.NewLine
@@ -296,7 +296,7 @@ public partial class MainWindow : Window
                                     "ROM Patching Failed." + Environment.NewLine + Environment.NewLine
                                        + "Please ensure that provided paths are valid and that " + Environment.NewLine
                                        + "the Shadow ROM provided is a full size clean rip. " + Environment.NewLine + Environment.NewLine
-                                       + "Expected ROM CRC32: F582CF1E");
+                                       + "Expected ROM CRC32 for " + patch.OriginalGameId + ": " + patch.BaseCRC);
                             await messageFailed.ShowAsync();
                             break;
                     }

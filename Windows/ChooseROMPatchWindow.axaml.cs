@@ -16,18 +16,11 @@ public partial class ChooseROMPatchWindow : Window
     public ChooseROMPatchWindow()
     {
         InitializeComponent();
+        
         //Scan "Patches" folder for patch data files.
         //This will allow for new patches to be added without
         //releasing a new build of the launcher.
-
         List<PatchData> patches = LoadPatchDataXmls();
-        
-        //Temp test options.
-        List<PatchData> options = new List<PatchData>
-        {
-            new PatchData("Shadow SX - 1.0", "sx1.xdelta", "Expects CleanRip of the original Shadow the Hedgehog NTSC ROM. CRC32 - XXXXXXX"),
-            new PatchData("Shadow SX - 1.1", "sx1-1.xdelta", "Expects CleanRip of the original Shadow the Hedgehog NTSC ROM. CRC32 - XXXXXXX")
-        };
         
         //Apply item list to the combo box.
         PatchComboBox.ItemsSource = patches;
@@ -40,7 +33,7 @@ public partial class ChooseROMPatchWindow : Window
     private List<PatchData> LoadPatchDataXmls()
     {
         List<PatchData> patches = new List<PatchData>();
-        var patchFilePaths = Directory.GetFiles(CommonFilePaths.SxResourcesPatchDataFolderPath, "*.xPatchData");
+        var patchFilePaths = Directory.GetFiles(CommonFilePaths.SxResourcesPatchDataFolderPath, "*.xPatchData", SearchOption.AllDirectories);
         foreach (var patchFilePath in patchFilePaths)
         {
             var patchDataXml = new XmlDocument();
@@ -50,6 +43,10 @@ public partial class ChooseROMPatchWindow : Window
             string? patchDisplayName = null;
             string? patchFileName = null;
             string? patchDescription = null;
+            string? patchBaseID = null;
+            string? patchNewID = null;
+            string? patchBaseCRC = null;
+            
             foreach (XmlElement node in patchDataXml.DocumentElement)
             {
                 if (node.Name == "DisplayName")
@@ -66,11 +63,29 @@ public partial class ChooseROMPatchWindow : Window
                 {
                     patchDescription = node.InnerText;
                 }
+                
+                if (node.Name == "OriginalGameID")
+                {
+                    patchBaseID = node.InnerText;
+                }
+                
+                if (node.Name == "NewGameID")
+                {
+                    patchNewID = node.InnerText;
+                }
+                
+                if (node.Name == "ExpectedBaseCRC")
+                {
+                    patchBaseCRC = node.InnerText;
+                }
             }
             
             if (patchDisplayName != null && patchFileName != null && patchDescription != null)
+            if (patchBaseID != null && patchNewID != null && patchBaseCRC != null)
             {
-                patches.Add(new PatchData(patchDisplayName, patchFileName, patchDescription));
+                patches.Add(new PatchData(patchDisplayName, patchFileName, patchDescription, 
+                    patchBaseID, patchNewID, patchBaseCRC,
+                    Path.GetDirectoryName(patchFilePath)));
             }
         }
 
