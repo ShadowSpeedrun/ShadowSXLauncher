@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -16,6 +19,8 @@ public partial class ChooseROMPatchWindow : Window
         //Scan "Patches" folder for patch data files.
         //This will allow for new patches to be added without
         //releasing a new build of the launcher.
+
+        List<PatchData> patches = LoadPatchDataXmls();
         
         //Temp test options.
         List<PatchData> options = new List<PatchData>
@@ -25,11 +30,51 @@ public partial class ChooseROMPatchWindow : Window
         };
         
         //Apply item list to the combo box.
-        PatchComboBox.ItemsSource = options;
+        PatchComboBox.ItemsSource = patches;
         PatchComboBox.SelectionChanged += PatchComboBoxOnSelectionChanged;
         ApplyButton.Click += ApplyButtonOnClick;
         ApplyButton.IsEnabled = false;
         CloseButton.Click += CloseButtonOnClick;
+    }
+
+    private List<PatchData> LoadPatchDataXmls()
+    {
+        List<PatchData> patches = new List<PatchData>();
+        var patchFilePaths = Directory.GetFiles(CommonFilePaths.SxResourcesPatchDataFolderPath, "*.xPatchData");
+        foreach (var patchFilePath in patchFilePaths)
+        {
+            var patchDataXml = new XmlDocument();
+            patchDataXml.Load(patchFilePath);
+
+            //TODO: Look into using XmlSerializer
+            string? patchDisplayName = null;
+            string? patchFileName = null;
+            string? patchDescription = null;
+            foreach (XmlElement node in patchDataXml.DocumentElement)
+            {
+                if (node.Name == "DisplayName")
+                {
+                    patchDisplayName = node.InnerText;
+                }
+
+                if (node.Name == "PatchFileName")
+                {
+                    patchFileName = node.InnerText;
+                }
+
+                if (node.Name == "Description")
+                {
+                    patchDescription = node.InnerText;
+                }
+            }
+            
+            if (patchDisplayName != null && patchFileName != null && patchDescription != null)
+            {
+                patches.Add(new PatchData(patchDisplayName, patchFileName, patchDescription));
+            }
+        }
+
+        return patches;
     }
 
     private void PatchComboBoxOnSelectionChanged(object? sender, SelectionChangedEventArgs e)
