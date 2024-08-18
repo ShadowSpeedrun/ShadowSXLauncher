@@ -17,41 +17,6 @@ namespace ShadowSXLauncher.Windows;
 
 public partial class MainWindow : Window
 {
-    private string dolphinPath
-    {
-        get { return Configuration.Instance.DolphinLocation; }
-    }
-        
-    private string savePath
-    {
-        get { return Path.Combine(dolphinPath, "User", "GC", "USA", "Card A"); }
-    }
-        
-    private string gameSettingsFilePath
-    {
-        get { return Path.Combine(dolphinPath, "User", "GameSettings", "GUPX8P.ini"); }
-    }
-
-    private string customTexturesPath
-    {
-        get { return Path.Combine(dolphinPath ,"User","Load","Textures","GUPX8P"); }
-    }
-
-    private string sxResourcesPath
-    {
-        get { return Path.Combine(Configuration.AppStart, "ShadowSXResources"); }
-    }
-        
-    private string sxResourcesCustomTexturesPath
-    {
-        get { return Path.Combine(sxResourcesPath + @"CustomTextures","GUPX8P"); }
-    }
-        
-    private string sxResourcesISOPatchingPath
-    {
-        get { return Path.Combine(sxResourcesPath + @"PatchingFiles"); }
-    }
-
     public MainWindow()
     {
         InitializeComponent();
@@ -118,9 +83,9 @@ public partial class MainWindow : Window
                 UpdateCustomAssets();
 
                 //Double check the .exe is found before attempting to run it.
-                if (File.Exists(dolphinPath + @"\Dolphin.exe"))
+                if (File.Exists(CommonFilePaths.DolphinPath + @"\Dolphin.exe"))
                 {
-                    Process.Start("\"" + dolphinPath + @"\Dolphin.exe" + "\"",
+                    Process.Start("\"" + CommonFilePaths.DolphinPath + @"\Dolphin.exe" + "\"",
                         @" -b " + "\"" + Configuration.Instance.RomLocation + "\"");
                     Close();
                 }
@@ -144,6 +109,7 @@ public partial class MainWindow : Window
         });
         
         Configuration.Instance.RomLocation = result == null ? "" : result.First();
+        Configuration.Instance.SaveSettings();
     }
     
     private async Task<string[]?> SetOpenFilePath(string title, FileDialogFilter filter)
@@ -151,7 +117,7 @@ public partial class MainWindow : Window
         var ofd = new OpenFileDialog();
         ofd.Title = title;
         ofd.Filters = new List<FileDialogFilter>() { filter };
-        ofd.Directory = Configuration.AppStart;
+        ofd.Directory = CommonFilePaths.AppStart;
         ofd.AllowMultiple = false;
         return await ofd.ShowAsync(this);
     }
@@ -161,7 +127,7 @@ public partial class MainWindow : Window
         var sfd = new SaveFileDialog();
         sfd.Title = title;
         sfd.Filters = new List<FileDialogFilter>() { filter };
-        sfd.Directory = Configuration.AppStart;
+        sfd.Directory = CommonFilePaths.AppStart;
         return await sfd.ShowAsync(this);
     }
 
@@ -169,24 +135,25 @@ public partial class MainWindow : Window
     {
         var result = await SetFolderPath("Set Path to Dolphin");
         Configuration.Instance.DolphinLocation = String.IsNullOrEmpty(result) ? "" : result;
+        Configuration.Instance.SaveSettings();
     }
 
     private async Task<string?> SetFolderPath(string title)
     {
         var ofd = new OpenFolderDialog();
         ofd.Title = "Set Path to Dolphin";
-        ofd.Directory = Configuration.AppStart; 
+        ofd.Directory = CommonFilePaths.AppStart; 
         return await ofd.ShowAsync(this);
     }
 
     private void OpenGameLocationButtonPressed(object? sender, RoutedEventArgs e)
     {
-        OpenFolder(Configuration.AppStart);
+        OpenFolder(CommonFilePaths.AppStart);
     }
 
     private async void OnSaveFileButtonPressed(object? sender, RoutedEventArgs e)
     {
-        var success = OpenFolder(savePath);
+        var success = OpenFolder(CommonFilePaths.SavePath);
         if (!success)
         {
             var message = MessageBoxManager
@@ -255,9 +222,9 @@ public partial class MainWindow : Window
 
     private async Task CreateROMWindows(PatchData patch)
     {
-        var xdeltaBinPath = Path.Combine(sxResourcesISOPatchingPath, PatchingFiles.Bin);
-        var vcdiffPath = Path.Combine(sxResourcesISOPatchingPath, PatchingFiles.PatchFile);
-        var patchScriptPath = Path.Combine(sxResourcesISOPatchingPath, PatchingFiles.PathScript);
+        var xdeltaBinPath = Path.Combine(CommonFilePaths.SxResourcesISOPatchingPath, PatchingFiles.Bin);
+        var vcdiffPath = Path.Combine(CommonFilePaths.SxResourcesISOPatchingPath, PatchingFiles.PatchFile);
+        var patchScriptPath = Path.Combine(CommonFilePaths.SxResourcesISOPatchingPath, PatchingFiles.PathScript);
                 
         var allPatchFilesFound = File.Exists(xdeltaBinPath);
         allPatchFilesFound &= File.Exists(vcdiffPath);
@@ -338,14 +305,14 @@ public partial class MainWindow : Window
                 {
                     var message = MessageBoxManager
                         .GetMessageBoxStandard("Patching Failed", "ROM Patching failed to launch.");
-                    var result = await message.ShowAsync();
+                    await message.ShowAsync();
                 }
             }
             else
             {
                 var message = MessageBoxManager
                     .GetMessageBoxStandard("Operation Cancelled", "Operation Cancelled");
-                var result = await message.ShowAsync();
+                await message.ShowAsync();
             }
         }
         else
@@ -355,7 +322,7 @@ public partial class MainWindow : Window
                     "One or more files needed to complete" + Environment.NewLine +
                         "the ROM patching were missing." + Environment.NewLine + Environment.NewLine +
                         "Please double check directory files.");
-            var result = await message.ShowAsync();
+            await message.ShowAsync();
         }
     }
 
@@ -363,23 +330,32 @@ public partial class MainWindow : Window
     {
         #region UI Display Textures
 
-        if (Directory.Exists(customTexturesPath + @"\Buttons"))
+        if (Directory.Exists(CommonFilePaths.CustomTexturesPath + @"\Buttons"))
         {
-            Directory.Delete(customTexturesPath + @"\Buttons", true);
+            Directory.Delete(CommonFilePaths.CustomTexturesPath + @"\Buttons", true);
         }
 
-        var buttonAssetsFolder =
-            Configuration.UiButtonStyles.Keys.ToArray()[Configuration.Instance.UiButtonDisplayIndex];
+        //TODO: Update to use folder name instead of index as the number of folders will now be dynamic.
+        var uiButtonOptions = new List<string>();
+        uiButtonOptions.Add("Default (GC)");
+        Directory.GetDirectories(CommonFilePaths.SxResourcesCustomTexturesPath + @"\Buttons\").ToList()
+            .ForEach(folderPath => uiButtonOptions.Add(Path.GetFileName(folderPath)));
+        
+        var buttonAssetsFolder = uiButtonOptions[Configuration.Instance.UiButtonDisplayIndex];
         if (!string.IsNullOrEmpty(buttonAssetsFolder))
         {
-            var newButtonFilePath = sxResourcesCustomTexturesPath + @"\Buttons\" + buttonAssetsFolder;
-            var newButtonUiFiles = Directory.EnumerateFiles(newButtonFilePath);
-            
-            Directory.CreateDirectory(customTexturesPath + @"\Buttons");
-            
-            foreach (var buttonFile in newButtonUiFiles)
+            var newButtonFilePath = CommonFilePaths.SxResourcesCustomTexturesPath + @"\Buttons\" + buttonAssetsFolder;
+            if (Directory.Exists(newButtonFilePath))
             {
-                File.Copy(buttonFile, customTexturesPath + @"\Buttons" + buttonFile.Replace(newButtonFilePath, ""));
+                var newButtonUiFiles = Directory.EnumerateFiles(newButtonFilePath);
+
+                Directory.CreateDirectory(CommonFilePaths.CustomTexturesPath + @"\Buttons");
+
+                foreach (var buttonFile in newButtonUiFiles)
+                {
+                    File.Copy(buttonFile,
+                        CommonFilePaths.CustomTexturesPath + @"\Buttons" + buttonFile.Replace(newButtonFilePath, ""));
+                }
             }
         }
 
@@ -387,23 +363,23 @@ public partial class MainWindow : Window
         
         #region Gloss Removal
 
-        if (Directory.Exists(customTexturesPath + @"\GlossAdjustment"))
+        if (Directory.Exists(CommonFilePaths.CustomTexturesPath + @"\GlossAdjustment"))
         {
-            Directory.Delete(customTexturesPath + @"\GlossAdjustment", true);
+            Directory.Delete(CommonFilePaths.CustomTexturesPath + @"\GlossAdjustment", true);
         }
 
         var glossAssetsFolder = 
             Configuration.GlossAdjustmentOptions.Keys.ToArray()[Configuration.Instance.GlossAdjustmentIndex];
         if (!string.IsNullOrEmpty(glossAssetsFolder))
         {
-            var removeGlossFilePath = sxResourcesCustomTexturesPath + @"\GlossAdjustment\" + glossAssetsFolder;
+            var removeGlossFilePath = CommonFilePaths.SxResourcesCustomTexturesPath + @"\GlossAdjustment\" + glossAssetsFolder;
             var removeGlossFiles = Directory.EnumerateFiles(removeGlossFilePath);
             
-            Directory.CreateDirectory(customTexturesPath + @"\GlossAdjustment");
+            Directory.CreateDirectory(CommonFilePaths.CustomTexturesPath + @"\GlossAdjustment");
             
             foreach (var removeGlossFile in removeGlossFiles)
             {
-                File.Copy(removeGlossFile, customTexturesPath + @"\GlossAdjustment" + removeGlossFile.Replace(removeGlossFilePath, ""));
+                File.Copy(removeGlossFile, CommonFilePaths.CustomTexturesPath + @"\GlossAdjustment" + removeGlossFile.Replace(removeGlossFilePath, ""));
             }
         }
 

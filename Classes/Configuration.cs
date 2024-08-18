@@ -18,26 +18,6 @@ public class Configuration
     public int UiButtonDisplayIndex;
     public int GlossAdjustmentIndex;
     
-    public static string AppStart
-    {
-        get
-        {
-            return AppContext.BaseDirectory.Replace("net6.0\\", "").Replace("net6.0/", "");
-        }
-    }
-    
-    private string fileLocation = Path.Combine(AppStart, "Config.xml");
-
-    public static readonly Dictionary<string, string> UiButtonStyles = new Dictionary<string, string>()
-    {
-        {"", "Default (GC)"},
-        {"Xbox", "Xbox"},
-        {"XboxOne", "Xbox One"},
-        {"SteamDeck", "Steam Deck"},
-        {"PS2", "PS2"},
-        {"PS3", "PS3"},
-    };
-    
     public static readonly Dictionary<string, string> GlossAdjustmentOptions = new Dictionary<string, string>()
     {
         {"", "Original"},
@@ -77,7 +57,7 @@ public class Configuration
             configurationXml = new XmlDocument();
             try
             {
-                configurationXml.Load(fileLocation);
+                configurationXml.Load(CommonFilePaths.ConfigFileLocation);
             }
 #pragma warning disable CS0168
             catch(IOException e)
@@ -136,6 +116,6 @@ public class Configuration
         mainNode.AppendChild(xmlElementUiButtonDisplayIndex);
         mainNode.AppendChild(xmlElementGlossAdjustment);
         
-        configurationXml.Save(fileLocation);
+        configurationXml.Save(CommonFilePaths.ConfigFileLocation);
     }
 }
