@@ -12,7 +12,7 @@
             <TextBlock Grid.Column="0" Padding="0, 0, 10,0">SX ROM Location</TextBlock>
             <TextBox Grid.Column="1" Name="RomLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
             <Button Grid.Column="2" Name="SetRomLocationButton" HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch">
+                    VerticalAlignment="Stretch" Margin="5,0,0,0">
                 ...
             </Button>
         </Grid>
@@ -20,22 +20,17 @@
             <TextBlock Grid.Column="0" Padding="0, 0, 14,0">Dolphin Location</TextBlock>
             <TextBox Grid.Column="1" Name="DolphinLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
             <Button Grid.Column="2" Name="SetDolphinLocationButton" HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch">
+                    VerticalAlignment="Stretch" Margin="5,0,0,0">
                 ...
             </Button>
         </Grid>
         <TextBlock Grid.Row="2" Margin="0,5,0,10">Dolphin Graphics Settings</TextBlock>
         <Grid Grid.Row="3" ColumnDefinitions="Auto,*" Margin="0,5,0,5">
             <TextBlock Grid.Column="0" Padding="0, 0, 10,0">UI Button Display</TextBlock>
-            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" Name="CustomButtonComboBox">
-                <ComboBoxItem>Default (GC)</ComboBoxItem>
-                <ComboBoxItem>Xbox</ComboBoxItem>
-                <ComboBoxItem>Xbox One</ComboBoxItem>
-                <ComboBoxItem>Steam Deck</ComboBoxItem>
-                <ComboBoxItem>PS2</ComboBoxItem>
-                <ComboBoxItem>PS3</ComboBoxItem>
-                <ComboBoxItem>Nintendo Switch</ComboBoxItem>
-            </ComboBox>
+            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" Name="CustomButtonComboBox"/>
+                <!-- <ComboBoxItem>Nintendo Switch</ComboBoxItem> -->
+                <!-- <ComboBoxItem>Modern UI (Cross Circles)</ComboBoxItem> -->
+            
         </Grid>
         <Grid Grid.Row="4" ColumnDefinitions="Auto,*" Margin="0,5,0,10">
             <TextBlock Grid.Column="0" Padding="0, 0, 10,0">Glossy Effect on Characters</TextBlock>
@@ -45,11 +40,16 @@
                 <ComboBoxItem>Removed</ComboBoxItem>
             </ComboBox>
         </Grid>
-        <Button Grid.Row="5" HorizontalAlignment="Stretch" Margin="0,0,0,10" Name="OpenDolphin">
-            <TextBlock HorizontalAlignment="Center">Open Dolphin Interface</TextBlock>
-        </Button>
-        <Button Grid.Row="6" HorizontalAlignment="Stretch" Name="CustomShadowColorButton">
-            <TextBlock HorizontalAlignment="Center">Customize Shadow Color</TextBlock>
+        <Grid Grid.Row="5" ColumnDefinitions="*, *" Margin="0,0,0,10">
+            <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,5,0" Name="OpenDolphinButton">
+                <TextBlock HorizontalAlignment="Center">Open Dolphin Interface</TextBlock>
+            </Button>
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,0,0,0" Name="CustomShadowColorButton">
+                <TextBlock HorizontalAlignment="Center">Customize Shadow Color</TextBlock>
+            </Button>
+        </Grid>
+        <Button Grid.Row="6" HorizontalAlignment="Stretch" Name="SaveSettingsButton">
+            <TextBlock HorizontalAlignment="Center">Save Settings</TextBlock>
         </Button>
     </Grid>
 </Window>
