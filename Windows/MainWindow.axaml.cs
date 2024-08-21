@@ -173,7 +173,7 @@ public partial class MainWindow : Window
         {
             ProcessStartInfo psi = new ProcessStartInfo
             {
-                FileName = GetExplorerPath(),
+                FileName = CommonFilePaths.GetExplorerPath,
                 Arguments = folderPath,
                 UseShellExecute = true
             };
@@ -182,22 +182,6 @@ public partial class MainWindow : Window
         }
 
         return false;
-    }
-    
-    private string GetExplorerPath()
-    {
-        return "explorer.exe";
-        /*switch (Configuration.Instance.CurrentOS)
-        {
-            case OperatingSystemType.WinNT:
-                return "explorer.exe";
-            case OperatingSystemType.Linux:
-                return "xdg-open";
-            case OperatingSystemType.OSX:
-                return "open";
-            default:
-                throw new Exception("Unsupported Operating System");
-        }*/
     }
 
     private void SettingsButton_Click(object? sender, EventArgs e)

@@ -115,7 +115,7 @@ public partial class ShadowColorAdjuster : Window
         {
             ProcessStartInfo psi = new ProcessStartInfo
             {
-                FileName = "explorer.exe",
+                FileName = CommonFilePaths.GetExplorerPath,
                 Arguments = CommonFilePaths.CustomTexturesPath,
                 UseShellExecute = true
             };

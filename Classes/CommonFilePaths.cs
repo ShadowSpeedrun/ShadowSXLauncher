@@ -85,4 +85,24 @@ public static class CommonFilePaths
             return string.Empty;
         }
     }
+    
+    public static string GetExplorerPath
+    {
+        get
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return "explorer.exe";
+            }
+            else if (OperatingSystem.IsLinux())
+            {
+                return "xdg-open";
+            }
+            else if (OperatingSystem.IsMacOS())
+            {
+                return "open";
+            }
+            throw new Exception("Unsupported Operating System");
+        }
+    }
 }

@@ -41,7 +41,7 @@ public partial class SettingsWindow : Window
     {
         uiButtonOptions = new List<string>();
         uiButtonOptions.Add("Default (GC)");
-        Directory.GetDirectories(CommonFilePaths.SxResourcesCustomTexturesPath + @"\Buttons\").ToList()
+        Directory.GetDirectories(Path.Combine(CommonFilePaths.SxResourcesCustomTexturesPath,"Buttons")).ToList()
             .ForEach(folderPath => uiButtonOptions.Add(Path.GetFileName(folderPath)));
         CustomButtonComboBox.ItemsSource = uiButtonOptions;
         CustomButtonComboBox.SelectedIndex = Configuration.Instance.UiButtonDisplayIndex;
