@@ -16,6 +16,7 @@ namespace ShadowSXLauncher.Windows;
 public partial class SettingsWindow : Window
 {
     private List<string> uiButtonOptions = new List<string>();
+    
     public SettingsWindow()
     {
         InitializeComponent();
@@ -26,6 +27,40 @@ public partial class SettingsWindow : Window
         
         Configuration.Instance.LoadSettings();
         InitializeOptions();
+    }
+
+    public TextBox DolphinLocationTextBox
+    {
+        get
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return DolphinLocationWindowsTextBox;
+            }
+            if (OperatingSystem.IsLinux())
+            {
+                return DolphinLocationLinuxTextBox;
+            }
+
+            return null;
+        }
+    }
+    
+    public Button SetDolphinLocationButton
+    {
+        get
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return SetDolphinLocationWindowsButton;
+            }
+            if (OperatingSystem.IsLinux())
+            {
+                return SetDolphinLocationLinuxButton;
+            }
+
+            return null;
+        }
     }
 
     private void InitializeOptions()

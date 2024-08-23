@@ -16,14 +16,28 @@
                 ...
             </Button>
         </Grid>
-        <Grid Grid.Row="1" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,5">
-            <TextBlock Grid.Column="0" Padding="0, 0, 14,0">Dolphin Location</TextBlock>
-            <TextBox Grid.Column="1" Name="DolphinLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
-            <Button Grid.Column="2" Name="SetDolphinLocationButton" HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch" Margin="5,0,0,0">
-                ...
-            </Button>
-        </Grid>
+        <OnPlatform>
+            <On Options="Windows">
+                <Grid Grid.Row="1" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,5">
+                    <TextBlock Grid.Column="0" Padding="0, 0, 14,0">Dolphin Location</TextBlock>
+                    <TextBox Grid.Column="1" Name="DolphinLocationWindowsTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
+                    <Button Grid.Column="2" Name="SetDolphinLocationWindowsButton" HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch" Margin="5,0,0,0">
+                        ...
+                    </Button>
+                </Grid>
+            </On>
+            <On Options="Linux">
+                <Grid Grid.Row="1" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,5">
+                    <TextBlock Grid.Column="0" Padding="0, 0, 14,0">Dolphin User Location</TextBlock>
+                    <TextBox Grid.Column="1" Name="DolphinLocationLinuxTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
+                    <Button Grid.Column="2" Name="SetDolphinLocationLinuxButton" HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch" Margin="5,0,0,0">
+                        ...
+                    </Button>
+                </Grid>
+            </On>
+        </OnPlatform>
         <TextBlock Grid.Row="2" Margin="0,5,0,10">Dolphin Graphics Settings</TextBlock>
         <Grid Grid.Row="3" ColumnDefinitions="Auto,*" Margin="0,5,0,5">
             <TextBlock Grid.Column="0" Padding="0, 0, 10,0">UI Button Display</TextBlock>
