@@ -9,10 +9,10 @@
         <Grid RowDefinitions="Auto, Auto, Auto, Auto" Margin="10">
                 <Grid Grid.Row="0" ColumnDefinitions="Auto, *" Margin="0, 0,0,10">
                         <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="0,0,10,0">Choose SX Patch</TextBlock>
-                        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch"  Name="PatchComboBox"/>
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Name="PatchComboBox"/>
                 </Grid>
-                <Grid Grid.Row="1" ColumnDefinitions="*" Margin="0,0,0,10">
-                        <TextBlock Height="150" Background="#151515" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="DescriptionTextBlock" TextWrapping="Wrap"></TextBlock>
+                <Grid Grid.Row="1" Margin="0,0,0,10">
+                        <TextBox FontSize="13" Height="150" Background="#151515" Name="DescriptionTextBox" TextWrapping="Wrap" IsReadOnly="True"/>
                 </Grid>
                 <Grid Grid.Row="2" ColumnDefinitions="*" Margin="0, 0,0, 5">
                         <Button HorizontalAlignment="Stretch" Name="ApplyButton">

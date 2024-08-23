@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -33,59 +34,63 @@ public partial class ChooseROMPatchWindow : Window
     private List<PatchData> LoadPatchDataXmls()
     {
         List<PatchData> patches = new List<PatchData>();
-        var patchFilePaths = Directory.GetFiles(CommonFilePaths.SxResourcesPatchDataFolderPath, "*.xPatchData", SearchOption.AllDirectories);
-        foreach (var patchFilePath in patchFilePaths)
+        if (Directory.Exists(CommonFilePaths.SxResourcesPatchDataFolderPath))
         {
-            var patchDataXml = new XmlDocument();
-            patchDataXml.Load(patchFilePath);
-
-            //TODO: Look into using XmlSerializer
-            string? patchDisplayName = null;
-            string? patchFileName = null;
-            string? patchDescription = null;
-            string? patchBaseID = null;
-            string? patchNewID = null;
-            string? patchBaseCRC = null;
-            
-            foreach (XmlElement node in patchDataXml.DocumentElement)
+            var patchFilePaths = Directory.GetFiles(CommonFilePaths.SxResourcesPatchDataFolderPath, "*.xPatchData",
+                SearchOption.AllDirectories);
+            foreach (var patchFilePath in patchFilePaths)
             {
-                if (node.Name == "DisplayName")
+                var patchDataXml = new XmlDocument();
+                patchDataXml.Load(patchFilePath);
+
+                //TODO: Look into using XmlSerializer
+                string? patchDisplayName = null;
+                string? patchFileName = null;
+                string? patchDescription = null;
+                string? patchBaseID = null;
+                string? patchNewID = null;
+                string? patchBaseCRC = null;
+
+                foreach (XmlElement node in patchDataXml.DocumentElement)
                 {
-                    patchDisplayName = node.InnerText;
+                    if (node.Name == "DisplayName")
+                    {
+                        patchDisplayName = node.InnerText;
+                    }
+
+                    if (node.Name == "PatchFileName")
+                    {
+                        patchFileName = node.InnerText;
+                    }
+
+                    if (node.Name == "Description")
+                    {
+                        patchDescription = node.InnerXml.Replace("<br />", Environment.NewLine);
+                    }
+
+                    if (node.Name == "OriginalGameID")
+                    {
+                        patchBaseID = node.InnerText;
+                    }
+
+                    if (node.Name == "NewGameID")
+                    {
+                        patchNewID = node.InnerText;
+                    }
+
+                    if (node.Name == "ExpectedBaseCRC")
+                    {
+                        patchBaseCRC = node.InnerText;
+                    }
                 }
 
-                if (node.Name == "PatchFileName")
-                {
-                    patchFileName = node.InnerText;
-                }
-
-                if (node.Name == "Description")
-                {
-                    patchDescription = node.InnerText;
-                }
-                
-                if (node.Name == "OriginalGameID")
-                {
-                    patchBaseID = node.InnerText;
-                }
-                
-                if (node.Name == "NewGameID")
-                {
-                    patchNewID = node.InnerText;
-                }
-                
-                if (node.Name == "ExpectedBaseCRC")
-                {
-                    patchBaseCRC = node.InnerText;
-                }
-            }
-            
-            if (patchDisplayName != null && patchFileName != null && patchDescription != null)
-            if (patchBaseID != null && patchNewID != null && patchBaseCRC != null)
-            {
-                patches.Add(new PatchData(patchDisplayName, patchFileName, patchDescription, 
-                    patchBaseID, patchNewID, patchBaseCRC,
-                    Path.GetDirectoryName(patchFilePath)));
+                if (patchDisplayName != null && patchFileName != null && patchDescription != null)
+                    if (patchBaseID != null && patchNewID != null && patchBaseCRC != null)
+                    {
+                        patches.Add(new PatchData(patchDisplayName, patchFileName, patchDescription,
+                            patchBaseID, patchNewID, patchBaseCRC,
+                            Path.GetDirectoryName(patchFilePath)));
+                    }
             }
         }
 
@@ -96,12 +101,15 @@ public partial class ChooseROMPatchWindow : Window
     {
         if (PatchComboBox.SelectedItem != null)
         {
-            DescriptionTextBlock.Text = ((PatchData)PatchComboBox.SelectedItem).Description;
+            DescriptionTextBox.Text = ((PatchData)PatchComboBox.SelectedItem).Description 
+                                      + Environment.NewLine + Environment.NewLine + "Expected CRC32 checksum values" +
+                                      Environment.NewLine + "Base ROM - " + ((PatchData)PatchComboBox.SelectedItem).BaseCRC
+                                      + Environment.NewLine + "Output ROM - " + ((PatchData)PatchComboBox.SelectedItem).BaseCRC;
             ApplyButton.IsEnabled = true;
         }
         else
         {
-            DescriptionTextBlock.Text = string.Empty;
+            DescriptionTextBox.Text = string.Empty;
             ApplyButton.IsEnabled = false;
         }
     }
