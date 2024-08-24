@@ -19,18 +19,18 @@ L + B = Turbo B input
 Z + A = Turbo A input</Description>
 	<Variants>
 		<Variant Name="4:3">
-			<PatchFileName>ShadowSX-4-3.vcdiff</PatchFileName>
+			<PatchFileName>ShadowSX-v1.1-4x3.vcdiff</PatchFileName>
 			<OriginalGameID>GUPE8P</OriginalGameID>
 			<NewGameID>GUPX8P</NewGameID>
 			<ExpectedBaseCRC>F582CF1E</ExpectedBaseCRC>
-			<ExpectedOutputCRC>F582CF1E</ExpectedOutputCRC>
+			<ExpectedOutputCRC>D1267C82</ExpectedOutputCRC>
 		</Variant>
 		<Variant Name="16:9">
-			<PatchFileName>ShadowSX-16-9.vcdiff</PatchFileName>
+			<PatchFileName>ShadowSX-v1.1-16x9.vcdiff</PatchFileName>
 			<OriginalGameID>GUPE8P</OriginalGameID>
 			<NewGameID>GUPX8P</NewGameID>
 			<ExpectedBaseCRC>F582CF1E</ExpectedBaseCRC>
-			<ExpectedOutputCRC>F582CF1E</ExpectedOutputCRC>
+			<ExpectedOutputCRC>1A8ABAC7</ExpectedOutputCRC>
 		</Variant>
 	</Variants>
 </PatchData>

@@ -6,7 +6,7 @@
 			<OriginalGameID>GUPE8P</OriginalGameID>
 			<NewGameID>GUPX8P</NewGameID>
 			<ExpectedBaseCRC>F582CF1E</ExpectedBaseCRC>
-			<ExpectedOutputCRC>F582CF1E</ExpectedOutputCRC>
+			<ExpectedOutputCRC>8BEE8EBA</ExpectedOutputCRC>
 		</Variant>
 	</Variants>
 </PatchData>
