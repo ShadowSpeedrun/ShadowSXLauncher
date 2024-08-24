@@ -206,7 +206,7 @@ public partial class MainWindow : Window
 
     private async Task CreateROMWindows(PatchData patch)
     {
-        var vcdiffPath = patch.PatchFilePath;
+        var vcdiffPath = patch.SelectedPatchFilePath;
         var xdeltaBinPath = CommonFilePaths.xdeltaBinPath;
         var patchScriptPath = CommonFilePaths.PatchingScriptPath;
                 
@@ -219,7 +219,7 @@ public partial class MainWindow : Window
             var baseIdLocation = "";
             var patchedRomDestination = "";
 
-            var resultBaseId = await SetOpenFilePath("Select Original ROM (" + patch.OriginalGameId + ")", 
+            var resultBaseId = await SetOpenFilePath("Select Original ROM (" + patch.SelectedVariant.OriginalGameId + ")", 
                 new FileDialogFilter()
                 {
                     Name = "ROM File",
@@ -230,7 +230,7 @@ public partial class MainWindow : Window
 
             if (!string.IsNullOrEmpty(baseIdLocation))
             {
-                var resultNewId = await SetSaveFilePath("Save Patched ROM (" + patch.NewGameId + ")", 
+                var resultNewId = await SetSaveFilePath("Save Patched ROM (" + patch.SelectedVariant.NewGameId + ")", 
                     new FileDialogFilter()
                     {
                         Name = "ROM File",
@@ -280,7 +280,7 @@ public partial class MainWindow : Window
                                     "ROM Patching Failed." + Environment.NewLine + Environment.NewLine
                                        + "Please ensure that provided paths are valid and that " + Environment.NewLine
                                        + "the Shadow ROM provided is a full size clean rip. " + Environment.NewLine + Environment.NewLine
-                                       + "Expected ROM CRC32 for " + patch.OriginalGameId + ": " + patch.BaseCRC);
+                                       + "Expected ROM CRC32 for " + patch.SelectedVariant.OriginalGameId + ": " + patch.SelectedVariant.BaseCRC);
                             await messageFailed.ShowAsync();
                             break;
                     }

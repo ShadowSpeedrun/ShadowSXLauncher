@@ -13,7 +13,6 @@ namespace ShadowSXLauncher.Windows;
 
 public partial class ChooseROMPatchWindow : Window
 {
-    //private List<string> availablePatches;
     public ChooseROMPatchWindow()
     {
         InitializeComponent();
@@ -26,6 +25,7 @@ public partial class ChooseROMPatchWindow : Window
         //Apply item list to the combo box.
         PatchComboBox.ItemsSource = patches;
         PatchComboBox.SelectionChanged += PatchComboBoxOnSelectionChanged;
+        VariantComboBox.SelectionChanged += VariantComboBoxOnSelectionChanged;
         ApplyButton.Click += ApplyButtonOnClick;
         ApplyButton.IsEnabled = false;
         CloseButton.Click += CloseButtonOnClick;
@@ -40,57 +40,7 @@ public partial class ChooseROMPatchWindow : Window
                 SearchOption.AllDirectories);
             foreach (var patchFilePath in patchFilePaths)
             {
-                var patchDataXml = new XmlDocument();
-                patchDataXml.Load(patchFilePath);
-
-                //TODO: Look into using XmlSerializer
-                string? patchDisplayName = null;
-                string? patchFileName = null;
-                string? patchDescription = null;
-                string? patchBaseID = null;
-                string? patchNewID = null;
-                string? patchBaseCRC = null;
-
-                foreach (XmlElement node in patchDataXml.DocumentElement)
-                {
-                    if (node.Name == "DisplayName")
-                    {
-                        patchDisplayName = node.InnerText;
-                    }
-
-                    if (node.Name == "PatchFileName")
-                    {
-                        patchFileName = node.InnerText;
-                    }
-
-                    if (node.Name == "Description")
-                    {
-                        patchDescription = node.InnerXml.Replace("<br />", Environment.NewLine);
-                    }
-
-                    if (node.Name == "OriginalGameID")
-                    {
-                        patchBaseID = node.InnerText;
-                    }
-
-                    if (node.Name == "NewGameID")
-                    {
-                        patchNewID = node.InnerText;
-                    }
-
-                    if (node.Name == "ExpectedBaseCRC")
-                    {
-                        patchBaseCRC = node.InnerText;
-                    }
-                }
-
-                if (patchDisplayName != null && patchFileName != null && patchDescription != null)
-                    if (patchBaseID != null && patchNewID != null && patchBaseCRC != null)
-                    {
-                        patches.Add(new PatchData(patchDisplayName, patchFileName, patchDescription,
-                            patchBaseID, patchNewID, patchBaseCRC,
-                            Path.GetDirectoryName(patchFilePath)));
-                    }
+                patches.Add(new PatchData(patchFilePath));
             }
         }
 
@@ -99,12 +49,30 @@ public partial class ChooseROMPatchWindow : Window
 
     private void PatchComboBoxOnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (PatchComboBox.SelectedItem != null)
+        var selectedPatchData = (PatchData)PatchComboBox.SelectedItem;
+        VariantComboBox.ItemsSource = selectedPatchData.Variants;
+        selectedPatchData.VariantIndex = 0;
+        VariantComboBox.SelectedIndex = 0;
+        UpdateDescriptionTextBox();
+    }
+    
+    private void VariantComboBoxOnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        var selectedPatchData = (PatchData)PatchComboBox.SelectedItem;
+        selectedPatchData.VariantIndex = VariantComboBox.SelectedIndex;
+        UpdateDescriptionTextBox();
+    }
+
+    private void UpdateDescriptionTextBox()
+    {
+        if (PatchComboBox.SelectedItem != null && VariantComboBox.SelectedItem != null)
         {
+            var currentPatchData = (PatchData)PatchComboBox.SelectedItem;
+            var currentVariant = currentPatchData.SelectedVariant;
             DescriptionTextBox.Text = ((PatchData)PatchComboBox.SelectedItem).Description 
-                                      + Environment.NewLine + Environment.NewLine + "Expected CRC32 checksum values" +
-                                      Environment.NewLine + "Base ROM - " + ((PatchData)PatchComboBox.SelectedItem).BaseCRC
-                                      + Environment.NewLine + "Output ROM - " + ((PatchData)PatchComboBox.SelectedItem).BaseCRC;
+                                      + Environment.NewLine + Environment.NewLine + "Expected CRC32 checksum values"
+                                      + Environment.NewLine + "Base ROM - " + currentVariant.BaseCRC
+                                      + Environment.NewLine + "Output ROM - " + currentVariant.OutputCRC;
             ApplyButton.IsEnabled = true;
         }
         else
