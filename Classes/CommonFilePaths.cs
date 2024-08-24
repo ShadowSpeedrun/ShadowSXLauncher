@@ -68,6 +68,16 @@ public static class CommonFilePaths
             {
                 return Path.Combine(SxResourcesPatchBinsFolderPath, "xdelta-3.1.0-x86_64.exe");
             }
+            
+            if (OperatingSystem.IsLinux())
+            {
+                return Path.Combine(SxResourcesPatchBinsFolderPath, "xdelta3");
+            }
+            
+            if (OperatingSystem.IsMacOS())
+            {
+                return Path.Combine(SxResourcesPatchBinsFolderPath, "xdelta3_mac");
+            }
 
             return string.Empty;
         }
@@ -80,6 +90,16 @@ public static class CommonFilePaths
             if (OperatingSystem.IsWindows())
             {
                 return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch ISO.bat");
+            }
+            
+            if (OperatingSystem.IsLinux())
+            {
+                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch ISO.sh");
+            }
+            
+            if (OperatingSystem.IsMacOS())
+            {
+                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch ISO.command");
             }
 
             return string.Empty;
