@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <LangVersion>latest</LangVersion>
+        <ApplicationIcon>Assets\S-SX.ico</ApplicationIcon>
+        <IsPackable>false</IsPackable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="Assets\ShadowColorReferences" />
+        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Remove="ShadowSXLauncher\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.5"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.5"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.5"/>
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.5"/>
+        <PackageReference Include="MessageBox.Avalonia" Version="3.1.5.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AvaloniaXaml Remove="ShadowSXLauncher\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="ShadowSXLauncher\**" />
+      <Compile Update="Windows\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Windows\SettingsWindow.axaml.cs">
+        <DependentUpon>SettingsWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Windows\ShadowColorAdjuster.axaml.cs">
+        <DependentUpon>ShadowColorAdjuster.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="ShadowSXLauncher\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Remove="ShadowSXLauncher\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="ShadowSXLauncher\**" />
+    </ItemGroup>
+</Project>

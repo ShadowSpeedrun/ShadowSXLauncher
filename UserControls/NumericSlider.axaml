@@ -1,0 +1,12 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="410" d:DesignHeight="55"
+             x:Class="ShadowSXLauncher.UserControls.NumericSlider">
+    <Grid ColumnDefinitions="Auto,*,Auto">
+        <TextBlock Grid.Column="0" VerticalAlignment="Center" x:Name="TextLabel"/>
+        <Slider Grid.Column="1" Minimum="0" Margin="10,0,20,0" x:Name="SliderValue"/>
+        <NumericUpDown Grid.Column="2" Minimum="0" Width="140" Height="30" x:Name="NumericUpDownValue"/>
+    </Grid>
+</UserControl>

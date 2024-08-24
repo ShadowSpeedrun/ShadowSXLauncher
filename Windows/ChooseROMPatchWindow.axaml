@@ -1,0 +1,32 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="450"
+        x:Class="ShadowSXLauncher.Windows.ChooseROMPatchWindow"
+        Title="Create SX ROM"
+        Width="450" MaxWidth="450" MinHeight="350" CanResize="True" SizeToContent="Height">
+        <Grid RowDefinitions="Auto, Auto, *, Auto, Auto" Margin="10">
+                <Grid Grid.Row="0" ColumnDefinitions="Auto, *" Margin="0, 0,0,10">
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="0,0,10,0">Choose Patch</TextBlock>
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Name="PatchComboBox"/>
+                </Grid>
+                <Grid Grid.Row="1" ColumnDefinitions="Auto, *" Margin="0, 0,0,10">
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" Padding="0,0,10,0">Variant</TextBlock>
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" Name="VariantComboBox"/>
+                </Grid>
+                <Grid Grid.Row="2" Margin="0,0,0,10">
+                        <TextBox FontSize="13" Background="#151515" Name="DescriptionTextBox" TextWrapping="Wrap" IsReadOnly="True"/>
+                </Grid>
+                <Grid Grid.Row="3" ColumnDefinitions="*" Margin="0, 0,0, 5">
+                        <Button HorizontalAlignment="Stretch" Name="ApplyButton">
+                                <TextBlock HorizontalAlignment="Center">Apply Patch</TextBlock>
+                        </Button>
+                </Grid>
+                <Grid Grid.Row="4" ColumnDefinitions="*">
+                        <Button HorizontalAlignment="Stretch" Name="CloseButton">
+                                <TextBlock HorizontalAlignment="Center">Close</TextBlock>
+                        </Button>
+                </Grid>
+        </Grid>
+</Window>
