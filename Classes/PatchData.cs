@@ -142,7 +142,7 @@ public class PatchData
                             patchBaseCRC = variantChildNode.InnerText;
                         }
 
-                        if (variantChildNode.Name == "ExpectedBaseCRC")
+                        if (variantChildNode.Name == "ExpectedOutputCRC")
                         {
                             patchNewCRC = variantChildNode.InnerText;
                         }
@@ -162,6 +162,7 @@ public class PatchData
         {
             this.patchDisplayName = patchDisplayName;
             this.patchDescription = patchDescription;
+            this.directoryLocation = Path.GetDirectoryName(directoryPath);
         }
         else
         {

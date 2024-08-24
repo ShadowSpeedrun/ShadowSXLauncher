@@ -199,7 +199,7 @@ public partial class MainWindow : Window
         var result = await chooseROMPatchDialog.ShowDialog<PatchData?>(this);
         if (result != null)
         {
-            await CreateROMWindows(result);   
+            await CreateROMWindows(result);
         }
         EnableButtons(true);
     }

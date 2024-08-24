@@ -94,14 +94,17 @@ public static class CommonFilePaths
             {
                 return "explorer.exe";
             }
-            else if (OperatingSystem.IsLinux())
+            
+            if (OperatingSystem.IsLinux())
             {
                 return "xdg-open";
             }
-            else if (OperatingSystem.IsMacOS())
+            
+            if (OperatingSystem.IsMacOS())
             {
                 return "open";
             }
+            
             throw new Exception("Unsupported Operating System");
         }
     }
