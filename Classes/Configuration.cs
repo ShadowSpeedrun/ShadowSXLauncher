@@ -13,7 +13,8 @@ public class Configuration
 
     private XmlDocument configurationXml;
 
-    public string DolphinLocation;
+    public string DolphinBinLocation;
+    public string DolphinUserLocation;
     public string RomLocation;
     public int UiButtonDisplayIndex;
     public int GlossAdjustmentIndex;
@@ -29,7 +30,8 @@ public class Configuration
     {
         configurationXml = null;
 
-        DolphinLocation = "";
+        DolphinBinLocation = "";
+        DolphinUserLocation = "";
         RomLocation = "";
         UiButtonDisplayIndex = 0;
         GlossAdjustmentIndex = 0;
@@ -70,9 +72,14 @@ public class Configuration
 
         foreach (XmlElement node in configurationXml.DocumentElement)
         {
-            if (node.Name == "DolphinLocation")
+            if (node.Name == "DolphinBinLocation")
             {
-                DolphinLocation = node.InnerText;
+                DolphinBinLocation = node.InnerText;
+            }
+            
+            if (node.Name == "DolphinUserLocation")
+            {
+                DolphinUserLocation = node.InnerText;
             }
             
             if (node.Name == "RomLocation")
@@ -98,8 +105,11 @@ public class Configuration
 
         var mainNode = configurationXml.CreateElement("Settings");
 
-        var xmlElementDolphinLocation = configurationXml.CreateElement("DolphinLocation");
-        xmlElementDolphinLocation.InnerText = DolphinLocation;
+        var xmlElementDolphinBinLocation = configurationXml.CreateElement("DolphinBinLocation");
+        xmlElementDolphinBinLocation.InnerText = DolphinBinLocation;
+        
+        var xmlElementDolphinUserLocation = configurationXml.CreateElement("DolphinUserLocation");
+        xmlElementDolphinUserLocation.InnerText = DolphinUserLocation;
         
         var xmlElementRomLocation = configurationXml.CreateElement("RomLocation");
         xmlElementRomLocation.InnerText = RomLocation;
@@ -111,7 +121,8 @@ public class Configuration
         xmlElementGlossAdjustment.InnerText = GlossAdjustmentIndex.ToString();
 
         configurationXml.AppendChild(mainNode);
-        mainNode.AppendChild(xmlElementDolphinLocation);
+        mainNode.AppendChild(xmlElementDolphinBinLocation);
+        mainNode.AppendChild(xmlElementDolphinUserLocation);
         mainNode.AppendChild(xmlElementRomLocation);
         mainNode.AppendChild(xmlElementUiButtonDisplayIndex);
         mainNode.AppendChild(xmlElementGlossAdjustment);

@@ -33,7 +33,8 @@ public partial class SettingsWindow : Window
     private void InitializeOptions()
     {
         RomLocationTextBox.Text = Configuration.Instance.RomLocation;
-        DolphinBinLocationTextBox.Text = Configuration.Instance.DolphinLocation;
+        DolphinBinLocationTextBox.Text = Configuration.Instance.DolphinBinLocation;
+        DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
         InitializeUiButtonOptions();
         GlossLevelComboBox.SelectedIndex = Configuration.Instance.GlossAdjustmentIndex;
 
@@ -57,6 +58,7 @@ public partial class SettingsWindow : Window
     {
         SetRomLocationButton.Click += SetRomLocationButtonOnClick;
         SetDolphinBinLocationButton.Click += SetDolphinBinLocationButtonOnClick;
+        SetDolphinUserLocationButton.Click += SetDolphinUserLocationButtonOnClick;
         OpenDolphinButton.Click += OpenDolphinButtonOnClick;
         CustomShadowColorButton.Click += CustomShadowColorButtonOnClick;
         SaveSettingsButton.Click += SaveSettingsButtonOnClick;
@@ -70,10 +72,11 @@ public partial class SettingsWindow : Window
     {
         SetRomLocationButton.IsEnabled = enable;
         SetDolphinBinLocationButton.IsEnabled = enable;
+        SetDolphinUserLocationButton.IsEnabled = enable;
         CustomButtonComboBox.IsEnabled = enable;
         GlossLevelComboBox.IsEnabled = enable;
-        OpenDolphinButton.IsEnabled = enable;
-        CustomShadowColorButton.IsEnabled = enable;
+        OpenDolphinButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation);
+        CustomShadowColorButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
         SaveSettingsButton.IsEnabled = enable;
     }
 
@@ -113,22 +116,36 @@ public partial class SettingsWindow : Window
     {
         EnableUI(false);
         
-        var result = await SetFolderPath("Set Path to Dolphin");
+        var result = await SetFolderPath("Set Path to Dolphin Executable");
         DolphinBinLocationTextBox.Text = !string.IsNullOrEmpty(result) ? result : string.Empty;
+        Configuration.Instance.DolphinBinLocation = result;
+        Configuration.Instance.SaveSettings();
+        
+        EnableUI(true);
+    }
+    
+    private async void SetDolphinUserLocationButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        EnableUI(false);
+        
+        var result = await SetFolderPath("Set Path to Dolphin User Folder");
+        DolphinUserLocationTextBox.Text = !string.IsNullOrEmpty(result) ? result : string.Empty;
+        Configuration.Instance.DolphinUserLocation = result;
+        Configuration.Instance.SaveSettings();
         
         EnableUI(true);
     }
 
     private async void OpenDolphinButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        if (Directory.Exists(CommonFilePaths.DolphinPath))
+        if (Directory.Exists(CommonFilePaths.DolphinBinPath))
         {
-            Process.Start(CommonFilePaths.DolphinPath + @"\Dolphin.exe");
+            Process.Start(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile));
         }
         else
         {
             var message = MessageBoxManager
-                .GetMessageBoxStandard("Operation Cancelled", "Could not find dolphin.exe. Please double check directory files.");
+                .GetMessageBoxStandard("Operation Cancelled", "Could not find " + CommonFilePaths.DolphinBinFile + ". Please double check directory files.");
             await message.ShowAsync();
         }
     }
@@ -142,7 +159,8 @@ public partial class SettingsWindow : Window
     private void SaveSettingsButtonOnClick(object? sender, RoutedEventArgs e)
     {
         Configuration.Instance.RomLocation = !string.IsNullOrEmpty(RomLocationTextBox.Text) ? RomLocationTextBox.Text : string.Empty;
-        Configuration.Instance.DolphinLocation = !string.IsNullOrEmpty(DolphinBinLocationTextBox.Text) ? DolphinBinLocationTextBox.Text : string.Empty;
+        Configuration.Instance.DolphinBinLocation = !string.IsNullOrEmpty(DolphinBinLocationTextBox.Text) ? DolphinBinLocationTextBox.Text : string.Empty;
+        Configuration.Instance.DolphinUserLocation = !string.IsNullOrEmpty(DolphinUserLocationTextBox.Text) ? DolphinUserLocationTextBox.Text : string.Empty;
         Configuration.Instance.UiButtonDisplayIndex = CustomButtonComboBox.SelectedIndex;
         Configuration.Instance.GlossAdjustmentIndex = GlossLevelComboBox.SelectedIndex;
         Configuration.Instance.SaveSettings();

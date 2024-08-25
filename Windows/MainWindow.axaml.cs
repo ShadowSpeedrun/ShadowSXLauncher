@@ -51,12 +51,17 @@ public partial class MainWindow : Window
     {
         EnableButtons(false);
         
-        if (string.IsNullOrEmpty(Configuration.Instance.DolphinLocation))
+        if (string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation))
         {
-            await OpenSetDolphinDialog();
+            await OpenSetDolphinBinDialog();
+        }
+        
+        if (string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation))
+        {
+            await OpenSetDolphinUserDialog();
         }
 
-        if (!string.IsNullOrEmpty(Configuration.Instance.DolphinLocation))
+        if (!string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation))
         {
             //Check if Rom Location has been set at all.
             if (string.IsNullOrEmpty(Configuration.Instance.RomLocation))
@@ -83,9 +88,9 @@ public partial class MainWindow : Window
                 UpdateCustomAssets();
 
                 //Double check the .exe is found before attempting to run it.
-                if (File.Exists(CommonFilePaths.DolphinPath + @"\Dolphin.exe"))
+                if (File.Exists(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)))
                 {
-                    Process.Start("\"" + CommonFilePaths.DolphinPath + @"\Dolphin.exe" + "\"",
+                    Process.Start("\"" + Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile) + "\"",
                         @" -b " + "\"" + Configuration.Instance.RomLocation + "\"");
                     Close();
                 }
@@ -131,17 +136,24 @@ public partial class MainWindow : Window
         return await sfd.ShowAsync(this);
     }
 
-    private async Task OpenSetDolphinDialog()
+    private async Task OpenSetDolphinBinDialog()
     {
-        var result = await SetFolderPath("Set Path to Dolphin");
-        Configuration.Instance.DolphinLocation = String.IsNullOrEmpty(result) ? "" : result;
+        var result = await SetFolderPath("Set Path to Dolphin Executable");
+        Configuration.Instance.DolphinBinLocation = String.IsNullOrEmpty(result) ? "" : result;
+        Configuration.Instance.SaveSettings();
+    }
+    
+    private async Task OpenSetDolphinUserDialog()
+    {
+        var result = await SetFolderPath("Set Path to Dolphin User Folder");
+        Configuration.Instance.DolphinUserLocation = String.IsNullOrEmpty(result) ? "" : result;
         Configuration.Instance.SaveSettings();
     }
 
     private async Task<string?> SetFolderPath(string title)
     {
         var ofd = new OpenFolderDialog();
-        ofd.Title = "Set Path to Dolphin";
+        ofd.Title = title;
         ofd.Directory = CommonFilePaths.AppStart; 
         return await ofd.ShowAsync(this);
     }

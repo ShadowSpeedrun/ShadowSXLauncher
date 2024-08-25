@@ -15,24 +15,29 @@ public static class CommonFilePaths
         get { return Path.Combine(AppStart, "Config.xml"); }
     }
 
-    public static string DolphinPath
+    public static string DolphinBinPath
     {
-        get { return Configuration.Instance.DolphinLocation; }
+        get { return Configuration.Instance.DolphinBinLocation; }
+    }
+    
+    public static string DolphinUserPath
+    {
+        get { return Configuration.Instance.DolphinUserLocation; }
     }
         
     public static string SavePath
     {
-        get { return Path.Combine(DolphinPath, "User", "GC", "USA", "Card A"); }
+        get { return Path.Combine(DolphinUserPath, "GC", "USA", "Card A"); }
     }
         
     public static string GameSettingsFilePath
     {
-        get { return Path.Combine(DolphinPath, "User", "GameSettings", "GUPX8P.ini"); }
+        get { return Path.Combine(DolphinUserPath, "GameSettings", "GUPX8P.ini"); }
     }
 
     public static string CustomTexturesPath
     {
-        get { return Path.Combine(DolphinPath ,"User","Load","Textures","GUPX8P"); }
+        get { return Path.Combine(DolphinUserPath ,"Load","Textures","GUPX8P"); }
     }
 
     public static string SxResourcesPath
@@ -58,6 +63,30 @@ public static class CommonFilePaths
     public static string SxResourcesPatchBinsFolderPath
     {
         get { return Path.Combine(SxResourcesISOPatchingPath, "PatchingScriptsAndBins"); }
+    }
+
+    public static string DolphinBinFile
+    {
+        get
+        {
+            if(OperatingSystem.IsWindows())
+            {
+                return "Dolphin.exe";
+            }
+            
+            if (OperatingSystem.IsLinux())
+            {
+                return "Dolphin";
+            }
+            
+            if (OperatingSystem.IsMacOS())
+            {
+                //TODO: What extension is used once it's extracted?
+                return "Dolphin";
+            }
+
+            return string.Empty;
+        }
     }
     
     public static string xdeltaBinPath
