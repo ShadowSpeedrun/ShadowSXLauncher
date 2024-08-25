@@ -40,6 +40,9 @@ public partial class SettingsWindow : Window
 
         FlatpakMessageBlocker.IsVisible = OperatingSystem.IsLinux();
         FlatpakMessageText.IsVisible = OperatingSystem.IsLinux();
+        FlatpakMessageBlocker2.IsVisible = OperatingSystem.IsLinux();
+        FlatpakMessageText2.IsVisible = OperatingSystem.IsLinux();
+
 
         RegisterEvents();
     }
