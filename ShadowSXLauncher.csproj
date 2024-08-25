@@ -58,5 +58,8 @@
 
     <ItemGroup>
       <None Remove="ShadowSXLauncher\**" />
+      <None Update="ShadowSXResources\**">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>
