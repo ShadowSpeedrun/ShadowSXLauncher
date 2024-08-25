@@ -264,7 +264,7 @@ public partial class MainWindow : Window
                 var batArguments = string.Format("\"{0}\" \"{1}\" \"{2}\" \"{3}\"", baseIdLocation, patchedRomDestination,
                         xdeltaBinPath, vcdiffPath);
                     
-                var processResult = Process.Start("\"" + patchScriptPath + "\"", batArguments);
+                var processResult = Process.Start(patchScriptPath, batArguments);
                 if (processResult != null)
                 {
                     processResult.WaitForExit();

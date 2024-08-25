@@ -118,17 +118,17 @@ public static class CommonFilePaths
         {
             if (OperatingSystem.IsWindows())
             {
-                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch ISO.bat");
+                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch-ISO.bat");
             }
             
             if (OperatingSystem.IsLinux())
             {
-                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch ISO.sh");
+                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch-ISO.sh");
             }
             
             if (OperatingSystem.IsMacOS())
             {
-                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch ISO.command");
+                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch-ISO.command");
             }
 
             return string.Empty;
