@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -29,46 +30,16 @@ public partial class SettingsWindow : Window
         InitializeOptions();
     }
 
-    public TextBox DolphinLocationTextBox
-    {
-        get
-        {
-            if (OperatingSystem.IsWindows())
-            {
-                return DolphinLocationWindowsTextBox;
-            }
-            if (OperatingSystem.IsLinux())
-            {
-                return DolphinLocationLinuxTextBox;
-            }
-
-            return null;
-        }
-    }
-    
-    public Button SetDolphinLocationButton
-    {
-        get
-        {
-            if (OperatingSystem.IsWindows())
-            {
-                return SetDolphinLocationWindowsButton;
-            }
-            if (OperatingSystem.IsLinux())
-            {
-                return SetDolphinLocationLinuxButton;
-            }
-
-            return null;
-        }
-    }
-
     private void InitializeOptions()
     {
         RomLocationTextBox.Text = Configuration.Instance.RomLocation;
-        DolphinLocationTextBox.Text = Configuration.Instance.DolphinLocation;
+        DolphinBinLocationTextBox.Text = Configuration.Instance.DolphinLocation;
         InitializeUiButtonOptions();
         GlossLevelComboBox.SelectedIndex = Configuration.Instance.GlossAdjustmentIndex;
+
+        FlatpakMessageBlocker.IsVisible = OperatingSystem.IsLinux();
+        FlatpakMessageText.IsVisible = OperatingSystem.IsLinux();
+
         RegisterEvents();
     }
 
@@ -85,7 +56,7 @@ public partial class SettingsWindow : Window
     private void RegisterEvents()
     {
         SetRomLocationButton.Click += SetRomLocationButtonOnClick;
-        SetDolphinLocationButton.Click += SetDolphinLocationButtonOnClick;
+        SetDolphinBinLocationButton.Click += SetDolphinBinLocationButtonOnClick;
         OpenDolphinButton.Click += OpenDolphinButtonOnClick;
         CustomShadowColorButton.Click += CustomShadowColorButtonOnClick;
         SaveSettingsButton.Click += SaveSettingsButtonOnClick;
@@ -98,7 +69,7 @@ public partial class SettingsWindow : Window
     private void EnableUI(bool enable)
     {
         SetRomLocationButton.IsEnabled = enable;
-        SetDolphinLocationButton.IsEnabled = enable;
+        SetDolphinBinLocationButton.IsEnabled = enable;
         CustomButtonComboBox.IsEnabled = enable;
         GlossLevelComboBox.IsEnabled = enable;
         OpenDolphinButton.IsEnabled = enable;
@@ -138,12 +109,12 @@ public partial class SettingsWindow : Window
         EnableUI(true);
     }
 
-    private async void SetDolphinLocationButtonOnClick(object? sender, RoutedEventArgs e)
+    private async void SetDolphinBinLocationButtonOnClick(object? sender, RoutedEventArgs e)
     {
         EnableUI(false);
         
         var result = await SetFolderPath("Set Path to Dolphin");
-        DolphinLocationTextBox.Text = !string.IsNullOrEmpty(result) ? result : string.Empty;
+        DolphinBinLocationTextBox.Text = !string.IsNullOrEmpty(result) ? result : string.Empty;
         
         EnableUI(true);
     }
@@ -171,7 +142,7 @@ public partial class SettingsWindow : Window
     private void SaveSettingsButtonOnClick(object? sender, RoutedEventArgs e)
     {
         Configuration.Instance.RomLocation = !string.IsNullOrEmpty(RomLocationTextBox.Text) ? RomLocationTextBox.Text : string.Empty;
-        Configuration.Instance.DolphinLocation = !string.IsNullOrEmpty(DolphinLocationTextBox.Text) ? DolphinLocationTextBox.Text : string.Empty;
+        Configuration.Instance.DolphinLocation = !string.IsNullOrEmpty(DolphinBinLocationTextBox.Text) ? DolphinBinLocationTextBox.Text : string.Empty;
         Configuration.Instance.UiButtonDisplayIndex = CustomButtonComboBox.SelectedIndex;
         Configuration.Instance.GlossAdjustmentIndex = GlossLevelComboBox.SelectedIndex;
         Configuration.Instance.SaveSettings();

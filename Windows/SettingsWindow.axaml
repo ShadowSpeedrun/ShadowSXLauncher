@@ -2,59 +2,57 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="290"
+        mc:Ignorable="d" d:DesignWidth="450"
         x:Class="ShadowSXLauncher.Windows.SettingsWindow"
-        Width="450" Height="290"
-        CanResize="False"
+        Width="450" MinWidth="450"
+        MinHeight="340" MaxHeight="340"
+        CanResize="true"
         Title="Settings">
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto" Margin="10">
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto" Margin="10">
         <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,5">
-            <TextBlock Grid.Column="0" Padding="0, 0, 10,0">SX ROM Location</TextBlock>
+            <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">SX ROM Location</TextBlock>
             <TextBox Grid.Column="1" Name="RomLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
             <Button Grid.Column="2" Name="SetRomLocationButton" HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch" Margin="5,0,0,0">
                 ...
             </Button>
         </Grid>
-        <OnPlatform>
-            <On Options="Windows">
-                <Grid Grid.Row="1" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,5">
-                    <TextBlock Grid.Column="0" Padding="0, 0, 14,0">Dolphin Location</TextBlock>
-                    <TextBox Grid.Column="1" Name="DolphinLocationWindowsTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
-                    <Button Grid.Column="2" Name="SetDolphinLocationWindowsButton" HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch" Margin="5,0,0,0">
-                        ...
-                    </Button>
-                </Grid>
-            </On>
-            <On Options="Linux">
-                <Grid Grid.Row="1" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,5">
-                    <TextBlock Grid.Column="0" Padding="0, 0, 14,0">Dolphin User Location</TextBlock>
-                    <TextBox Grid.Column="1" Name="DolphinLocationLinuxTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
-                    <Button Grid.Column="2" Name="SetDolphinLocationLinuxButton" HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch" Margin="5,0,0,0">
-                        ...
-                    </Button>
-                </Grid>
-            </On>
-        </OnPlatform>
-        <TextBlock Grid.Row="2" Margin="0,5,0,10">Dolphin Graphics Settings</TextBlock>
-        <Grid Grid.Row="3" ColumnDefinitions="Auto,*" Margin="0,5,0,5">
-            <TextBlock Grid.Column="0" Padding="0, 0, 10,0">UI Button Display</TextBlock>
+        <Grid Grid.Row="1" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,5">
+            <TextBlock Grid.Column="0" Padding="0, 0, 14,0" VerticalAlignment="Center">Dolphin Location</TextBlock>
+            <TextBox Grid.Column="1" Name="DolphinBinLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
+            <Button Grid.Column="2" Name="SetDolphinBinLocationButton" HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" Margin="5,0,0,0">
+                ...
+            </Button>
+        </Grid>
+        <Grid Grid.Row="1" ColumnDefinitions="*" Background="#DD181818" Name="FlatpakMessageBlocker">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Name="FlatpakMessageText">Flatpak Version Required</TextBlock>
+        </Grid>
+        <Grid Grid.Row="2" ColumnDefinitions="Auto, *, Auto" Margin="0,5,0,5">
+            <TextBlock Grid.Column="0" Padding="0, 0, 14,0" VerticalAlignment="Center">Dolphin User Location</TextBlock>
+            <TextBox Grid.Column="1" Name="DolphinUserLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
+            <Button Grid.Column="2" Name="SetDolphinUserLocationButton" HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch" Margin="5,0,0,0">
+                ...
+            </Button>
+        </Grid>
+        <TextBlock Grid.Row="3" Margin="0,5,0,10">Dolphin Graphics Settings</TextBlock>
+        <Grid Grid.Row="4" ColumnDefinitions="Auto,*" Margin="0,5,0,5">
+            <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">UI Button Display</TextBlock>
             <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" Name="CustomButtonComboBox"/>
                 <!-- <ComboBoxItem>Nintendo Switch</ComboBoxItem> -->
                 <!-- <ComboBoxItem>Modern UI (Cross Circles)</ComboBoxItem> -->
             
         </Grid>
-        <Grid Grid.Row="4" ColumnDefinitions="Auto,*" Margin="0,5,0,10">
-            <TextBlock Grid.Column="0" Padding="0, 0, 10,0">Glossy Effect on Characters</TextBlock>
+        <Grid Grid.Row="5" ColumnDefinitions="Auto,*" Margin="0,5,0,10">
+            <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">Glossy Effect on Characters</TextBlock>
             <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" Name="GlossLevelComboBox">
                 <ComboBoxItem>Original</ComboBoxItem>
                 <ComboBoxItem>Reduced</ComboBoxItem>
                 <ComboBoxItem>Removed</ComboBoxItem>
             </ComboBox>
         </Grid>
-        <Grid Grid.Row="5" ColumnDefinitions="*, *" Margin="0,0,0,10">
+        <Grid Grid.Row="6" ColumnDefinitions="*, *" Margin="0,0,0,10">
             <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,5,0" Name="OpenDolphinButton">
                 <TextBlock HorizontalAlignment="Center">Open Dolphin Interface</TextBlock>
             </Button>
@@ -62,7 +60,7 @@
                 <TextBlock HorizontalAlignment="Center">Customize Shadow Color</TextBlock>
             </Button>
         </Grid>
-        <Button Grid.Row="6" HorizontalAlignment="Stretch" Name="SaveSettingsButton">
+        <Button Grid.Row="7" HorizontalAlignment="Stretch" Name="SaveSettingsButton">
             <TextBlock HorizontalAlignment="Center">Save Settings</TextBlock>
         </Button>
     </Grid>
