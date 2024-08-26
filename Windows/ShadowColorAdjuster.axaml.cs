@@ -72,27 +72,27 @@ public partial class ShadowColorAdjuster : Window
         
         // Image newImage = ApplyColorWithMask(true,  baseImage1, colorMask1, AccentColorPreview.BackColor);
         // newImage = ApplyColorWithMask(false,  newImage, colorMask3, MainColorPreview.BackColor);
-        var exportImage1 = ApplyColorMaskToBitmap(base1Image, mask1Image, accentColorPicker.GetColor);
-        exportImage1 = ApplyColorMaskToBitmap(exportImage1, mask3Image, mainColorPicker.GetColor);
+        var exportImage1 = ApplyColorMaskToBitmap(base1Image, mask1Image, accentColorPicker.GetColor, true);
+        exportImage1 = ApplyColorMaskToBitmap(exportImage1, mask3Image, mainColorPicker.GetColor, false);
         
         // Image newImage2 = ApplyColorWithMask(true,  baseImage2, colorMask2, AccentColorPreview.BackColor);
-        var exportImage2 = ApplyColorMaskToBitmap(base2Image, mask2Image, accentColorPicker.GetColor);
+        var exportImage2 = ApplyColorMaskToBitmap(base2Image, mask2Image, accentColorPicker.GetColor, true);
         
         // Image newImage3 = ApplyColorWithMask(false,  baseImage3, colorMask4, MainColorPreview.BackColor);
         // newImage3 = ApplyColorWithMask(true,  newImage3, colorMask5, AccentColorPreview.BackColor);
-        var exportImage3 = ApplyColorMaskToBitmap(base3Image, mask4Image, mainColorPicker.GetColor);
-        exportImage3 = ApplyColorMaskToBitmap(exportImage3, mask5Image, accentColorPicker.GetColor);
+        var exportImage3 = ApplyColorMaskToBitmap(base3Image, mask4Image, mainColorPicker.GetColor, false);
+        exportImage3 = ApplyColorMaskToBitmap(exportImage3, mask5Image, accentColorPicker.GetColor, true);
         
         // Image newImage4 = ApplyColorWithMask(true,  baseImage4, null, AccentColorPreview.BackColor);
-        var exportImage4 = ApplyColorMaskToBitmap(base4Image, null, accentColorPicker.GetColor);
+        var exportImage4 = ApplyColorMaskToBitmap(base4Image, null, accentColorPicker.GetColor, true);
         
         // Image newImage5 = ApplyColorWithMask(true,  baseImage1, colorMask1, AccentColorPreview.BackColor);
         // newImage5 = ApplyColorWithMask(false,  newImage5, colorMask3, Color.Black);
-        var exportImage5 = ApplyColorMaskToBitmap(base1Image, mask1Image, accentColorPicker.GetColor);
-        exportImage5 = ApplyColorMaskToBitmap(exportImage5, mask3Image, Colors.Black);
+        var exportImage5 = ApplyColorMaskToBitmap(base1Image, mask1Image, accentColorPicker.GetColor, true);
+        exportImage5 = ApplyColorMaskToBitmap(exportImage5, mask3Image, Colors.Black, false);
         
         // Image newImage6 = ApplyColorWithMask(true,  baseImage5, colorMask6, AccentColorPreview.BackColor);
-        var exportImage6 = ApplyColorMaskToBitmap(base5Image, mask6Image, accentColorPicker.GetColor);
+        var exportImage6 = ApplyColorMaskToBitmap(base5Image, mask6Image, accentColorPicker.GetColor, true);
         
         var filePathToShadowTextures = Path.Combine(CommonFilePaths.CustomTexturesPath, "Shadow");
         if (Directory.Exists(filePathToShadowTextures))
@@ -101,12 +101,12 @@ public partial class ShadowColorAdjuster : Window
         }
         Directory.CreateDirectory(filePathToShadowTextures);
         
-        SaveBitmapAsPng(exportImage1,filePathToShadowTextures + @"\" + Image1Name);
-        SaveBitmapAsPng(exportImage2,filePathToShadowTextures + @"\" + Image2Name);
-        SaveBitmapAsPng(exportImage3,filePathToShadowTextures + @"\" + Image3Name);
-        SaveBitmapAsPng(exportImage4,filePathToShadowTextures + @"\" + Image4Name);
-        SaveBitmapAsPng(exportImage5,filePathToShadowTextures + @"\" + Image5Name);
-        SaveBitmapAsPng(exportImage6,filePathToShadowTextures + @"\" + Image6Name);
+        SaveBitmapAsPng(exportImage1,Path.Combine(filePathToShadowTextures, Image1Name));
+        SaveBitmapAsPng(exportImage2,Path.Combine(filePathToShadowTextures, Image2Name));
+        SaveBitmapAsPng(exportImage3,Path.Combine(filePathToShadowTextures, Image3Name));
+        SaveBitmapAsPng(exportImage4,Path.Combine(filePathToShadowTextures, Image4Name));
+        SaveBitmapAsPng(exportImage5,Path.Combine(filePathToShadowTextures, Image5Name));
+        SaveBitmapAsPng(exportImage6,Path.Combine(filePathToShadowTextures, Image6Name));
     }
 
     private void OpenTextureFolderButtonOnClick(object? sender, RoutedEventArgs e)
@@ -129,8 +129,8 @@ public partial class ShadowColorAdjuster : Window
         var mainMaskImage = bitmapToWriteable(new Bitmap(AssetLoader.Open(new Uri("avares://ShadowSXLauncher/Assets/ShadowColorReferences/ShadowPreviewMainMask.png"))));
         var accentMaskImage = bitmapToWriteable(new Bitmap(AssetLoader.Open(new Uri("avares://ShadowSXLauncher/Assets/ShadowColorReferences/ShadowPreviewAccentMask.png"))));
         
-        var preview = ApplyColorMaskToBitmap(baseImage, mainMaskImage, mainColorPicker.GetColor);
-        preview = ApplyColorMaskToBitmap(preview, accentMaskImage, accentColorPicker.GetColor);
+        var preview = ApplyColorMaskToBitmap(baseImage, mainMaskImage, mainColorPicker.GetColor, true);
+        preview = ApplyColorMaskToBitmap(preview, accentMaskImage, accentColorPicker.GetColor, true);
 
         PreviewImage.Source = preview;
     }
@@ -148,7 +148,7 @@ public partial class ShadowColorAdjuster : Window
         }
     }
 
-    private WriteableBitmap ApplyColorMaskToBitmap(WriteableBitmap baseImage, WriteableBitmap maskImage, Color colorToApply)
+    private WriteableBitmap ApplyColorMaskToBitmap(WriteableBitmap baseImage, WriteableBitmap maskImage, Color colorToApply, bool colorizeInsteadOfReplace)
     {
         var newImage  = bitmapToWriteable(baseImage);
 
@@ -166,9 +166,9 @@ public partial class ShadowColorAdjuster : Window
                     
                     if (isPixelToColor)
                     {
-                        newColor = Color.FromRgb((byte)(colorToApply.R * (baseColorPixel.R / 255.0f)),
-                                                 (byte)(colorToApply.G * (baseColorPixel.G / 255.0f)),
-                                                 (byte)(colorToApply.B * (baseColorPixel.B / 255.0f)));
+                        newColor = Color.FromRgb((byte)(colorToApply.R * (colorizeInsteadOfReplace ? (baseColorPixel.R / 255.0f) : 1)),
+                                                 (byte)(colorToApply.G * (colorizeInsteadOfReplace ? (baseColorPixel.G / 255.0f) : 1)),
+                                                 (byte)(colorToApply.B * (colorizeInsteadOfReplace ? (baseColorPixel.B / 255.0f) : 1)));
                     }
                     
                     int pixelIndex = ((y * newImage.PixelSize.Width) + x) * 4;
