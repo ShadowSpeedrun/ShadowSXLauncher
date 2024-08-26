@@ -62,6 +62,7 @@ public partial class ColorPicker : UserControl
         NumSliderS.NumericUpDownValue.ValueChanged += (sender, args) => { if (changeAllowed) AdjustColorByValue(false); };
         NumSliderV.SliderValue.ValueChanged += (sender, args) => { if (changeAllowed) AdjustColorBySlider(false); };
         NumSliderV.NumericUpDownValue.ValueChanged += (sender, args) => { if (changeAllowed) AdjustColorByValue(false); };
+        PickedColorHexString.TextChanged += (sender, args) => { if (changeAllowed) AttemptHexColorChange(); };        
     }
 
     private void AdjustColorBySlider(bool isRGB)
@@ -101,7 +102,21 @@ public partial class ColorPicker : UserControl
         var r = (PickedColor.Background as SolidColorBrush).Color.R.ToString("X2");
         var g = (PickedColor.Background as SolidColorBrush).Color.G.ToString("X2");
         var b = (PickedColor.Background as SolidColorBrush).Color.B.ToString("X2");
-        this.Get<TextBox>("PickedColorHexString").Text = (r + g + b).ToUpper();
+        PickedColorHexString.Text = (r + g + b).ToUpper();
+    }
+
+    private void AttemptHexColorChange()
+    {
+        var colorString = PickedColorHexString.Text;
+        if (colorString != null && colorString.Length == 6 && System.Text.RegularExpressions.Regex.IsMatch(colorString, @"^[0-9A-Fa-f]{6}$"))
+        {
+            //Color string is expected to be in RGB format
+            byte r = Convert.ToByte(colorString.Substring(0, 2),  16);
+            byte g = Convert.ToByte(colorString.Substring(2, 2), 16);
+            byte b = Convert.ToByte(colorString.Substring(4, 2), 16);
+
+            SetRGBColor(Color.FromRgb(r, g, b));
+        }
     }
 
     public void SetRGBColor(Color fromRgb)
