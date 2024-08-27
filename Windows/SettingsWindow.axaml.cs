@@ -40,10 +40,7 @@ public partial class SettingsWindow : Window
 
         FlatpakMessageBlocker.IsVisible = OperatingSystem.IsLinux();
         FlatpakMessageText.IsVisible = OperatingSystem.IsLinux();
-        FlatpakMessageBlocker2.IsVisible = OperatingSystem.IsLinux();
-        FlatpakMessageText2.IsVisible = OperatingSystem.IsLinux();
-
-
+        
         RegisterEvents();
     }
 
@@ -65,6 +62,7 @@ public partial class SettingsWindow : Window
         OpenDolphinButton.Click += OpenDolphinButtonOnClick;
         CustomShadowColorButton.Click += CustomShadowColorButtonOnClick;
         SaveSettingsButton.Click += SaveSettingsButtonOnClick;
+        HighRezUiFixButton.Click += HighRezUiFixButtonOnClick;
     }
 
     /// <summary>
@@ -81,6 +79,7 @@ public partial class SettingsWindow : Window
         OpenDolphinButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation);
         CustomShadowColorButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
         SaveSettingsButton.IsEnabled = enable;
+        HighRezUiFixButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
     }
 
     private async Task<string[]?> GetFilePath(string title, FileDialogFilter filter)
@@ -167,5 +166,25 @@ public partial class SettingsWindow : Window
         Configuration.Instance.UiButtonDisplayIndex = CustomButtonComboBox.SelectedIndex;
         Configuration.Instance.GlossAdjustmentIndex = GlossLevelComboBox.SelectedIndex;
         Configuration.Instance.SaveSettings();
+    }
+    
+    private void HighRezUiFixButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        var dolphinCustomTexturePath = Path.Combine(CommonFilePaths.CustomTexturesPath, "UI Fix");
+        if (Directory.Exists(dolphinCustomTexturePath))
+        {
+            Directory.Delete(dolphinCustomTexturePath, true);
+        }
+
+        var uiFixFilePath = Path.Combine(CommonFilePaths.SxResourcesCustomTexturesPath, "UI Fix");
+        var uiFixFiles = Directory.EnumerateFiles(uiFixFilePath);
+            
+        Directory.CreateDirectory(dolphinCustomTexturePath);
+            
+        foreach (var uiFixFile in uiFixFiles)
+        {
+            var dest = Path.Combine(dolphinCustomTexturePath, uiFixFile.Replace(uiFixFilePath + Path.DirectorySeparatorChar, ""));
+            File.Copy(uiFixFile, dest);
+        }
     }
 }
