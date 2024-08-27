@@ -51,7 +51,8 @@ public partial class SettingsWindow : Window
         Directory.GetDirectories(Path.Combine(CommonFilePaths.SxResourcesCustomTexturesPath,"Buttons")).ToList()
             .ForEach(folderPath => uiButtonOptions.Add(Path.GetFileName(folderPath)));
         CustomButtonComboBox.ItemsSource = uiButtonOptions;
-        CustomButtonComboBox.SelectedIndex = Configuration.Instance.UiButtonDisplayIndex;
+        var initialUiButtonIndex = uiButtonOptions.FindIndex(u=> u == Configuration.Instance.UiButtonDisplayAssetFolderName);
+        CustomButtonComboBox.SelectedIndex = initialUiButtonIndex != -1 ? initialUiButtonIndex : 0;
     }
 
     private void RegisterEvents()
@@ -163,7 +164,7 @@ public partial class SettingsWindow : Window
         Configuration.Instance.RomLocation = !string.IsNullOrEmpty(RomLocationTextBox.Text) ? RomLocationTextBox.Text : string.Empty;
         Configuration.Instance.DolphinBinLocation = !string.IsNullOrEmpty(DolphinBinLocationTextBox.Text) ? DolphinBinLocationTextBox.Text : string.Empty;
         Configuration.Instance.DolphinUserLocation = !string.IsNullOrEmpty(DolphinUserLocationTextBox.Text) ? DolphinUserLocationTextBox.Text : string.Empty;
-        Configuration.Instance.UiButtonDisplayIndex = CustomButtonComboBox.SelectedIndex;
+        Configuration.Instance.UiButtonDisplayAssetFolderName = CustomButtonComboBox.SelectedIndex != 0 ? CustomButtonComboBox.SelectedItem.ToString() : string.Empty;
         Configuration.Instance.GlossAdjustmentIndex = GlossLevelComboBox.SelectedIndex;
         Configuration.Instance.SaveSettings();
     }

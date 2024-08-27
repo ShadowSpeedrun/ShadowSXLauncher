@@ -16,7 +16,7 @@ public class Configuration
     public string DolphinBinLocation;
     public string DolphinUserLocation;
     public string RomLocation;
-    public int UiButtonDisplayIndex;
+    public string UiButtonDisplayAssetFolderName;
     public int GlossAdjustmentIndex;
     
     public static readonly Dictionary<string, string> GlossAdjustmentOptions = new Dictionary<string, string>()
@@ -33,7 +33,7 @@ public class Configuration
         DolphinBinLocation = "";
         DolphinUserLocation = "";
         RomLocation = "";
-        UiButtonDisplayIndex = 0;
+        UiButtonDisplayAssetFolderName = "";
         GlossAdjustmentIndex = 0;
     }
 
@@ -87,9 +87,9 @@ public class Configuration
                 RomLocation = node.InnerText;
             }
 
-            if (node.Name == "UiButtonDisplayIndex")
+            if (node.Name == "UiButtonDisplayAssetFolderName")
             {
-                UiButtonDisplayIndex = int.Parse(node.InnerText);
+                UiButtonDisplayAssetFolderName = node.InnerText;
             }
             
             if (node.Name == "GlossAdjustment")
@@ -114,8 +114,8 @@ public class Configuration
         var xmlElementRomLocation = configurationXml.CreateElement("RomLocation");
         xmlElementRomLocation.InnerText = RomLocation;
 
-        var xmlElementUiButtonDisplayIndex = configurationXml.CreateElement("UiButtonDisplayIndex");
-        xmlElementUiButtonDisplayIndex.InnerText = UiButtonDisplayIndex.ToString();
+        var xmlElementUiButtonDisplayIndex = configurationXml.CreateElement("UiButtonDisplayAssetFolderName");
+        xmlElementUiButtonDisplayIndex.InnerText = UiButtonDisplayAssetFolderName;
         
         var xmlElementGlossAdjustment = configurationXml.CreateElement("GlossAdjustment");
         xmlElementGlossAdjustment.InnerText = GlossAdjustmentIndex.ToString();

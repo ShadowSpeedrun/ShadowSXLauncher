@@ -331,13 +331,12 @@ public partial class MainWindow : Window
             Directory.Delete(CommonFilePaths.CustomTexturesPath + @"\Buttons", true);
         }
 
-        //TODO: Update to use folder name instead of index as the number of folders will now be dynamic.
         var uiButtonOptions = new List<string>();
         uiButtonOptions.Add("Default (GC)");
         Directory.GetDirectories(CommonFilePaths.SxResourcesCustomTexturesPath + @"\Buttons\").ToList()
             .ForEach(folderPath => uiButtonOptions.Add(Path.GetFileName(folderPath)));
         
-        var buttonAssetsFolder = uiButtonOptions[Configuration.Instance.UiButtonDisplayIndex];
+        var buttonAssetsFolder = Configuration.Instance.UiButtonDisplayAssetFolderName;
         if (!string.IsNullOrEmpty(buttonAssetsFolder))
         {
             var newButtonFilePath = CommonFilePaths.SxResourcesCustomTexturesPath + @"\Buttons\" + buttonAssetsFolder;
