@@ -30,8 +30,16 @@ public class Configuration
     {
         configurationXml = null;
 
-        DolphinBinLocation = "";
-        DolphinUserLocation = "";
+        // data/dolphin-emu/
+        // config/dolphin-emu/
+        // sudo flatpak override org.DolphinEmu.dolphin-emu --filesystem host
+        // flatpak run
+        
+        // TODO: ~/. may be invalid? Not writing but not throwing an error
+        DolphinBinLocation = OperatingSystem.IsLinux() ? "flatpak run org.DolphinEmu.dolphin-emu" : "";
+                DolphinUserLocation = OperatingSystem.IsLinux() ? "~/.var/app/org.DolphinEmu.dolphin-emu/data/dolphin-emu/"
+            : OperatingSystem.IsMacOS() ? "mac path"
+            : "";
         RomLocation = "";
         UiButtonDisplayAssetFolderName = "";
         GlossAdjustmentIndex = 0;
@@ -61,11 +69,9 @@ public class Configuration
             {
                 configurationXml.Load(CommonFilePaths.ConfigFileLocation);
             }
-#pragma warning disable CS0168
             catch(IOException e)
-#pragma warning restore CS0168
             {
-                //Create the file if it doesnt exist.
+                // Create the file if it does not exist.
                 SaveSettings();
             }
         }

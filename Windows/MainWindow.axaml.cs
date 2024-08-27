@@ -50,17 +50,20 @@ public partial class MainWindow : Window
     private async void OnPlayButtonPressed(object? sender, RoutedEventArgs e)
     {
         EnableButtons(false);
-        
-        if (string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation))
-        {
-            await OpenSetDolphinBinDialog();
-        }
-        
-        if (string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation))
-        {
-            await OpenSetDolphinUserDialog();
-        }
 
+        if (!OperatingSystem.IsLinux())
+        {
+            if (string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation))
+            {
+                await OpenSetDolphinBinDialog();
+            }
+
+            if (string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation))
+            {
+                await OpenSetDolphinUserDialog();
+            }
+
+        }
         if (!string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation))
         {
             //Check if Rom Location has been set at all.
@@ -326,30 +329,29 @@ public partial class MainWindow : Window
     {
         #region UI Display Textures
 
-        if (Directory.Exists(CommonFilePaths.CustomTexturesPath + @"\Buttons"))
+        if (Directory.Exists(Path.Combine(CommonFilePaths.CustomTexturesPath, "Buttons")))
         {
-            Directory.Delete(CommonFilePaths.CustomTexturesPath + @"\Buttons", true);
+            Directory.Delete(Path.Combine(CommonFilePaths.CustomTexturesPath, "Buttons"), true);
         }
 
         var uiButtonOptions = new List<string>();
         uiButtonOptions.Add("Default (GC)");
-        Directory.GetDirectories(CommonFilePaths.SxResourcesCustomTexturesPath + @"\Buttons\").ToList()
+        Directory.GetDirectories(Path.Combine(CommonFilePaths.SxResourcesCustomTexturesPath, "Buttons")).ToList()
             .ForEach(folderPath => uiButtonOptions.Add(Path.GetFileName(folderPath)));
         
         var buttonAssetsFolder = Configuration.Instance.UiButtonDisplayAssetFolderName;
         if (!string.IsNullOrEmpty(buttonAssetsFolder))
         {
-            var newButtonFilePath = CommonFilePaths.SxResourcesCustomTexturesPath + @"\Buttons\" + buttonAssetsFolder;
+            var newButtonFilePath = Path.Combine(CommonFilePaths.SxResourcesCustomTexturesPath, "Buttons", buttonAssetsFolder);
             if (Directory.Exists(newButtonFilePath))
             {
                 var newButtonUiFiles = Directory.EnumerateFiles(newButtonFilePath);
 
-                Directory.CreateDirectory(CommonFilePaths.CustomTexturesPath + @"\Buttons");
+                Directory.CreateDirectory(Path.Combine(CommonFilePaths.CustomTexturesPath, "Buttons"));
 
                 foreach (var buttonFile in newButtonUiFiles)
                 {
-                    File.Copy(buttonFile,
-                        CommonFilePaths.CustomTexturesPath + @"\Buttons" + buttonFile.Replace(newButtonFilePath, ""));
+                    File.Copy(buttonFile, Path.Combine(CommonFilePaths.CustomTexturesPath, "Buttons") + buttonFile.Replace(newButtonFilePath, ""));
                 }
             }
         }
@@ -358,23 +360,23 @@ public partial class MainWindow : Window
         
         #region Gloss Removal
 
-        if (Directory.Exists(CommonFilePaths.CustomTexturesPath + @"\GlossAdjustment"))
+        if (Directory.Exists(Path.Combine(CommonFilePaths.CustomTexturesPath, "GlossAdjustment")))
         {
-            Directory.Delete(CommonFilePaths.CustomTexturesPath + @"\GlossAdjustment", true);
+            Directory.Delete(Path.Combine(CommonFilePaths.CustomTexturesPath, "GlossAdjustment"), true);
         }
 
         var glossAssetsFolder = 
             Configuration.GlossAdjustmentOptions.Keys.ToArray()[Configuration.Instance.GlossAdjustmentIndex];
         if (!string.IsNullOrEmpty(glossAssetsFolder))
         {
-            var removeGlossFilePath = CommonFilePaths.SxResourcesCustomTexturesPath + @"\GlossAdjustment\" + glossAssetsFolder;
+            var removeGlossFilePath = Path.Combine(CommonFilePaths.SxResourcesCustomTexturesPath, "GlossAdjustment", glossAssetsFolder);
             var removeGlossFiles = Directory.EnumerateFiles(removeGlossFilePath);
             
-            Directory.CreateDirectory(CommonFilePaths.CustomTexturesPath + @"\GlossAdjustment");
+            Directory.CreateDirectory(Path.Combine(CommonFilePaths.CustomTexturesPath, "GlossAdjustment"));
             
             foreach (var removeGlossFile in removeGlossFiles)
             {
-                File.Copy(removeGlossFile, CommonFilePaths.CustomTexturesPath + @"\GlossAdjustment" + removeGlossFile.Replace(removeGlossFilePath, ""));
+                File.Copy(removeGlossFile, Path.Combine(CommonFilePaths.CustomTexturesPath, "GlossAdjustment") + removeGlossFile.Replace(removeGlossFilePath, ""));
             }
         }
 

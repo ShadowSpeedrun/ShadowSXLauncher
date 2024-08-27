@@ -37,7 +37,7 @@ public static class CommonFilePaths
 
     public static string CustomTexturesPath
     {
-        get { return Path.Combine(DolphinUserPath ,"Load","Textures","GUPX8P"); }
+        get { return Path.Combine(DolphinUserPath, "Load", "Textures", "GUPX8P"); }
     }
 
     public static string SxResourcesPath
