@@ -141,15 +141,39 @@ public partial class SettingsWindow : Window
 
     private async void OpenDolphinButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        if (Directory.Exists(CommonFilePaths.DolphinBinPath))
+        if (OperatingSystem.IsWindows())
         {
-            Process.Start(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile));
+            if (Directory.Exists(CommonFilePaths.DolphinBinPath))
+            {
+                Process.Start(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile));
+            }
+            else
+            {
+                var message = MessageBoxManager
+                    .GetMessageBoxStandard("Operation Cancelled",
+                        "Could not find " + CommonFilePaths.DolphinBinFile + ". Please double check directory files.");
+                await message.ShowAsync();
+            }
         }
-        else
+        else if (OperatingSystem.IsLinux())
         {
-            var message = MessageBoxManager
-                .GetMessageBoxStandard("Operation Cancelled", "Could not find " + CommonFilePaths.DolphinBinFile + ". Please double check directory files.");
-            await message.ShowAsync();
+            var checkFlatpak = new Process();
+            checkFlatpak.StartInfo.FileName = "which";
+            checkFlatpak.StartInfo.Arguments = "flatpak";
+            checkFlatpak.StartInfo.RedirectStandardOutput = true;
+            checkFlatpak.Start();
+            await checkFlatpak.WaitForExitAsync();
+            var flatpakDirectory = await checkFlatpak.StandardOutput.ReadToEndAsync();
+            if (flatpakDirectory.Length == 0)
+            {
+                // flatpak not found case
+                return;
+            }
+            Process.Start(flatpakDirectory.Trim('\n'), "run org.DolphinEmu.dolphin-emu");
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            // TODO
         }
     }
 

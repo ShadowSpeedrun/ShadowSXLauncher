@@ -108,7 +108,21 @@ public partial class MainWindow : Window
                 }
                 else if (OperatingSystem.IsLinux())
                 {
-                    Process.Start("/usr/bin/flatpak", "run org.DolphinEmu.dolphin-emu -b " + Configuration.Instance.RomLocation);
+                    var checkFlatpak = new Process();
+                    checkFlatpak.StartInfo.FileName = "which";
+                    checkFlatpak.StartInfo.Arguments = "flatpak";
+                    checkFlatpak.StartInfo.RedirectStandardOutput = true;
+                    checkFlatpak.Start();
+                    await checkFlatpak.WaitForExitAsync();
+                    var flatpakDirectory = await checkFlatpak.StandardOutput.ReadToEndAsync();
+                    if (flatpakDirectory.Length == 0)
+                    {
+                        // flatpak not found case
+                        return;
+                    }
+
+                    Process.Start(flatpakDirectory.Trim('\n'), "run org.DolphinEmu.dolphin-emu -b " + Configuration.Instance.RomLocation);
+                    // Close(); // find why Close doesnt work on Linux (child process?)
                 }
             }
         }

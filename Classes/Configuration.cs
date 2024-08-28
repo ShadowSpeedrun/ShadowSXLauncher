@@ -32,7 +32,7 @@ public class Configuration
 
         // data/dolphin-emu/
         // config/dolphin-emu/
-        // sudo flatpak override org.DolphinEmu.dolphin-emu --filesystem host
+        // non flatpak: ~/.local/share/dolphin-emu/ and ~/.config/dolphin-emu
         // flatpak run
         
         DolphinBinLocation = OperatingSystem.IsLinux() ? "flatpak run org.DolphinEmu.dolphin-emu" : "";
