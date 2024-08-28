@@ -135,39 +135,9 @@ public partial class SettingsWindow : Window
         EnableUI(true);
     }
 
-    private async void OpenDolphinButtonOnClick(object? sender, RoutedEventArgs e)
+    private void OpenDolphinButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        if (OperatingSystem.IsWindows())
-        {
-            if (Directory.Exists(CommonFilePaths.DolphinBinPath))
-            {
-                Process.Start(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile));
-            }
-            else
-            {
-                var message = MessageBoxManager
-                    .GetMessageBoxStandard("Operation Cancelled",
-                        "Could not find " + CommonFilePaths.DolphinBinFile + ". Please double check directory files.");
-                await message.ShowAsync();
-            }
-        }
-        else if (OperatingSystem.IsLinux())
-        {
-            var flatpakBinPath = await CommonFilePaths.GetFlatpakBinPath();
-            if (flatpakBinPath.Length == 0)
-            {
-                var message = MessageBoxManager
-                    .GetMessageBoxStandard("Operation Cancelled",
-                        "Flatpak not detected.\nPlease check Flatpak is installed.");
-                await message.ShowAsync();
-                return;
-            }
-            Process.Start(flatpakBinPath, "run org.DolphinEmu.dolphin-emu");
-        }
-        else if (OperatingSystem.IsMacOS())
-        {
-            // TODO
-        }
+        CommonFilePaths.LaunchDolphin(showInterface: true);
     }
 
     private void CustomShadowColorButtonOnClick(object? sender, RoutedEventArgs e)

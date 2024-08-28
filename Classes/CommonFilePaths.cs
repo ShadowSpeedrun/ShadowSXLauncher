@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using MsBox.Avalonia;
 
 namespace ShadowSXLauncher.Classes;
 
@@ -78,7 +79,7 @@ public static class CommonFilePaths
             
             if (OperatingSystem.IsLinux())
             {
-                return "Dolphin";
+                return "dolphin-emu";
             }
             
             if (OperatingSystem.IsMacOS())
@@ -160,7 +161,9 @@ public static class CommonFilePaths
         }
     }
 
-    public static async Task<string> GetFlatpakBinPath()
+    
+    // TODO: Probably move these to a new util file?
+    private static async Task<string> GetFlatpakBinPath()
     {
         var checkFlatpak = new Process();
         checkFlatpak.StartInfo.FileName = "which";
@@ -170,5 +173,53 @@ public static class CommonFilePaths
         await checkFlatpak.WaitForExitAsync();
         var flatpakDirectory = await checkFlatpak.StandardOutput.ReadToEndAsync();
         return flatpakDirectory.Trim('\n');
+    }
+    
+    // TODO: Probably move these to a new util file?
+    public static async void LaunchDolphin(bool showInterface = false)
+    {
+        if (File.Exists(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)))
+        {
+            var processInfo = new ProcessStartInfo();
+            processInfo.FileName = $"{Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)}";
+            
+            if (!showInterface)
+            {
+                processInfo.Arguments = @" -b " + Configuration.Instance.RomLocation;
+            }
+
+            if (OperatingSystem.IsLinux())
+            {
+                processInfo.EnvironmentVariables["QT_QPA_PLATFORM"] = "xcb"; // Workaround until Dolphin runs on Wayland
+                processInfo.UseShellExecute = false; // required for wayland override
+            }
+
+            Process.Start(processInfo);
+        }
+        else
+        {
+            if (OperatingSystem.IsLinux())
+            {
+                var flatpakBinPath = await CommonFilePaths.GetFlatpakBinPath();
+                if (flatpakBinPath.Length == 0)
+                {
+                    var flatpakWarning = MessageBoxManager
+                        .GetMessageBoxStandard("Operation Cancelled",
+                            "Flatpak not detected. Please check Flatpak is installed.\nOtherwise specify the paths to Dolphin");
+                    await flatpakWarning.ShowAsync();
+                    return;
+                }
+
+                Process.Start(flatpakBinPath,
+                    showInterface
+                        ? "run org.DolphinEmu.dolphin-emu"
+                        : $"run org.DolphinEmu.dolphin-emu -b {Configuration.Instance.RomLocation}");
+                return;
+            }
+           
+            var message = MessageBoxManager
+                .GetMessageBoxStandard("Dolphin not found", "Could not find Dolphin. Please double check directory files.");
+            var result = await message.ShowAsync();
+        }
     }
 }

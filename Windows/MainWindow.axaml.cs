@@ -89,44 +89,17 @@ public partial class MainWindow : Window
                 //annoying checks and processes is not worth it.
 
                 UpdateCustomAssets();
+                CommonFilePaths.LaunchDolphin(showInterface: false);
 
-                //Double-check the .exe is found before attempting to run it.
                 if (OperatingSystem.IsWindows())
                 {
-                    if (File.Exists(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)))
-                    {
-                        Process.Start(
-                            $"\"{Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)}\"",
-                            @" -b " + "\"" + Configuration.Instance.RomLocation + "\"");
-                        Close();
-                    }
-                    else
-                    {
-                        var message = MessageBoxManager
-                            .GetMessageBoxStandard("Dolphin not found", "Could not find Dolphin. Please double check directory files.");
-                        var result = await message.ShowAsync();
-                    }
-                }
-                else if (OperatingSystem.IsLinux())
-                {
-                    // TODO: if we have not set our Bin Path, assume flatpak? Or do we want a toggle/checkbox between Flatpak mode and standard mode?
-                    var flatpakBinPath = await CommonFilePaths.GetFlatpakBinPath();
-                    if (flatpakBinPath.Length == 0)
-                    {
-                        var message = MessageBoxManager
-                            .GetMessageBoxStandard("Operation Cancelled",
-                                "Flatpak not detected.\nPlease check Flatpak is installed.");
-                        await message.ShowAsync();
-                        return;
-                    }
-
-                    Process.Start(flatpakBinPath, $"run org.DolphinEmu.dolphin-emu -b {Configuration.Instance.RomLocation}");
-                    // Close(); // find why Close does not work on Linux (child process?)
+                    Close(); // Not working with Linux (child process issue)?
                 }
             }
         }
         EnableButtons(true);
     }
+    
     private async Task OpenSetRomDialog()
     {
         var result = await SetOpenFilePath("Set Path to SX ROM", 
