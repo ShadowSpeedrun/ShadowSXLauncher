@@ -35,9 +35,8 @@ public class Configuration
         // sudo flatpak override org.DolphinEmu.dolphin-emu --filesystem host
         // flatpak run
         
-        // TODO: ~/. may be invalid? Not writing but not throwing an error
         DolphinBinLocation = OperatingSystem.IsLinux() ? "flatpak run org.DolphinEmu.dolphin-emu" : "";
-                DolphinUserLocation = OperatingSystem.IsLinux() ? "~/.var/app/org.DolphinEmu.dolphin-emu/data/dolphin-emu/"
+        DolphinUserLocation = OperatingSystem.IsLinux() ? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.var/app/org.DolphinEmu.dolphin-emu/data/dolphin-emu/"
             : OperatingSystem.IsMacOS() ? "mac path"
             : "";
         RomLocation = "";

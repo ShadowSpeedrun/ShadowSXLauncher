@@ -91,17 +91,24 @@ public partial class MainWindow : Window
                 UpdateCustomAssets();
 
                 //Double check the .exe is found before attempting to run it.
-                if (File.Exists(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)))
+                if (OperatingSystem.IsWindows())
                 {
-                    Process.Start("\"" + Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile) + "\"",
-                        @" -b " + "\"" + Configuration.Instance.RomLocation + "\"");
-                    Close();
+                    if (File.Exists(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)))
+                    {
+                        Process.Start("\"" + Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile) + "\"",
+                            @" -b " + "\"" + Configuration.Instance.RomLocation + "\"");
+                        Close();
+                    }
+                    else
+                    {
+                        var message = MessageBoxManager
+                            .GetMessageBoxStandard("Dolphin not found", "Could not find Dolphin. Please double check directory files.");
+                        var result = await message.ShowAsync();
+                    }
                 }
-                else
+                else if (OperatingSystem.IsLinux())
                 {
-                    var message = MessageBoxManager
-                        .GetMessageBoxStandard("Dolphin not found", "Could not find Dolphin. Please double check directory files.");
-                    var result = await message.ShowAsync();
+                    Process.Start("/usr/bin/flatpak", "run org.DolphinEmu.dolphin-emu -b " + Configuration.Instance.RomLocation);
                 }
             }
         }
@@ -189,7 +196,7 @@ public partial class MainWindow : Window
             ProcessStartInfo psi = new ProcessStartInfo
             {
                 FileName = CommonFilePaths.GetExplorerPath,
-                Arguments = folderPath,
+                Arguments = "\"" + folderPath + "\"",
                 UseShellExecute = true
             };
             Process.Start(psi);
