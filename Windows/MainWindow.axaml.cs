@@ -62,9 +62,8 @@ public partial class MainWindow : Window
             {
                 await OpenSetDolphinUserDialog();
             }
-
         }
-        if (!string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation))
+        if (!string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation) || OperatingSystem.IsLinux())
         {
             //Check if Rom Location has been set at all.
             if (string.IsNullOrEmpty(Configuration.Instance.RomLocation))
@@ -81,6 +80,7 @@ public partial class MainWindow : Window
                     var message = MessageBoxManager
                         .GetMessageBoxStandard("ROM not found", "ROM file not found. Please provide ROM location again.");
                     var result = await message.ShowAsync();
+                    // TODO: Restore the below or call return?
                     //OpenRomDialog();
                 }
 
@@ -90,12 +90,13 @@ public partial class MainWindow : Window
 
                 UpdateCustomAssets();
 
-                //Double check the .exe is found before attempting to run it.
+                //Double-check the .exe is found before attempting to run it.
                 if (OperatingSystem.IsWindows())
                 {
                     if (File.Exists(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)))
                     {
-                        Process.Start("\"" + Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile) + "\"",
+                        Process.Start(
+                            $"\"{Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)}\"",
                             @" -b " + "\"" + Configuration.Instance.RomLocation + "\"");
                         Close();
                     }
@@ -108,21 +109,19 @@ public partial class MainWindow : Window
                 }
                 else if (OperatingSystem.IsLinux())
                 {
-                    var checkFlatpak = new Process();
-                    checkFlatpak.StartInfo.FileName = "which";
-                    checkFlatpak.StartInfo.Arguments = "flatpak";
-                    checkFlatpak.StartInfo.RedirectStandardOutput = true;
-                    checkFlatpak.Start();
-                    await checkFlatpak.WaitForExitAsync();
-                    var flatpakDirectory = await checkFlatpak.StandardOutput.ReadToEndAsync();
-                    if (flatpakDirectory.Length == 0)
+                    // TODO: if we have not set our Bin Path, assume flatpak? Or do we want a toggle/checkbox between Flatpak mode and standard mode?
+                    var flatpakBinPath = await CommonFilePaths.GetFlatpakBinPath();
+                    if (flatpakBinPath.Length == 0)
                     {
-                        // flatpak not found case
+                        var message = MessageBoxManager
+                            .GetMessageBoxStandard("Operation Cancelled",
+                                "Flatpak not detected.\nPlease check Flatpak is installed.");
+                        await message.ShowAsync();
                         return;
                     }
 
-                    Process.Start(flatpakDirectory.Trim('\n'), "run org.DolphinEmu.dolphin-emu -b " + Configuration.Instance.RomLocation);
-                    // Close(); // find why Close doesnt work on Linux (child process?)
+                    Process.Start(flatpakBinPath, $"run org.DolphinEmu.dolphin-emu -b {Configuration.Instance.RomLocation}");
+                    // Close(); // find why Close does not work on Linux (child process?)
                 }
             }
         }

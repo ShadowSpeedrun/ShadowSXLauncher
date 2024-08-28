@@ -36,9 +36,6 @@
                 </Button>
             </Grid>
         </Grid>
-        <Grid Grid.Row="1" ColumnDefinitions="*" Background="#DD181818" Name="FlatpakMessageBlocker">
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Name="FlatpakMessageText">Flatpak Version Required</TextBlock>
-        </Grid>
         <Grid Row="2" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
             <Canvas Grid.Row="0" Height="3" Background="#DD181818"></Canvas>
             <TextBlock Grid.Row="1" Margin="0,5,0,10">Dolphin Graphics Settings</TextBlock>

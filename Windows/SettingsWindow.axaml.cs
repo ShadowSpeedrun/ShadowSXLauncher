@@ -37,10 +37,6 @@ public partial class SettingsWindow : Window
         DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
         InitializeUiButtonOptions();
         GlossLevelComboBox.SelectedIndex = Configuration.Instance.GlossAdjustmentIndex;
-
-        FlatpakMessageBlocker.IsVisible = OperatingSystem.IsLinux();
-        FlatpakMessageText.IsVisible = OperatingSystem.IsLinux();
-        
         RegisterEvents();
     }
 
@@ -157,14 +153,8 @@ public partial class SettingsWindow : Window
         }
         else if (OperatingSystem.IsLinux())
         {
-            var checkFlatpak = new Process();
-            checkFlatpak.StartInfo.FileName = "which";
-            checkFlatpak.StartInfo.Arguments = "flatpak";
-            checkFlatpak.StartInfo.RedirectStandardOutput = true;
-            checkFlatpak.Start();
-            await checkFlatpak.WaitForExitAsync();
-            var flatpakDirectory = await checkFlatpak.StandardOutput.ReadToEndAsync();
-            if (flatpakDirectory.Length == 0)
+            var flatpakBinPath = await CommonFilePaths.GetFlatpakBinPath();
+            if (flatpakBinPath.Length == 0)
             {
                 var message = MessageBoxManager
                     .GetMessageBoxStandard("Operation Cancelled",
@@ -172,7 +162,7 @@ public partial class SettingsWindow : Window
                 await message.ShowAsync();
                 return;
             }
-            Process.Start(flatpakDirectory.Trim('\n'), "run org.DolphinEmu.dolphin-emu");
+            Process.Start(flatpakBinPath, "run org.DolphinEmu.dolphin-emu");
         }
         else if (OperatingSystem.IsMacOS())
         {

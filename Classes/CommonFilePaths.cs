@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ShadowSXLauncher.Classes;
 
@@ -68,7 +70,7 @@ public static class CommonFilePaths
     public static string DolphinBinFile
     {
         get
-        {
+        {   
             if(OperatingSystem.IsWindows())
             {
                 return "Dolphin.exe";
@@ -156,5 +158,17 @@ public static class CommonFilePaths
             
             throw new Exception("Unsupported Operating System");
         }
+    }
+
+    public static async Task<string> GetFlatpakBinPath()
+    {
+        var checkFlatpak = new Process();
+        checkFlatpak.StartInfo.FileName = "which";
+        checkFlatpak.StartInfo.Arguments = "flatpak";
+        checkFlatpak.StartInfo.RedirectStandardOutput = true;
+        checkFlatpak.Start();
+        await checkFlatpak.WaitForExitAsync();
+        var flatpakDirectory = await checkFlatpak.StandardOutput.ReadToEndAsync();
+        return flatpakDirectory.Trim('\n');
     }
 }
