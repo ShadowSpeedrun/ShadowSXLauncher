@@ -166,7 +166,10 @@ public partial class SettingsWindow : Window
             var flatpakDirectory = await checkFlatpak.StandardOutput.ReadToEndAsync();
             if (flatpakDirectory.Length == 0)
             {
-                // flatpak not found case
+                var message = MessageBoxManager
+                    .GetMessageBoxStandard("Operation Cancelled",
+                        "Flatpak not detected.\nPlease check Flatpak is installed.");
+                await message.ShowAsync();
                 return;
             }
             Process.Start(flatpakDirectory.Trim('\n'), "run org.DolphinEmu.dolphin-emu");
