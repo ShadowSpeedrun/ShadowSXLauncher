@@ -37,6 +37,8 @@ public partial class SettingsWindow : Window
         DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
         InitializeUiButtonOptions();
         GlossLevelComboBox.SelectedIndex = Configuration.Instance.GlossAdjustmentIndex;
+        /*SetPathsFlatpakAndPortableButton.Name = OperatingSystem.IsLinux() ? "Flatpak" : "Portable";
+        SetPathsNativeAndGlobalButton.Name = OperatingSystem.IsWindows() ? "Global" : "Native";*/ // TODO: NOT ALLOWED
         RegisterEvents();
     }
 
@@ -56,8 +58,8 @@ public partial class SettingsWindow : Window
         SetRomLocationButton.Click += SetRomLocationButtonOnClick;
         SetDolphinBinLocationButton.Click += SetDolphinBinLocationButtonOnClick;
         SetDolphinUserLocationButton.Click += SetDolphinUserLocationButtonOnClick;
-        SetPathsFlatpakAndPortable.Click += SetPathsFlatpakAndPortableOnClick;
-        SetPathsNativeAndGlobal.Click += SetPathsNativeAndGlobalOnClick;
+        SetPathsFlatpakAndPortableButton.Click += SetPathsFlatpakAndPortableOnClick;
+        SetPathsNativeAndGlobalButton.Click += SetPathsNativeAndGlobalOnClick;
         OpenDolphinButton.Click += OpenDolphinButtonOnClick;
         CustomShadowColorButton.Click += CustomShadowColorButtonOnClick;
         SaveSettingsButton.Click += SaveSettingsButtonOnClick;

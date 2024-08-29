@@ -39,7 +39,7 @@ public static class CommonFilePaths
 
     public static string CustomTexturesPath
     {
-        get { return Path.Combine(DolphinUserPath, "Load", "Textures", "GUPX8P"); }
+        get { return Path.Combine(DolphinUserPath, "Load", "Textures", "GUP"); }
     }
 
     public static string SxResourcesPath
@@ -185,7 +185,7 @@ public static class CommonFilePaths
 
             if (!showInterface)
             {
-                processInfo.Arguments = $@" -b {Configuration.Instance.RomLocation}";
+                processInfo.Arguments = $" -b \"{Configuration.Instance.RomLocation}\"";
             }
 
             if (OperatingSystem.IsLinux())
@@ -206,15 +206,25 @@ public static class CommonFilePaths
                 {
                     var flatpakWarning = MessageBoxManager
                         .GetMessageBoxStandard("Flatpak Not Found",
-                            "Flatpak not detected. Please check Flatpak is installed.\nOtherwise specify the paths to Dolphin");
+                            $"Flatpak not detected. Please check Flatpak is installed.{Environment.NewLine}Otherwise specify the paths to Dolphin");
                     await flatpakWarning.ShowAsync();
                     return;
                 }
 
+                if (CommonFilePaths.DolphinUserPath !=
+                    $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.var/app/org.DolphinEmu.dolphin-emu/data/dolphin-emu/")
+                {
+                    var mismatchedConfig = MessageBoxManager
+                        .GetMessageBoxStandard("Flatpak User Folder Mismatch",
+                            $"Flatpak was detected, but your User Folder is set to an unexpected location.{Environment.NewLine}Press the Flatpak Button to automatically fix this in Settings.");
+                    await mismatchedConfig.ShowAsync();
+                    return;
+                }
+                
                 Process.Start("/usr/bin/flatpak",
                     showInterface
                         ? "run org.DolphinEmu.dolphin-emu"
-                        : $"run org.DolphinEmu.dolphin-emu -b {Configuration.Instance.RomLocation}");
+                        : $"run org.DolphinEmu.dolphin-emu -b \"{Configuration.Instance.RomLocation}\"");
                 return;
             }
            

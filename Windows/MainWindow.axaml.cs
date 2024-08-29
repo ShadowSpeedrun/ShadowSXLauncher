@@ -107,7 +107,7 @@ public partial class MainWindow : Window
         new FileDialogFilter()
         {
             Name = "ROM File",
-            Extensions = new List<string>() {"iso"}
+            Extensions = new List<string>() {"iso", "rvz"}
         });
         
         Configuration.Instance.RomLocation = result == null ? "" : result.First();
@@ -232,7 +232,7 @@ public partial class MainWindow : Window
                 new FileDialogFilter()
                 {
                     Name = "ROM File",
-                    Extensions = new List<string>() {"iso"}
+                    Extensions = new List<string> {"iso"}
                 });
         
             baseIdLocation = resultBaseId == null ? "" : resultBaseId.First();
@@ -243,7 +243,7 @@ public partial class MainWindow : Window
                     new FileDialogFilter()
                     {
                         Name = "ROM File",
-                        Extensions = new List<string>() {"iso"}
+                        Extensions = new List<string> {"iso"}
                     });
                 patchedRomDestination = resultNewId ?? "";
             }

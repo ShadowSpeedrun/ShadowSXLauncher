@@ -148,12 +148,8 @@ public class Configuration
     {
         if (OperatingSystem.IsWindows())
         {
-            DolphinBinLocation = "SET ME"; // There is no such thing as a Global Dolphin for Windows yet
-            // it will probably be
-            // C:\Program Files\Dolphin\ [dolphin.exe etc in this folder] 
-            // Or
-            // C:\Users\<username>\AppData\Local\Dolphin\ (non admin) 
-            DolphinUserLocation = Path.Combine(Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).FullName, "Dolphin"); // and LocalApplicationData
+            DolphinBinLocation = "SET ME"; // There is no such thing as a Global Dolphin for Windows yet, so make it junk for the user to be prompted if they forget to set it
+            DolphinUserLocation = Path.Combine(Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).FullName, "Dolphin Emulator");
         } 
         else if (OperatingSystem.IsLinux())
         {
