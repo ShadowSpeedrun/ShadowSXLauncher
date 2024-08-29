@@ -51,50 +51,51 @@ public partial class MainWindow : Window
     {
         EnableButtons(false);
 
-        if (!OperatingSystem.IsLinux())
+        // If Dolphin Paths have not been set, we assume Portable on Windows and Flatpak on Linux
+        if (string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation))
         {
-            if (string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation))
-            {
-                await OpenSetDolphinBinDialog();
-            }
-
-            if (string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation))
-            {
-                await OpenSetDolphinUserDialog();
-            }
+            Configuration.Instance.SetDolphinPathsForFlatpakAndPortable();
         }
-        if (!string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation) || OperatingSystem.IsLinux())
+
+        // On Windows only, if the paths don't exist, we prompt for manual paths. We don't do this on Linux due to differences in bin handling
+        if (OperatingSystem.IsWindows() && !Directory.Exists(Configuration.Instance.DolphinBinLocation))
         {
-            //Check if Rom Location has been set at all.
-            if (string.IsNullOrEmpty(Configuration.Instance.RomLocation))
+            await OpenSetDolphinBinDialog();
+        }
+        
+        if (OperatingSystem.IsWindows() && (string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation) || !Directory.Exists(Configuration.Instance.DolphinUserLocation)))
+        {
+            await OpenSetDolphinUserDialog();
+        }
+
+        // Check if Rom Location has been set, and if the file is accessible.
+        if (string.IsNullOrEmpty(Configuration.Instance.RomLocation) || !File.Exists(Configuration.Instance.RomLocation))
+        {
+            await OpenSetRomDialog();
+        }
+
+        // Only continue if Rom Location has been set
+        if (!string.IsNullOrEmpty(Configuration.Instance.RomLocation))
+        {
+            // Double-check if the provided path has a file, if not re-prompt for a ROM.
+            if (!File.Exists(Configuration.Instance.RomLocation))
             {
-                await OpenSetRomDialog();
+                var message = MessageBoxManager
+                    .GetMessageBoxStandard("ROM not found", "ROM file not found. Please provide ROM location again.");
+                var result = await message.ShowAsync();
+                return;
             }
 
-            //Only continue if Rom Location has been set, in case it was not in the above code. 
-            if (!string.IsNullOrEmpty(Configuration.Instance.RomLocation))
+            // At this point assume there is a correct ROM. Technically nothing stopping a user from
+            // choosing whatever ROM they want to launch, but trying to account for that without additional
+            // annoying checks and processes is not worth it.
+
+            UpdateCustomAssets();
+            CommonFilePaths.LaunchDolphin(showInterface: false);
+
+            if (OperatingSystem.IsWindows())
             {
-                //Double check if the provided path has a file, if not re-prompt for a ROM.
-                if (!File.Exists(Configuration.Instance.RomLocation))
-                {
-                    var message = MessageBoxManager
-                        .GetMessageBoxStandard("ROM not found", "ROM file not found. Please provide ROM location again.");
-                    var result = await message.ShowAsync();
-                    // TODO: Restore the below or call return?
-                    //OpenRomDialog();
-                }
-
-                //At this point assume there is a correct ROM. Technically nothing stopping a user from
-                //choosing whatever ROM they want to launch, but trying to account for that without additional
-                //annoying checks and processes is not worth it.
-
-                UpdateCustomAssets();
-                CommonFilePaths.LaunchDolphin(showInterface: false);
-
-                if (OperatingSystem.IsWindows())
-                {
-                    Close(); // Not working with Linux (child process issue)?
-                }
+                Close(); // Not working with Linux (child process issue)?
             }
         }
         EnableButtons(true);

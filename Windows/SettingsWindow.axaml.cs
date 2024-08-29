@@ -56,6 +56,8 @@ public partial class SettingsWindow : Window
         SetRomLocationButton.Click += SetRomLocationButtonOnClick;
         SetDolphinBinLocationButton.Click += SetDolphinBinLocationButtonOnClick;
         SetDolphinUserLocationButton.Click += SetDolphinUserLocationButtonOnClick;
+        SetPathsFlatpakAndPortable.Click += SetPathsFlatpakAndPortableOnClick;
+        SetPathsNativeAndGlobal.Click += SetPathsNativeAndGlobalOnClick;
         OpenDolphinButton.Click += OpenDolphinButtonOnClick;
         CustomShadowColorButton.Click += CustomShadowColorButtonOnClick;
         SaveSettingsButton.Click += SaveSettingsButtonOnClick;
@@ -132,6 +134,24 @@ public partial class SettingsWindow : Window
         Configuration.Instance.DolphinUserLocation = result;
         Configuration.Instance.SaveSettings();
         
+        EnableUI(true);
+    }
+    
+    private void SetPathsFlatpakAndPortableOnClick(object? sender, RoutedEventArgs e)
+    {
+        EnableUI(false);
+        Configuration.Instance.SetDolphinPathsForFlatpakAndPortable();
+        DolphinBinLocationTextBox.Text = Configuration.Instance.DolphinBinLocation;
+        DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
+        EnableUI(true);
+    }
+    
+    private void SetPathsNativeAndGlobalOnClick(object? sender, RoutedEventArgs e)
+    {
+        EnableUI(false);
+        Configuration.Instance.SetDolphinPathsForNativeAndGlobal();
+        DolphinBinLocationTextBox.Text = Configuration.Instance.DolphinBinLocation;
+        DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
         EnableUI(true);
     }
 

@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using MsBox.Avalonia;
 
 namespace ShadowSXLauncher.Classes;
@@ -50,7 +49,7 @@ public static class CommonFilePaths
         
     public static string SxResourcesCustomTexturesPath
     {
-        get { return Path.Combine(SxResourcesPath, @"CustomTextures","GUPX8P"); }
+        get { return Path.Combine(SxResourcesPath, @"CustomTextures", "GUPX8P"); }
     }
         
     public static string SxResourcesISOPatchingPath
@@ -160,10 +159,9 @@ public static class CommonFilePaths
             throw new Exception("Unsupported Operating System");
         }
     }
-
     
     // TODO: Probably move these to a new util file?
-    private static async Task<string> GetFlatpakBinPath()
+    /*private static async Task<string> GetFlatpakBinPath()
     {
         var checkFlatpak = new Process();
         checkFlatpak.StartInfo.FileName = "which";
@@ -173,19 +171,21 @@ public static class CommonFilePaths
         await checkFlatpak.WaitForExitAsync();
         var flatpakDirectory = await checkFlatpak.StandardOutput.ReadToEndAsync();
         return flatpakDirectory.Trim('\n');
-    }
+    }*/
     
     // TODO: Probably move these to a new util file?
     public static async void LaunchDolphin(bool showInterface = false)
     {
         if (File.Exists(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)))
         {
-            var processInfo = new ProcessStartInfo();
-            processInfo.FileName = $"{Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)}";
-            
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = $"{Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)}"
+            };
+
             if (!showInterface)
             {
-                processInfo.Arguments = @" -b " + Configuration.Instance.RomLocation;
+                processInfo.Arguments = $@" -b {Configuration.Instance.RomLocation}";
             }
 
             if (OperatingSystem.IsLinux())
@@ -198,19 +198,20 @@ public static class CommonFilePaths
         }
         else
         {
-            if (OperatingSystem.IsLinux())
+            // A bit of a hack, if the user is configured for the flatpak the above 'If' will fail
+            // since we would check /usr/bin/flatpak/dolphin-emu, which won't ever exist.
+            if (OperatingSystem.IsLinux()) 
             {
-                var flatpakBinPath = await CommonFilePaths.GetFlatpakBinPath();
-                if (flatpakBinPath.Length == 0)
+                if (!File.Exists("/usr/bin/flatpak"))
                 {
                     var flatpakWarning = MessageBoxManager
-                        .GetMessageBoxStandard("Operation Cancelled",
+                        .GetMessageBoxStandard("Flatpak Not Found",
                             "Flatpak not detected. Please check Flatpak is installed.\nOtherwise specify the paths to Dolphin");
                     await flatpakWarning.ShowAsync();
                     return;
                 }
 
-                Process.Start(flatpakBinPath,
+                Process.Start("/usr/bin/flatpak",
                     showInterface
                         ? "run org.DolphinEmu.dolphin-emu"
                         : $"run org.DolphinEmu.dolphin-emu -b {Configuration.Instance.RomLocation}");
