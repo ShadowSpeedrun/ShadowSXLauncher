@@ -159,7 +159,7 @@ public partial class SettingsWindow : Window
 
     private void OpenDolphinButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        CommonFilePaths.LaunchDolphin(showInterface: true);
+        _ = CommonFilePaths.LaunchDolphin(showInterface: true);
     }
 
     private void CustomShadowColorButtonOnClick(object? sender, RoutedEventArgs e)

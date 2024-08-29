@@ -149,7 +149,7 @@ public class Configuration
         if (OperatingSystem.IsWindows())
         {
             DolphinBinLocation = "SET ME"; // There is no such thing as a Global Dolphin for Windows yet, so make it junk for the user to be prompted if they forget to set it
-            DolphinUserLocation = Path.Combine(Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).FullName, "Dolphin Emulator");
+            DolphinUserLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dolphin Emulator");
         } 
         else if (OperatingSystem.IsLinux())
         {

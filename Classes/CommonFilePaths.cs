@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using MsBox.Avalonia;
 
 namespace ShadowSXLauncher.Classes;
@@ -174,7 +175,7 @@ public static class CommonFilePaths
     }*/
     
     // TODO: Probably move these to a new util file?
-    public static async void LaunchDolphin(bool showInterface = false)
+    public static async Task<bool> LaunchDolphin(bool showInterface = false)
     {
         if (File.Exists(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)))
         {
@@ -195,6 +196,7 @@ public static class CommonFilePaths
             }
 
             Process.Start(processInfo);
+            return true;
         }
         else
         {
@@ -208,7 +210,7 @@ public static class CommonFilePaths
                         .GetMessageBoxStandard("Flatpak Not Found",
                             $"Flatpak not detected. Please check Flatpak is installed.{Environment.NewLine}Otherwise specify the paths to Dolphin");
                     await flatpakWarning.ShowAsync();
-                    return;
+                    return false;
                 }
 
                 if (CommonFilePaths.DolphinUserPath !=
@@ -218,19 +220,20 @@ public static class CommonFilePaths
                         .GetMessageBoxStandard("Flatpak User Folder Mismatch",
                             $"Flatpak was detected, but your User Folder is set to an unexpected location.{Environment.NewLine}Press the Flatpak Button to automatically fix this in Settings.");
                     await mismatchedConfig.ShowAsync();
-                    return;
+                    return false;
                 }
                 
                 Process.Start("/usr/bin/flatpak",
                     showInterface
                         ? "run org.DolphinEmu.dolphin-emu"
                         : $"run org.DolphinEmu.dolphin-emu -b \"{Configuration.Instance.RomLocation}\"");
-                return;
+                return true;
             }
            
             var message = MessageBoxManager
                 .GetMessageBoxStandard("Dolphin not found", "Could not find Dolphin. Please double check directory files.");
             var result = await message.ShowAsync();
+            return false;
         }
     }
 }

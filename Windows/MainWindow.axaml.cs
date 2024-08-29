@@ -91,9 +91,9 @@ public partial class MainWindow : Window
             // annoying checks and processes is not worth it.
 
             UpdateCustomAssets();
-            CommonFilePaths.LaunchDolphin(showInterface: false);
+            var launchedSuccessfully = await CommonFilePaths.LaunchDolphin(showInterface: false);
 
-            if (OperatingSystem.IsWindows())
+            if (OperatingSystem.IsWindows() && launchedSuccessfully)
             {
                 Close(); // Not working with Linux (child process issue)?
             }
@@ -110,7 +110,7 @@ public partial class MainWindow : Window
             Extensions = new List<string>() {"iso", "rvz"}
         });
         
-        Configuration.Instance.RomLocation = result == null ? "" : result.First();
+        Configuration.Instance.RomLocation = (result == null || result.Length == 0) ? "" : result.First();
         Configuration.Instance.SaveSettings();
     }
     
