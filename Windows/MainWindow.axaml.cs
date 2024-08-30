@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Platform;
 
 using System;
 using System.Collections.Generic;
@@ -91,7 +90,7 @@ public partial class MainWindow : Window
             // annoying checks and processes is not worth it.
 
             UpdateCustomAssets();
-            var launchedSuccessfully = await CommonFilePaths.LaunchDolphin(showInterface: false);
+            var launchedSuccessfully = await CommonUtils.LaunchDolphin(showInterface: false);
 
             if (OperatingSystem.IsWindows() && launchedSuccessfully)
             {

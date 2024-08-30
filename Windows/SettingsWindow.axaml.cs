@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using MsBox.Avalonia;
 using ShadowSXLauncher.Classes;
 
 namespace ShadowSXLauncher.Windows;
@@ -37,8 +33,8 @@ public partial class SettingsWindow : Window
         DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
         InitializeUiButtonOptions();
         GlossLevelComboBox.SelectedIndex = Configuration.Instance.GlossAdjustmentIndex;
-        /*SetPathsFlatpakAndPortableButton.Name = OperatingSystem.IsLinux() ? "Flatpak" : "Portable";
-        SetPathsNativeAndGlobalButton.Name = OperatingSystem.IsWindows() ? "Global" : "Native";*/ // TODO: NOT ALLOWED
+        SetPathsFlatpakAndPortableButtonTextBlock.Text = OperatingSystem.IsLinux() ? "Flatpak" : "Portable";
+        SetPathsNativeAndGlobalButtonTextBlock.Text = OperatingSystem.IsWindows() ? "Global" : "Native";
         RegisterEvents();
     }
 
@@ -159,7 +155,7 @@ public partial class SettingsWindow : Window
 
     private void OpenDolphinButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        _ = CommonFilePaths.LaunchDolphin(showInterface: true);
+        _ = CommonUtils.LaunchDolphin(showInterface: true);
     }
 
     private void CustomShadowColorButtonOnClick(object? sender, RoutedEventArgs e)
