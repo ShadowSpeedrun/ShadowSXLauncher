@@ -71,6 +71,8 @@ public partial class SettingsWindow : Window
         SetRomLocationButton.IsEnabled = enable;
         SetDolphinBinLocationButton.IsEnabled = enable;
         SetDolphinUserLocationButton.IsEnabled = enable;
+        SetPathsFlatpakAndPortableButton.IsEnabled = enable;
+        SetPathsNativeAndGlobalButton.IsEnabled = enable;
         CustomButtonComboBox.IsEnabled = enable;
         GlossLevelComboBox.IsEnabled = enable;
         OpenDolphinButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation);
