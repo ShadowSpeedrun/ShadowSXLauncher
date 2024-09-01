@@ -2,14 +2,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="430"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="460"
         x:Class="ShadowSXLauncher.Windows.SettingsWindow"
         Width="450" MinWidth="450"
-        Height="430" MinHeight="430" MaxHeight="430"
+        Height="460" MinHeight="460" MaxHeight="460"
         CanResize="true"
         Title="Settings">
     
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" Margin="10">
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto" Margin="10">
         <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,5">
             <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">SX ROM Location</TextBlock>
             <TextBox Grid.Column="1" Name="RomLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
@@ -77,8 +77,11 @@
                 <TextBlock HorizontalAlignment="Center">Customize Shadow Color</TextBlock>
             </Button>
         </Grid>
-        <Button Grid.Row="5" HorizontalAlignment="Stretch" Name="SaveSettingsButton">
+        <Button Grid.Row="5" HorizontalAlignment="Stretch" Name="SaveSettingsButton" Margin="0,0,0,10">
             <TextBlock HorizontalAlignment="Center">Save Settings</TextBlock>
+        </Button>
+        <Button Grid.Row="6" HorizontalAlignment="Stretch" Name="BackButton">
+            <TextBlock HorizontalAlignment="Center">Back</TextBlock>
         </Button>
     </Grid>
 </Window>

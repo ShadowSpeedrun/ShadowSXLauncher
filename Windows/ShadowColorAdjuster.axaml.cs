@@ -45,6 +45,7 @@ public partial class ShadowColorAdjuster : Window
         GeneratePreview();
         ExportButton.Click += OnExportButtonPressed;
         OpenTextureFolderButton.Click += OpenTextureFolderButtonOnClick;
+        CloseButton.Click += (sender, args) => { Close(); };
     }
 
     private void OnExportButtonPressed(object? sender, RoutedEventArgs e)

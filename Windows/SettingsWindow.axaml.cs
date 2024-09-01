@@ -60,6 +60,7 @@ public partial class SettingsWindow : Window
         CustomShadowColorButton.Click += CustomShadowColorButtonOnClick;
         SaveSettingsButton.Click += SaveSettingsButtonOnClick;
         HighRezUiFixButton.Click += HighRezUiFixButtonOnClick;
+        BackButton.Click += (sender, args) => { Close(); };
     }
 
     /// <summary>
@@ -79,6 +80,7 @@ public partial class SettingsWindow : Window
         CustomShadowColorButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
         SaveSettingsButton.IsEnabled = enable;
         HighRezUiFixButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
+        BackButton.IsEnabled = enable;
     }
 
     private async Task<string[]?> GetFilePath(string title, FileDialogFilter filter)

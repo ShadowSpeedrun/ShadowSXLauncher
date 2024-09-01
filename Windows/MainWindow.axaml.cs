@@ -35,6 +35,7 @@ public partial class MainWindow : Window
         OpenGameLocationButton.Click += OpenGameLocationButtonPressed;
         OpenSaveFileLocationButton.Click += OnSaveFileButtonPressed;
         SettingsButton.Click += SettingsButton_Click;
+        ExitButton.Click += (sender, args) => { Close(); };
     }
 
     private void EnableButtons(bool enable)
@@ -44,6 +45,7 @@ public partial class MainWindow : Window
         OpenGameLocationButton.IsEnabled = enable;
         OpenSaveFileLocationButton.IsEnabled = enable;
         SettingsButton.IsEnabled = enable;
+        ExitButton.IsEnabled = enable;
     }
     
     private async void OnPlayButtonPressed(object? sender, RoutedEventArgs e)

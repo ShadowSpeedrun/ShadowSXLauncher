@@ -6,7 +6,7 @@
         x:Class="ShadowSXLauncher.Windows.MainWindow"
         Title="Shadow SX Launcher"
         Width="488" Height="468" CanResize="False">
-    <Grid RowDefinitions="*,Auto,Auto,Auto,Auto,Auto" Margin="10">
+    <Grid RowDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto" Margin="10">
         <Image Grid.Row="0" Source="/Assets/S_SX_Launcher_Logo.png"/>
         <Button Grid.Row="1" HorizontalAlignment="Stretch" Margin="0,5,0,5"
                 Name="PlayButton">
@@ -24,9 +24,13 @@
                 Name="OpenSaveFileLocationButton">
             <TextBlock TextAlignment="Center">Save File Management</TextBlock>
         </Button>
-        <Button Grid.Row="5" HorizontalAlignment="Stretch" Margin="0,5,0,0"
+        <Button Grid.Row="5" HorizontalAlignment="Stretch" Margin="0,5,0,5"
                 Name="SettingsButton">
             <TextBlock TextAlignment="Center">Settings</TextBlock>
+        </Button>
+        <Button Grid.Row="6" HorizontalAlignment="Stretch" Margin="0,5,0, 0"
+                Name="ExitButton">
+            <TextBlock TextAlignment="Center">Exit</TextBlock>
         </Button>
     </Grid>
 
