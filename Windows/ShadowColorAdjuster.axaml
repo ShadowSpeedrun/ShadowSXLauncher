@@ -4,22 +4,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:userControls="clr-namespace:ShadowSXLauncher.UserControls"
         mc:Ignorable="d"
-        d:DesignWidth="1380" d:DesignHeight="430"
-        Width="1380" Height="430"
+        d:DesignWidth="1280" d:DesignHeight="430"
+        Width="1280" Height="430"
         x:Class="ShadowSXLauncher.Windows.ShadowColorAdjuster"
         Title="Shadow Color Adjuster"
         CanResize="False"> 
-    <Grid ColumnDefinitions="250, 1100" Margin="10">
-        <Grid Grid.Column="0" RowDefinitions="Auto, *, *" Margin="0,0,10,0">
+    <Grid ColumnDefinitions="18*, 82*" Margin="10">
+        <Grid Grid.Column="0" RowDefinitions="Auto, *, *, *" Margin="0,0,10,0">
             <Image Grid.Row="0" Name="PreviewImage"/>
-            <Button Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="ExportButton" Margin="0,5, 0, 0">
+            <Button Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="ExportButton" Margin="0,5,0,0">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Export Textures</TextBlock>
             </Button>
-            <Button Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="OpenTextureFolderButton" Margin="0, 5,0,0">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" >Open Custom Texture Folder</TextBlock>
+            <Button Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="OpenTextureFolderButton" Margin="0,5,0,0">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Open Custom Texture Folder</TextBlock>
+            </Button>
+            <Button Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="CloseButton" Margin="0,5,0,0">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Close</TextBlock>
             </Button>
         </Grid>
-        <Grid Grid.Column="1" RowDefinitions="*, *" >
+        <Grid Grid.Column="1" RowDefinitions="*, *">
             <userControls:ColorPicker Name="MainColorPicker" Grid.Row="0" Margin="0,0,0,5"/>
             <userControls:ColorPicker Name="AccentColorPicker" Grid.Row="1" Margin="0,5,0,0"/>
         </Grid>

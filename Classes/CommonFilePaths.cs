@@ -37,7 +37,7 @@ public static class CommonFilePaths
 
     public static string CustomTexturesPath
     {
-        get { return Path.Combine(DolphinUserPath ,"Load","Textures","GUPX8P"); }
+        get { return Path.Combine(DolphinUserPath, "Load", "Textures", "GUP"); }
     }
 
     public static string SxResourcesPath
@@ -47,7 +47,7 @@ public static class CommonFilePaths
         
     public static string SxResourcesCustomTexturesPath
     {
-        get { return Path.Combine(SxResourcesPath, @"CustomTextures","GUPX8P"); }
+        get { return Path.Combine(SxResourcesPath, @"CustomTextures", "GUPX8P"); }
     }
         
     public static string SxResourcesISOPatchingPath
@@ -68,7 +68,7 @@ public static class CommonFilePaths
     public static string DolphinBinFile
     {
         get
-        {
+        {   
             if(OperatingSystem.IsWindows())
             {
                 return "Dolphin.exe";
@@ -76,7 +76,7 @@ public static class CommonFilePaths
             
             if (OperatingSystem.IsLinux())
             {
-                return "Dolphin";
+                return "dolphin-emu";
             }
             
             if (OperatingSystem.IsMacOS())

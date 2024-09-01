@@ -1,0 +1,72 @@
+﻿using MsBox.Avalonia;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+
+namespace ShadowSXLauncher.Classes;
+
+public static class CommonUtils
+{
+    public static async Task<bool> LaunchDolphin(bool showInterface = false)
+    {
+        if (File.Exists(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)))
+        {
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = $"{Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile)}"
+            };
+
+            if (!showInterface)
+            {
+                processInfo.Arguments = $" -b \"{Configuration.Instance.RomLocation}\"";
+            }
+
+            if (OperatingSystem.IsLinux())
+            {
+                processInfo.EnvironmentVariables["QT_QPA_PLATFORM"] = "xcb"; // Workaround until Dolphin runs on Wayland
+                processInfo.UseShellExecute = false; // required for wayland override
+            }
+
+            Process.Start(processInfo);
+            return true;
+        }
+        else
+        {
+            // A bit of a hack, if the user is configured for the flatpak the above 'If' will fail
+            // since we would check /usr/bin/flatpak/dolphin-emu, which won't ever exist.
+            if (OperatingSystem.IsLinux())
+            {
+                if (!File.Exists("/usr/bin/flatpak"))
+                {
+                    var flatpakWarning = MessageBoxManager
+                        .GetMessageBoxStandard("Flatpak Not Found",
+                            $"Flatpak not detected. Please check Flatpak is installed.{Environment.NewLine}Otherwise specify the paths to Dolphin");
+                    await flatpakWarning.ShowAsync();
+                    return false;
+                }
+
+                if (CommonFilePaths.DolphinUserPath !=
+                    $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.var/app/org.DolphinEmu.dolphin-emu/data/dolphin-emu/")
+                {
+                    var mismatchedConfig = MessageBoxManager
+                        .GetMessageBoxStandard("Flatpak User Folder Mismatch",
+                            $"Flatpak was detected, but your User Folder is set to an unexpected location.{Environment.NewLine}Press the Flatpak Button to automatically fix this in Settings.");
+                    await mismatchedConfig.ShowAsync();
+                    return false;
+                }
+
+                Process.Start("/usr/bin/flatpak",
+                    showInterface
+                        ? "run org.DolphinEmu.dolphin-emu"
+                        : $"run org.DolphinEmu.dolphin-emu -b \"{Configuration.Instance.RomLocation}\"");
+                return true;
+            }
+
+            var message = MessageBoxManager
+                .GetMessageBoxStandard("Dolphin not found", "Could not find Dolphin. Please double check directory files.");
+            var result = await message.ShowAsync();
+            return false;
+        }
+    }
+}

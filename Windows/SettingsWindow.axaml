@@ -2,14 +2,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="450"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="460"
         x:Class="ShadowSXLauncher.Windows.SettingsWindow"
         Width="450" MinWidth="450"
-        MinHeight="390" MaxHeight="390"
+        Height="460" MinHeight="460" MaxHeight="460"
         CanResize="true"
         Title="Settings">
     
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto" Margin="10">
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto" Margin="10">
         <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,5">
             <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">SX ROM Location</TextBlock>
             <TextBox Grid.Column="1" Name="RomLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
@@ -36,10 +36,16 @@
                 </Button>
             </Grid>
         </Grid>
-        <Grid Grid.Row="1" ColumnDefinitions="*" Background="#DD181818" Name="FlatpakMessageBlocker">
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Name="FlatpakMessageText">Flatpak Version Required</TextBlock>
+        <Grid Grid.Row="2" ColumnDefinitions="Auto, *, *" Margin="0,5,0,5">
+            <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">Quick Settings</TextBlock>
+            <Button Grid.Column="1" Name="SetPathsFlatpakAndPortableButton" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5,0,0,0">
+				<TextBlock Name="SetPathsFlatpakAndPortableButtonTextBlock" HorizontalAlignment="Center">Flatpak/Portable</TextBlock>
+			</Button>
+            <Button Grid.Column="2" Name="SetPathsNativeAndGlobalButton" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5,0,0,0">
+				<TextBlock Name="SetPathsNativeAndGlobalButtonTextBlock" HorizontalAlignment="Center">Native/Global</TextBlock>
+            </Button>
         </Grid>
-        <Grid Row="2" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
+        <Grid Row="3" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
             <Canvas Grid.Row="0" Height="3" Background="#DD181818"></Canvas>
             <TextBlock Grid.Row="1" Margin="0,5,0,10">Dolphin Graphics Settings</TextBlock>
             <Grid Grid.Row="2" ColumnDefinitions="Auto,*" Margin="0,5,0,5">
@@ -63,7 +69,7 @@
             </Grid>
             <Canvas Grid.Row="5" Height="3" Background="#DD181818" Margin="0,0,0,5"></Canvas>
         </Grid>
-        <Grid Grid.Row="3" ColumnDefinitions="*, *" Margin="0,0,0,10">
+        <Grid Grid.Row="4" ColumnDefinitions="*, *" Margin="0,0,0,10">
             <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,5,0" Name="OpenDolphinButton">
                 <TextBlock HorizontalAlignment="Center">Open Dolphin Interface</TextBlock>
             </Button>
@@ -71,8 +77,11 @@
                 <TextBlock HorizontalAlignment="Center">Customize Shadow Color</TextBlock>
             </Button>
         </Grid>
-        <Button Grid.Row="4" HorizontalAlignment="Stretch" Name="SaveSettingsButton">
+        <Button Grid.Row="5" HorizontalAlignment="Stretch" Name="SaveSettingsButton" Margin="0,0,0,10">
             <TextBlock HorizontalAlignment="Center">Save Settings</TextBlock>
+        </Button>
+        <Button Grid.Row="6" HorizontalAlignment="Stretch" Name="BackButton">
+            <TextBlock HorizontalAlignment="Center">Back</TextBlock>
         </Button>
     </Grid>
 </Window>

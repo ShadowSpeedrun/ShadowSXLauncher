@@ -4,7 +4,6 @@ using System.IO;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -46,6 +45,7 @@ public partial class ShadowColorAdjuster : Window
         GeneratePreview();
         ExportButton.Click += OnExportButtonPressed;
         OpenTextureFolderButton.Click += OpenTextureFolderButtonOnClick;
+        CloseButton.Click += (sender, args) => { Close(); };
     }
 
     private void OnExportButtonPressed(object? sender, RoutedEventArgs e)

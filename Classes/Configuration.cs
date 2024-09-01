@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using Avalonia;
-using Avalonia.Platform;
 
 namespace ShadowSXLauncher.Classes;
 
@@ -19,7 +17,11 @@ public class Configuration
     public string UiButtonDisplayAssetFolderName;
     public int GlossAdjustmentIndex;
     
-    public static readonly Dictionary<string, string> GlossAdjustmentOptions = new Dictionary<string, string>()
+    // TODO: When the 'copy recommended config' option is implemented, we need to use these paths:
+    // Flatpak: Flatpak Dir + data/dolphin-emu/ and config/dolphin-emu/
+    // Non Flatpak: ~/.local/share/dolphin-emu/ and ~/.config/dolphin-emu
+    
+    public static readonly Dictionary<string, string> GlossAdjustmentOptions = new()
     {
         {"", "Original"},
         {"ReducedGloss", "Reduced"},
@@ -29,7 +31,6 @@ public class Configuration
     private Configuration()
     {
         configurationXml = null;
-
         DolphinBinLocation = "";
         DolphinUserLocation = "";
         RomLocation = "";
@@ -61,11 +62,9 @@ public class Configuration
             {
                 configurationXml.Load(CommonFilePaths.ConfigFileLocation);
             }
-#pragma warning disable CS0168
             catch(IOException e)
-#pragma warning restore CS0168
             {
-                //Create the file if it doesnt exist.
+                // Create the file if it does not exist.
                 SaveSettings();
             }
         }
@@ -128,5 +127,35 @@ public class Configuration
         mainNode.AppendChild(xmlElementGlossAdjustment);
         
         configurationXml.Save(CommonFilePaths.ConfigFileLocation);
+    }
+
+    public void SetDolphinPathsForFlatpakAndPortable()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            DolphinBinLocation = Path.Combine(CommonFilePaths.AppStart, "Dolphin-x64");
+            DolphinUserLocation = Path.Combine(DolphinBinLocation, "User");
+        } 
+        else if (OperatingSystem.IsLinux())
+        {
+            DolphinBinLocation = "flatpak";
+            DolphinUserLocation = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.var/app/org.DolphinEmu.dolphin-emu/data/dolphin-emu/";
+        }
+        SaveSettings();
+    }
+    
+    public void SetDolphinPathsForNativeAndGlobal()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            DolphinBinLocation = "SET ME"; // There is no such thing as a Global Dolphin for Windows yet, so make it junk for the user to be prompted if they forget to set it
+            DolphinUserLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dolphin Emulator");
+        } 
+        else if (OperatingSystem.IsLinux())
+        {
+            DolphinBinLocation = "/usr/bin";
+            DolphinUserLocation = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.local/share/dolphin-emu/";
+        }
+        SaveSettings();
     }
 }

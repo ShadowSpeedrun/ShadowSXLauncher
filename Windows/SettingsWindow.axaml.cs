@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using MsBox.Avalonia;
 using ShadowSXLauncher.Classes;
 
 namespace ShadowSXLauncher.Windows;
@@ -37,10 +33,8 @@ public partial class SettingsWindow : Window
         DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
         InitializeUiButtonOptions();
         GlossLevelComboBox.SelectedIndex = Configuration.Instance.GlossAdjustmentIndex;
-
-        FlatpakMessageBlocker.IsVisible = OperatingSystem.IsLinux();
-        FlatpakMessageText.IsVisible = OperatingSystem.IsLinux();
-        
+        SetPathsFlatpakAndPortableButtonTextBlock.Text = OperatingSystem.IsLinux() ? "Flatpak" : "Portable";
+        SetPathsNativeAndGlobalButtonTextBlock.Text = OperatingSystem.IsWindows() ? "Global" : "Native";
         RegisterEvents();
     }
 
@@ -60,10 +54,13 @@ public partial class SettingsWindow : Window
         SetRomLocationButton.Click += SetRomLocationButtonOnClick;
         SetDolphinBinLocationButton.Click += SetDolphinBinLocationButtonOnClick;
         SetDolphinUserLocationButton.Click += SetDolphinUserLocationButtonOnClick;
+        SetPathsFlatpakAndPortableButton.Click += SetPathsFlatpakAndPortableOnClick;
+        SetPathsNativeAndGlobalButton.Click += SetPathsNativeAndGlobalOnClick;
         OpenDolphinButton.Click += OpenDolphinButtonOnClick;
         CustomShadowColorButton.Click += CustomShadowColorButtonOnClick;
         SaveSettingsButton.Click += SaveSettingsButtonOnClick;
         HighRezUiFixButton.Click += HighRezUiFixButtonOnClick;
+        BackButton.Click += (sender, args) => { Close(); };
     }
 
     /// <summary>
@@ -75,12 +72,15 @@ public partial class SettingsWindow : Window
         SetRomLocationButton.IsEnabled = enable;
         SetDolphinBinLocationButton.IsEnabled = enable;
         SetDolphinUserLocationButton.IsEnabled = enable;
+        SetPathsFlatpakAndPortableButton.IsEnabled = enable;
+        SetPathsNativeAndGlobalButton.IsEnabled = enable;
         CustomButtonComboBox.IsEnabled = enable;
         GlossLevelComboBox.IsEnabled = enable;
         OpenDolphinButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation);
         CustomShadowColorButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
         SaveSettingsButton.IsEnabled = enable;
         HighRezUiFixButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
+        BackButton.IsEnabled = enable;
     }
 
     private async Task<string[]?> GetFilePath(string title, FileDialogFilter filter)
@@ -138,19 +138,28 @@ public partial class SettingsWindow : Window
         
         EnableUI(true);
     }
-
-    private async void OpenDolphinButtonOnClick(object? sender, RoutedEventArgs e)
+    
+    private void SetPathsFlatpakAndPortableOnClick(object? sender, RoutedEventArgs e)
     {
-        if (Directory.Exists(CommonFilePaths.DolphinBinPath))
-        {
-            Process.Start(Path.Combine(CommonFilePaths.DolphinBinPath, CommonFilePaths.DolphinBinFile));
-        }
-        else
-        {
-            var message = MessageBoxManager
-                .GetMessageBoxStandard("Operation Cancelled", "Could not find " + CommonFilePaths.DolphinBinFile + ". Please double check directory files.");
-            await message.ShowAsync();
-        }
+        EnableUI(false);
+        Configuration.Instance.SetDolphinPathsForFlatpakAndPortable();
+        DolphinBinLocationTextBox.Text = Configuration.Instance.DolphinBinLocation;
+        DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
+        EnableUI(true);
+    }
+    
+    private void SetPathsNativeAndGlobalOnClick(object? sender, RoutedEventArgs e)
+    {
+        EnableUI(false);
+        Configuration.Instance.SetDolphinPathsForNativeAndGlobal();
+        DolphinBinLocationTextBox.Text = Configuration.Instance.DolphinBinLocation;
+        DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
+        EnableUI(true);
+    }
+
+    private void OpenDolphinButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        _ = CommonUtils.LaunchDolphin(showInterface: true);
     }
 
     private void CustomShadowColorButtonOnClick(object? sender, RoutedEventArgs e)
