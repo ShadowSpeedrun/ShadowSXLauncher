@@ -64,6 +64,11 @@ public static class CommonFilePaths
     {
         get { return Path.Combine(SxResourcesISOPatchingPath, "PatchingScriptsAndBins"); }
     }
+    
+    public static string SxResourcesDolphinConfigFilesFolderPath
+    {
+        get { return Path.Combine(SxResourcesPath, "DolphinConfigFiles"); }
+    }
 
     public static string DolphinBinFile
     {

@@ -7,10 +7,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using ShadowSXLauncher.Classes;
+using ShadowSXLauncher.Windows.OnboardingWindows;
 
 namespace ShadowSXLauncher.Windows;
 
@@ -23,8 +25,6 @@ public partial class MainWindow : Window
 #if DEBUG
         this.AttachDevTools();
 #endif
-        
-        Configuration.Instance.LoadSettings();
         RegisterEvents();
     }
 
@@ -33,9 +33,27 @@ public partial class MainWindow : Window
         PlayButton.Click += OnPlayButtonPressed;
         CreateROMButton.Click += CreateRomButton_Click;
         OpenGameLocationButton.Click += OpenGameLocationButtonPressed;
+        OpenLauncherLocationButton.Click += OpenLauncherLocationButtonPressed;
         OpenSaveFileLocationButton.Click += OnSaveFileButtonPressed;
         SettingsButton.Click += SettingsButton_Click;
         ExitButton.Click += (sender, args) => { Close(); };
+        this.Loaded += OnLoaded;
+    }
+
+    private void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        Configuration.Instance.LoadSettings();
+        if (!Configuration.Instance.OnboardingCompleted)
+        {
+            RunOnboading();
+        }
+    }
+
+    private async void RunOnboading()
+    {
+        EnableButtons(false);
+        await OnboardingManager.RunOnboarding(this);
+        EnableButtons(true);
     }
 
     private void EnableButtons(bool enable)
@@ -43,6 +61,7 @@ public partial class MainWindow : Window
         PlayButton.IsEnabled = enable;
         CreateROMButton.IsEnabled = enable;
         OpenGameLocationButton.IsEnabled = enable;
+        OpenLauncherLocationButton.IsEnabled = enable;
         OpenSaveFileLocationButton.IsEnabled = enable;
         SettingsButton.IsEnabled = enable;
         ExitButton.IsEnabled = enable;
@@ -61,12 +80,12 @@ public partial class MainWindow : Window
         // On Windows only, if the paths don't exist, we prompt for manual paths. We don't do this on Linux due to differences in bin handling
         if (OperatingSystem.IsWindows() && !Directory.Exists(Configuration.Instance.DolphinBinLocation))
         {
-            await OpenSetDolphinBinDialog();
+            await CommonUtils.OpenSetDolphinBinDialog(this);
         }
         
         if (OperatingSystem.IsWindows() && (string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation) || !Directory.Exists(Configuration.Instance.DolphinUserLocation)))
         {
-            await OpenSetDolphinUserDialog();
+            await CommonUtils.OpenSetDolphinUserDialog(this);
         }
 
         // Check if Rom Location has been set, and if the file is accessible.
@@ -134,64 +153,25 @@ public partial class MainWindow : Window
         return await sfd.ShowAsync(this);
     }
 
-    private async Task OpenSetDolphinBinDialog()
-    {
-        var result = await SetFolderPath("Set Path to Dolphin Executable");
-        Configuration.Instance.DolphinBinLocation = String.IsNullOrEmpty(result) ? "" : result;
-        Configuration.Instance.SaveSettings();
-    }
-    
-    private async Task OpenSetDolphinUserDialog()
-    {
-        var result = await SetFolderPath("Set Path to Dolphin User Folder");
-        Configuration.Instance.DolphinUserLocation = String.IsNullOrEmpty(result) ? "" : result;
-        Configuration.Instance.SaveSettings();
-    }
-
-    private async Task<string?> SetFolderPath(string title)
-    {
-        var ofd = new OpenFolderDialog();
-        ofd.Title = title;
-        ofd.Directory = CommonFilePaths.AppStart; 
-        return await ofd.ShowAsync(this);
-    }
-
     private void OpenGameLocationButtonPressed(object? sender, RoutedEventArgs e)
     {
-        OpenFolder(CommonFilePaths.AppStart);
+        CommonUtils.OpenFolder(CommonFilePaths.AppStart);
+    }
+    
+    private void OpenLauncherLocationButtonPressed(object? sender, RoutedEventArgs e)
+    {
+        CommonUtils.OpenFolder(CommonFilePaths.AppStart);
     }
 
     private async void OnSaveFileButtonPressed(object? sender, RoutedEventArgs e)
     {
-        var success = OpenFolder(CommonFilePaths.SavePath);
+        var success = CommonUtils.OpenFolder(CommonFilePaths.SavePath);
         if (!success)
         {
             var message = MessageBoxManager
                 .GetMessageBoxStandard("Save folder not found", "Please launch game to generate the save directory.");
             var result = await message.ShowAsync();
         }
-    }
-
-    /// <summary>
-    /// Open the provided folder path in the file explorer of the current operating system.
-    /// </summary>
-    /// <param name="folderPath"></param>
-    /// <returns>Returns True if File Path Exists.</returns>
-    private bool OpenFolder(string folderPath)
-    {
-        if (Directory.Exists(folderPath))
-        {
-            ProcessStartInfo psi = new ProcessStartInfo
-            {
-                FileName = CommonFilePaths.GetExplorerPath,
-                Arguments = "\"" + folderPath + "\"",
-                UseShellExecute = true
-            };
-            Process.Start(psi);
-            return true;
-        }
-
-        return false;
     }
 
     private void SettingsButton_Click(object? sender, EventArgs e)

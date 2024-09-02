@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 
 namespace ShadowSXLauncher.Classes;
 
@@ -68,5 +69,49 @@ public static class CommonUtils
             var result = await message.ShowAsync();
             return false;
         }
+    }
+    
+    public static async Task OpenSetDolphinBinDialog(Window parentWindow)
+    {
+        var result = await SetFolderPath("Set Path to Dolphin Executable", parentWindow);
+        Configuration.Instance.DolphinBinLocation = String.IsNullOrEmpty(result) ? "" : result;
+        Configuration.Instance.SaveSettings();
+    }
+    
+    public static async Task OpenSetDolphinUserDialog(Window parentWindow)
+    {
+        var result = await SetFolderPath("Set Path to Dolphin User Folder", parentWindow);
+        Configuration.Instance.DolphinUserLocation = String.IsNullOrEmpty(result) ? "" : result;
+        Configuration.Instance.SaveSettings();
+    }
+
+    private static async Task<string?> SetFolderPath(string title, Window parentWindow)
+    {
+        var ofd = new OpenFolderDialog();
+        ofd.Title = title;
+        ofd.Directory = CommonFilePaths.AppStart; 
+        return await ofd.ShowAsync(parentWindow);
+    }
+    
+    /// <summary>
+    /// Open the provided folder path in the file explorer of the current operating system.
+    /// </summary>
+    /// <param name="folderPath"></param>
+    /// <returns>Returns True if File Path Exists.</returns>
+    public static bool OpenFolder(string folderPath)
+    {
+        if (Directory.Exists(folderPath))
+        {
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = CommonFilePaths.GetExplorerPath,
+                Arguments = "\"" + folderPath + "\"",
+                UseShellExecute = true
+            };
+            Process.Start(psi);
+            return true;
+        }
+
+        return false;
     }
 }

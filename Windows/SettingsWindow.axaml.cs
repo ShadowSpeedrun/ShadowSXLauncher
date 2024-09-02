@@ -60,7 +60,15 @@ public partial class SettingsWindow : Window
         CustomShadowColorButton.Click += CustomShadowColorButtonOnClick;
         SaveSettingsButton.Click += SaveSettingsButtonOnClick;
         HighRezUiFixButton.Click += HighRezUiFixButtonOnClick;
+        OnboardingButton.Click += OnboardingButtonOnClick;
         BackButton.Click += (sender, args) => { Close(); };
+    }
+
+    private async void OnboardingButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        EnableUI(false);
+        await OnboardingManager.RunOnboarding(this);
+        EnableUI(true);
     }
 
     /// <summary>
@@ -81,6 +89,7 @@ public partial class SettingsWindow : Window
         SaveSettingsButton.IsEnabled = enable;
         HighRezUiFixButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
         BackButton.IsEnabled = enable;
+        OnboardingButton.IsEnabled = enable;
     }
 
     private async Task<string[]?> GetFilePath(string title, FileDialogFilter filter)

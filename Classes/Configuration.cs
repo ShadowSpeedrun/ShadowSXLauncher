@@ -11,6 +11,7 @@ public class Configuration
 
     private XmlDocument configurationXml;
 
+    public bool OnboardingCompleted;
     public string DolphinBinLocation;
     public string DolphinUserLocation;
     public string RomLocation;
@@ -31,6 +32,7 @@ public class Configuration
     private Configuration()
     {
         configurationXml = null;
+        OnboardingCompleted = false;
         DolphinBinLocation = "";
         DolphinUserLocation = "";
         RomLocation = "";
@@ -71,6 +73,11 @@ public class Configuration
 
         foreach (XmlElement node in configurationXml.DocumentElement)
         {
+            if (node.Name == "OnboardingCompleted")
+            {
+                OnboardingCompleted = bool.Parse(node.InnerText);
+            }
+            
             if (node.Name == "DolphinBinLocation")
             {
                 DolphinBinLocation = node.InnerText;
@@ -104,6 +111,9 @@ public class Configuration
 
         var mainNode = configurationXml.CreateElement("Settings");
 
+        var xmlElementOnboardingComplete = configurationXml.CreateElement("OnboardingCompleted");
+        xmlElementOnboardingComplete.InnerText = OnboardingCompleted.ToString();
+        
         var xmlElementDolphinBinLocation = configurationXml.CreateElement("DolphinBinLocation");
         xmlElementDolphinBinLocation.InnerText = DolphinBinLocation;
         
@@ -120,6 +130,7 @@ public class Configuration
         xmlElementGlossAdjustment.InnerText = GlossAdjustmentIndex.ToString();
 
         configurationXml.AppendChild(mainNode);
+        mainNode.AppendChild(xmlElementOnboardingComplete);
         mainNode.AppendChild(xmlElementDolphinBinLocation);
         mainNode.AppendChild(xmlElementDolphinUserLocation);
         mainNode.AppendChild(xmlElementRomLocation);

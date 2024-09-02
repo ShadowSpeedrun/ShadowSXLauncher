@@ -2,14 +2,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="460"
+        mc:Ignorable="d" d:DesignWidth="450"
         x:Class="ShadowSXLauncher.Windows.SettingsWindow"
         Width="450" MinWidth="450"
-        Height="460" MinHeight="460" MaxHeight="460"
+        SizeToContent="Height"
         CanResize="true"
         Title="Settings">
+    <!--Height="460" MinHeight="460" MaxHeight="460"  d:DesignHeight="460"-->
     
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto" Margin="10">
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto" Margin="10">
         <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,5">
             <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">SX ROM Location</TextBlock>
             <TextBox Grid.Column="1" Name="RomLocationTextBox" HorizontalAlignment="Stretch" IsEnabled="False"></TextBox>
@@ -37,7 +38,7 @@
             </Grid>
         </Grid>
         <Grid Grid.Row="2" ColumnDefinitions="Auto, *, *" Margin="0,5,0,5">
-            <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">Quick Settings</TextBlock>
+            <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">Quick Set Paths</TextBlock>
             <Button Grid.Column="1" Name="SetPathsFlatpakAndPortableButton" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5,0,0,0">
 				<TextBlock Name="SetPathsFlatpakAndPortableButtonTextBlock" HorizontalAlignment="Center">Flatpak/Portable</TextBlock>
 			</Button>
@@ -45,31 +46,54 @@
 				<TextBlock Name="SetPathsNativeAndGlobalButtonTextBlock" HorizontalAlignment="Center">Native/Global</TextBlock>
             </Button>
         </Grid>
-        <Grid Row="3" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
-            <Canvas Grid.Row="0" Height="3" Background="#DD181818"></Canvas>
-            <TextBlock Grid.Row="1" Margin="0,5,0,10">Dolphin Graphics Settings</TextBlock>
-            <Grid Grid.Row="2" ColumnDefinitions="Auto,*" Margin="0,5,0,5">
+        <Button Grid.Row="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,5,0,5"
+                HorizontalContentAlignment="Center" Name="OnboardingButton">Run Initial Setup Again</Button>
+        <!-- <Grid Row="3" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto"> -->
+        <!--     <Canvas Grid.Row="0" Height="3" Background="#DD181818"></Canvas> -->
+        <!--     <TextBlock Grid.Row="1" Margin="0,5,0,10">Dolphin Graphics Settings</TextBlock> -->
+        <!--     <Grid Grid.Row="2" ColumnDefinitions="Auto,*" Margin="0,5,0,5"> -->
+        <!--         <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">UI Button Display</TextBlock> -->
+        <!--         <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" Name="CustomButtonComboBox"/> -->
+        <!--         ~1~ <ComboBoxItem>Nintendo Switch</ComboBoxItem> @1@ -->
+        <!--         ~1~ <ComboBoxItem>Modern UI (Cross Circles)</ComboBoxItem> @1@ -->
+        <!--     </Grid> -->
+        <!--     <Grid Grid.Row="3" ColumnDefinitions="Auto,*" Margin="0,5,0,10"> -->
+        <!--         <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">Glossy Effect on Characters</TextBlock> -->
+        <!--         <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" Name="GlossLevelComboBox"> -->
+        <!--             <ComboBoxItem>Original</ComboBoxItem> -->
+        <!--             <ComboBoxItem>Reduced</ComboBoxItem> -->
+        <!--             <ComboBoxItem>Removed</ComboBoxItem> -->
+        <!--         </ComboBox> -->
+        <!--     </Grid> -->
+        <!--     <Grid Grid.Row="4" ColumnDefinitions="Auto, *"> -->
+        <!--         <TextBlock Grid.Column="0"  Padding="0, 0, 14,0" VerticalAlignment="Center">Higher Rez UI Fix</TextBlock> -->
+        <!--         <Button Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5" -->
+        <!--                 HorizontalContentAlignment="Center" Name="HighRezUiFixButton">Apply</Button> -->
+        <!--     </Grid> -->
+        <!--     <Canvas Grid.Row="5" Height="3" Background="#DD181818" Margin="0,0,0,5"></Canvas> -->
+        <!-- </Grid> -->
+        <Grid Grid.Row="4" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" Margin="0,0,0,10">
+            <Canvas Grid.Row="0" Height="3" Background="#DD181818" Margin="0,0,0,5"></Canvas>
+            <Label Grid.Row="1" Margin="-3,0,0,10">Dolphin Graphics Settings</Label>
+            <Grid Grid.Row="2" ColumnDefinitions="Auto,*" Margin="0,0,0,5">
                 <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">UI Button Display</TextBlock>
                 <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" Name="CustomButtonComboBox"/>
                 <!-- <ComboBoxItem>Nintendo Switch</ComboBoxItem> -->
                 <!-- <ComboBoxItem>Modern UI (Cross Circles)</ComboBoxItem> -->
             </Grid>
-            <Grid Grid.Row="3" ColumnDefinitions="Auto,*" Margin="0,5,0,10">
+            <Grid Grid.Row="3" ColumnDefinitions="*, *" Margin="0,5,0,10">
                 <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">Glossy Effect on Characters</TextBlock>
-                <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" Name="GlossLevelComboBox">
+                <!--Width="110"--><ComboBox Grid.Column="1"  HorizontalAlignment="Stretch" SelectedIndex="0" Name="GlossLevelComboBox">
                     <ComboBoxItem>Original</ComboBoxItem>
                     <ComboBoxItem>Reduced</ComboBoxItem>
                     <ComboBoxItem>Removed</ComboBoxItem>
                 </ComboBox>
             </Grid>
-            <Grid Grid.Row="4" ColumnDefinitions="Auto, *">
-                <TextBlock Grid.Column="0"  Padding="0, 0, 14,0" VerticalAlignment="Center">Higher Rez UI Fix</TextBlock>
-                <Button Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5"
-                        HorizontalContentAlignment="Center" Name="HighRezUiFixButton">Apply</Button>
-            </Grid>
-            <Canvas Grid.Row="5" Height="3" Background="#DD181818" Margin="0,0,0,5"></Canvas>
+            <Button Grid.Row="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5"
+                    HorizontalContentAlignment="Center" Name="HighRezUiFixButton">Apply Higher Rez UI Fix</Button>
+            <Canvas Grid.Row="5" Height="3" Background="#DD181818" Margin="0,5,0,0"></Canvas>
         </Grid>
-        <Grid Grid.Row="4" ColumnDefinitions="*, *" Margin="0,0,0,10">
+        <Grid Grid.Row="5" ColumnDefinitions="*, *" Margin="0,0,0,10">
             <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,5,0" Name="OpenDolphinButton">
                 <TextBlock HorizontalAlignment="Center">Open Dolphin Interface</TextBlock>
             </Button>
@@ -77,10 +101,10 @@
                 <TextBlock HorizontalAlignment="Center">Customize Shadow Color</TextBlock>
             </Button>
         </Grid>
-        <Button Grid.Row="5" HorizontalAlignment="Stretch" Name="SaveSettingsButton" Margin="0,0,0,10">
+        <Button Grid.Row="6" HorizontalAlignment="Stretch" Name="SaveSettingsButton" Margin="0,0,0,10">
             <TextBlock HorizontalAlignment="Center">Save Settings</TextBlock>
         </Button>
-        <Button Grid.Row="6" HorizontalAlignment="Stretch" Name="BackButton">
+        <Button Grid.Row="7" HorizontalAlignment="Stretch" Name="BackButton">
             <TextBlock HorizontalAlignment="Center">Back</TextBlock>
         </Button>
     </Grid>
