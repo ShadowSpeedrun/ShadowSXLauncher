@@ -12,7 +12,7 @@
         <StackPanel Grid.Row="0" Margin="0,0,0,10" Spacing="10">
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">First step is to setup the executable path for Dolphin.</TextBlock>
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">Version 2407 or higher is recommended. older builds can have issues.</TextBlock>
-            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">For Linux, the Flatpak version is recommended for it's ease of setup and configuration. You could also use a native executable if you have one ready for use.</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">For Linux, the Flatpak version is recommended for it's ease of setup and configuration. You could also use a native executable if you have one ready for use. This program assumes Flatpak is already configured if selected.</TextBlock>
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">The next steps will allow changing configuration settings, but keep in mind these changes will apply for all games played with the picked dolphin instance.</TextBlock>
         </StackPanel>
         <Grid Grid.Row="1" ColumnDefinitions="*, *, *">

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using ShadowSXLauncher.Classes;
 
@@ -15,10 +16,8 @@ public partial class OnboardingLinuxDolphinPortable : OnboardingWindow
     {
         InitializeComponent();
         RegisterEvents();
-        var portableFileFound =Directory.GetFiles(CommonFilePaths.DolphinBinPath, "*.*", SearchOption.TopDirectoryOnly)
-            .Any(file => Path.GetFileName(file).Equals("portable.txt", StringComparison.OrdinalIgnoreCase));
         
-        if (!portableFileFound)
+        if (!CommonUtils.isDolphinPortable())
         {
             SetPortableStackPanel.IsVisible = true;
             PortableFoundTextBlock.IsVisible = false;
@@ -27,34 +26,39 @@ public partial class OnboardingLinuxDolphinPortable : OnboardingWindow
         {
             SetPortableStackPanel.IsVisible = false;
             PortableFoundTextBlock.IsVisible = true;
-            Width = 300;
-            Configuration.Instance.DolphinUserLocation =
-                Path.Combine(Configuration.Instance.DolphinBinLocation, "User");
+            Width = 300; 
+            PortableCheckBox.IsChecked = true;
         }
     }
 
     private void RegisterEvents()
     {
-        ContinueButton.Click += (sender, args) =>
-        {
-            if ((bool)PortableCheckBox.IsChecked!)
-            {
-                CreatePortableFile();
-                Configuration.Instance.DolphinUserLocation = Path.Combine(Configuration.Instance.DolphinBinLocation, "User");
-            }
-            else
-            {
-                //Assume Global File path
-                Configuration.Instance.DolphinUserLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dolphin Emulator");
-            }
-            SetOnboardingPage(3);
-        };
+        ContinueButton.Click += ContinueButtonOnClick;
         BackButton.Click += (sender, args) => { SetOnboardingPage(1); };
+    }
+
+    private void ContinueButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        if ((bool)PortableCheckBox.IsChecked!)
+        {
+            CreatePortableFile();
+            Configuration.Instance.DolphinUserLocation = Path.Combine(Configuration.Instance.DolphinBinLocation, "user");
+        }
+        else
+        {
+            //Assume Global File path
+            Configuration.Instance.DolphinUserLocation = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.local/share/dolphin-emu/";
+        }
+        SetOnboardingPage(3);
     }
 
     private void CreatePortableFile()
     {
         //Create the portable.txt file in the bin location.
-        File.Create(Path.Combine(CommonFilePaths.DolphinBinPath, "portable.txt"));
+        var portableFilePath = Path.Combine(CommonFilePaths.DolphinBinPath, "portable.txt");
+        if (!File.Exists(portableFilePath))
+        {
+            File.Create(portableFilePath);
+        }
     }
 }

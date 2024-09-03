@@ -27,7 +27,6 @@ public static class OnboardingManager
         }
         else if(OperatingSystem.IsLinux())
         {
-            //TODO: Adjust for Linux
             onboardingPages = new List<Type>()
             {
                 typeof(OnboardingIntroWindow),

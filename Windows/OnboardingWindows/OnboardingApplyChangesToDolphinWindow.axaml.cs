@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Avalonia;
@@ -30,9 +32,23 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
 
     private void ApplyButtonOnClick(object? sender, RoutedEventArgs e)
     {
+        var coreSettingsPath = Path.Combine(CommonFilePaths.DolphinUserPath, "Config", "Dolphin.ini");
+        var graphicsSettingsPath = Path.Combine(CommonFilePaths.DolphinUserPath, "Config", "GFX.ini");
+        var hotkeySettingsPath = Path.Combine(CommonFilePaths.DolphinUserPath, "Config", "Hotkeys.ini");
+        var gameSettingsPath = Path.Combine(CommonFilePaths.DolphinUserPath, "GameSettings", "GUPX8P.ini");
+        
+        if (OperatingSystem.IsLinux() && !CommonUtils.isDolphinPortable())
+        {
+            var linuxConfigPath = Path.Combine($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}",".config", "dolphin-emu");
+            var linuxLocalPath = Path.Combine($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}",".local", "share", "dolphin-emu");
+            coreSettingsPath = Path.Combine(linuxConfigPath, "Dolphin.ini");
+            graphicsSettingsPath = Path.Combine(linuxConfigPath, "GFX.ini");
+            hotkeySettingsPath = Path.Combine(linuxConfigPath, "Hotkeys.ini");
+            gameSettingsPath = Path.Combine(linuxLocalPath, "GameSettings", "GUPX8P.ini");
+        }
+        
         if(CoreCheckBox.IsChecked!.Value)
         {
-            var coreSettingsPath = Path.Combine(CommonFilePaths.DolphinUserPath, "Config", "Dolphin.ini");
             var coreSettings = new DolphinSettingsAdjuster(coreSettingsPath);
             if (coreSettings.Sections.Count > 0)
             {
@@ -58,7 +74,6 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
         }
         if(GraphicsCheckBox.IsChecked!.Value)
         {
-            var graphicsSettingsPath = Path.Combine(CommonFilePaths.DolphinUserPath, "Config", "GFX.ini");
             var graphicsSettings = new DolphinSettingsAdjuster(graphicsSettingsPath);
             if (graphicsSettings.Sections.Count > 0)
             {
@@ -97,7 +112,6 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
         }
         if(HotkeyCheckBox.IsChecked!.Value)
         {
-            var hotkeySettingsPath = Path.Combine(CommonFilePaths.DolphinUserPath, "Config", "Hotkeys.ini");
             var hotkeySettings = new DolphinSettingsAdjuster(hotkeySettingsPath);
             if (hotkeySettings.Sections.Count > 0)
             {
@@ -138,7 +152,6 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
         }
         if(GameCheckBox.IsChecked!.Value)
         {
-            var gameSettingsPath = Path.Combine(CommonFilePaths.DolphinUserPath, "GameSettings", "GUPX8P.ini");
             var gameSettings = new DolphinSettingsAdjuster(gameSettingsPath);
             if (gameSettings.Sections.Count > 0)
             {

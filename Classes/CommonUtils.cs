@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 
@@ -114,4 +115,11 @@ public static class CommonUtils
 
         return false;
     }
+
+    public static bool isDolphinPortable()
+    {
+        return Directory.GetFiles(CommonFilePaths.DolphinBinPath, "*.*", SearchOption.TopDirectoryOnly)
+            .Any(file => Path.GetFileName(file).Equals("portable.txt", StringComparison.OrdinalIgnoreCase));
+    }
+    
 }

@@ -15,10 +15,8 @@ public partial class OnboardingWindowsDolphinPortable : OnboardingWindow
     {
         InitializeComponent();
         RegisterEvents();
-        var portableFileFound =Directory.GetFiles(CommonFilePaths.DolphinBinPath, "*.*", SearchOption.TopDirectoryOnly)
-            .Any(file => Path.GetFileName(file).Equals("portable.txt", StringComparison.OrdinalIgnoreCase));
         
-        if (!portableFileFound)
+        if (!CommonUtils.isDolphinPortable())
         {
             SetPortableStackPanel.IsVisible = true;
             PortableFoundTextBlock.IsVisible = false;

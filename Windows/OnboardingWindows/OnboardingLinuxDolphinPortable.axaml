@@ -10,8 +10,8 @@
         WindowStartupLocation="CenterOwner">
     <Grid RowDefinitions="Auto, Auto" Margin="10">
         <StackPanel Grid.Row="0" Margin="0,0,0,10" Spacing="10" Name="SetPortableStackPanel">
-            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">The next recommended step is to the provided Dolphin "Portable"</TextBlock>
-            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">By making the chosen Dolphin portable, we can make adjustments to the emulator settings without affecting settings used for other games.</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">If the Dolphin Instance Selected was a local build, the next recommended step is to make the provided Dolphin "Portable"</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">By making the chosen Dolphin portable, we can make adjustments to the emulator settings without affecting settings used for other games. If the Dolphin you selected is not a local build you should not make it a portable build.</TextBlock>
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">You can skip this step, but then the next set of settings will apply to your global Dolphin Settings and Configuration</TextBlock>
             <CheckBox HorizontalAlignment="Center" Name="PortableCheckBox">Make provided Dolphin Portable</CheckBox>
         </StackPanel>
