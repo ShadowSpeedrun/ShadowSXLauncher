@@ -31,8 +31,8 @@ public static class OnboardingManager
             onboardingPages = new List<Type>()
             {
                 typeof(OnboardingIntroWindow),
-                typeof(OnboardingSetDolphinPaths),
-                typeof(OnboardingWindowsDolphinPortable),
+                typeof(OnboardingSetDolphinPathsLinux),
+                typeof(OnboardingLinuxDolphinPortable),
                 typeof(OnboardingQuickLaunchDolphin),
                 typeof(OnboardingApplyChangesToDolphinWindow),
                 typeof(OnboardingCompleteWindow)
