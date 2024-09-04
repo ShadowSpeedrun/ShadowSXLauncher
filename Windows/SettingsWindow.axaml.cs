@@ -29,14 +29,27 @@ public partial class SettingsWindow : Window
 
     private void InitializeOptions()
     {
-        RomLocationTextBox.Text = Configuration.Instance.RomLocation;
-        DolphinBinLocationTextBox.Text = Configuration.Instance.DolphinBinLocation;
-        DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
+        RefreshPaths();
         InitializeUiButtonOptions();
         GlossLevelComboBox.SelectedIndex = Configuration.Instance.GlossAdjustmentIndex;
         SetPathsFlatpakAndPortableButtonTextBlock.Text = OperatingSystem.IsLinux() ? "Flatpak" : "Portable";
         SetPathsNativeAndGlobalButtonTextBlock.Text = OperatingSystem.IsWindows() ? "Global" : "Native";
+        SetHeights(OperatingSystem.IsLinux() ? 490 : 450);
         RegisterEvents();
+    }
+
+    private void RefreshPaths()
+    {
+        RomLocationTextBox.Text = Configuration.Instance.RomLocation;
+        DolphinBinLocationTextBox.Text = Configuration.Instance.DolphinBinLocation;
+        DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
+    }
+
+    private void SetHeights(int value)
+    {
+        Height = value;
+        MinHeight = value;
+        MaxHeight = value;
     }
 
     private void InitializeUiButtonOptions()
@@ -69,6 +82,7 @@ public partial class SettingsWindow : Window
         EnableUI(false);
         await OnboardingManager.RunOnboarding(this);
         EnableUI(true);
+        RefreshPaths();
     }
 
     /// <summary>

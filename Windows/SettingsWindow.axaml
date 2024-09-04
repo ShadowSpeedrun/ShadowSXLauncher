@@ -5,11 +5,11 @@
         mc:Ignorable="d" d:DesignWidth="450"
         x:Class="ShadowSXLauncher.Windows.SettingsWindow"
         Width="450" MinWidth="450"
-        Height="450" MinHeight="450" MaxHeight="450" d:DesignHeight="450"
+        Height="490" MinHeight="490" MaxHeight="490" d:DesignHeight="490"
         CanResize="true"
         Title="Settings">
     <!--Height="450" MinHeight="450" MaxHeight="450" d:DesignHeight="450"--><!--Windows-->
-    <!--Height="450" MinHeight="450" MaxHeight="450" d:DesignHeight="450"--><!--Linux-->
+    <!--Height="490" MinHeight="490" MaxHeight="490" d:DesignHeight="490"--><!--Linux-->
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto" Margin="10">
         <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,5">
             <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">SX ROM Location</TextBlock>

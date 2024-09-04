@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -17,12 +18,27 @@ public partial class OnboardingQuickLaunchDolphin : OnboardingWindow
     private void RegisterEvents()
     {
         ContinueButton.Click += ContinueButtonOnClick;
-        BackButton.Click += (sender, args) => { SetOnboardingPage(2); };
+        BackButton.Click += BackButtonOnClick;;
     }
 
     private void ContinueButtonOnClick(object? sender, RoutedEventArgs e)
     {
         CommonUtils.LaunchDolphin(true);
         SetOnboardingPage(4);
+    }
+    
+    private void BackButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        var previousPage = 2;
+        if (OperatingSystem.IsLinux())
+        {
+            if (Configuration.Instance.DolphinBinLocation == "flatpak"
+                || Configuration.Instance.DolphinBinLocation == "/usr/bin")
+            {
+                //Skip portable menu to go back to bin selection.
+                previousPage = 1;
+            }
+        }
+        SetOnboardingPage(previousPage);
     }
 }

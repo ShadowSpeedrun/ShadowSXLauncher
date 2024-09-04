@@ -131,10 +131,10 @@ public static class CommonUtils
                 "Dolphin Emulator");
             var appdataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "Dolphin Emulator");
-
             
-                var dolphinEmuKey = Registry.CurrentUser.OpenSubKey("Software", true)?.OpenSubKey("Dolphin Emulator", true);
-                var dolphinUserPathRegistryValue = dolphinEmuKey.GetValue("UserConfigPath");
+            var dolphinEmuKey = Registry.CurrentUser.OpenSubKey("Software", true)?.OpenSubKey("Dolphin Emulator", true);
+            var dolphinUserPathRegistryValue = dolphinEmuKey.GetValue("UserConfigPath");
+            
             if (dolphinUserPathRegistryValue != null)
             {
                 return ((string)dolphinUserPathRegistryValue);
