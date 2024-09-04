@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Microsoft.Win32;
 
 namespace ShadowSXLauncher.Classes;
 
@@ -121,5 +122,30 @@ public static class CommonUtils
         return Directory.GetFiles(CommonFilePaths.DolphinBinPath, "*.*", SearchOption.TopDirectoryOnly)
             .Any(file => Path.GetFileName(file).Equals("portable.txt", StringComparison.OrdinalIgnoreCase));
     }
-    
+
+    public static string SetWindowsUserGlobal()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            var docsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "Dolphin Emulator");
+            var appdataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "Dolphin Emulator");
+
+            
+                var dolphinEmuKey = Registry.CurrentUser.OpenSubKey("Software", true)?.OpenSubKey("Dolphin Emulator", true);
+                var dolphinUserPathRegistryValue = dolphinEmuKey.GetValue("UserConfigPath");
+            if (dolphinUserPathRegistryValue != null)
+            {
+                return ((string)dolphinUserPathRegistryValue);
+            }
+
+            //Dolphin will first check if the docs path exists, if not, will then make a directory in AppData.
+            return Directory.Exists(docsPath) ? docsPath : appdataPath;
+        }
+        else
+        {
+            throw new PlatformNotSupportedException();
+        }
+    }
 }
