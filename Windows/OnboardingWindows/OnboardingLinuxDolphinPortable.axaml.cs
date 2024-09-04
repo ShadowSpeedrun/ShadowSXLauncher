@@ -56,7 +56,7 @@ public partial class OnboardingLinuxDolphinPortable : OnboardingWindow
     {
         //Create the portable.txt file in the bin location.
         var portableFilePath = Path.Combine(CommonFilePaths.DolphinBinPath, "portable.txt");
-        if (!File.Exists(portableFilePath))
+        if (!CommonUtils.isDolphinPortable())
         {
             File.Create(portableFilePath);
         }

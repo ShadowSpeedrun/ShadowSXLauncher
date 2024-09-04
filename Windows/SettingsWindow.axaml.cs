@@ -24,6 +24,7 @@ public partial class SettingsWindow : Window
         
         Configuration.Instance.LoadSettings();
         InitializeOptions();
+        QuickSetButtons.IsVisible = OperatingSystem.IsLinux();
     }
 
     private void InitializeOptions()
@@ -59,7 +60,6 @@ public partial class SettingsWindow : Window
         OpenDolphinButton.Click += OpenDolphinButtonOnClick;
         CustomShadowColorButton.Click += CustomShadowColorButtonOnClick;
         SaveSettingsButton.Click += SaveSettingsButtonOnClick;
-        HighRezUiFixButton.Click += HighRezUiFixButtonOnClick;
         OnboardingButton.Click += OnboardingButtonOnClick;
         BackButton.Click += (sender, args) => { Close(); };
     }
@@ -87,7 +87,6 @@ public partial class SettingsWindow : Window
         OpenDolphinButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation);
         CustomShadowColorButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
         SaveSettingsButton.IsEnabled = enable;
-        HighRezUiFixButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
         BackButton.IsEnabled = enable;
         OnboardingButton.IsEnabled = enable;
     }
@@ -189,21 +188,6 @@ public partial class SettingsWindow : Window
     
     private void HighRezUiFixButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        var dolphinCustomTexturePath = Path.Combine(CommonFilePaths.CustomTexturesPath, "UI Fix");
-        if (Directory.Exists(dolphinCustomTexturePath))
-        {
-            Directory.Delete(dolphinCustomTexturePath, true);
-        }
-
-        var uiFixFilePath = Path.Combine(CommonFilePaths.SxResourcesCustomTexturesPath, "UI Fix");
-        var uiFixFiles = Directory.EnumerateFiles(uiFixFilePath);
-            
-        Directory.CreateDirectory(dolphinCustomTexturePath);
-            
-        foreach (var uiFixFile in uiFixFiles)
-        {
-            var dest = Path.Combine(dolphinCustomTexturePath, uiFixFile.Replace(uiFixFilePath + Path.DirectorySeparatorChar, ""));
-            File.Copy(uiFixFile, dest);
-        }
+        
     }
 }

@@ -15,6 +15,11 @@ public partial class OnboardingCompleteWindow : OnboardingWindow
 
     private void RegisterEvents()
     {
+        OpenDolphinButton.Click += (sender, args) =>
+        {
+            CommonUtils.LaunchDolphin(true);
+            Close();
+        };
         FinishButton.Click += (sender, args) => { Close(); };
     }
 }

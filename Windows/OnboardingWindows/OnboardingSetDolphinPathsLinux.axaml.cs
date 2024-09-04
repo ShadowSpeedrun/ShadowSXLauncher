@@ -18,6 +18,7 @@ public partial class OnboardingSetDolphinPathsLinux : OnboardingWindow
     {
         SetFlatpakPathButton.Click += SetFlatpakPathButtonOnClick;
         SetNativePathButton.Click += SetNativeButtonOnClick;
+        SetCustomPathButton.Click += SetCustomPathButtonOnClick;
         BackButton.Click += (sender, args) => { SetOnboardingPage(0); };
     }
 
@@ -29,7 +30,15 @@ public partial class OnboardingSetDolphinPathsLinux : OnboardingWindow
         SetOnboardingPage(3);
     }
 
-    private async void SetNativeButtonOnClick(object? sender, RoutedEventArgs e)
+    private void SetNativeButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        Configuration.Instance.SetDolphinPathsForNativeAndGlobal();
+        
+        //We can skip setting the user path in this case.
+        SetOnboardingPage(3);
+    }
+    
+    private async void SetCustomPathButtonOnClick(object? sender, RoutedEventArgs e)
     {
         await CommonUtils.OpenSetDolphinBinDialog(this);
 

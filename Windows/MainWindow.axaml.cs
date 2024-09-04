@@ -26,6 +26,7 @@ public partial class MainWindow : Window
         this.AttachDevTools();
 #endif
         RegisterEvents();
+        EnableButtons(true);
     }
 
     private void RegisterEvents()
@@ -60,7 +61,7 @@ public partial class MainWindow : Window
     {
         PlayButton.IsEnabled = enable;
         CreateROMButton.IsEnabled = enable;
-        OpenGameLocationButton.IsEnabled = enable;
+        OpenGameLocationButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.RomLocation);
         OpenLauncherLocationButton.IsEnabled = enable;
         OpenSaveFileLocationButton.IsEnabled = enable;
         SettingsButton.IsEnabled = enable;
@@ -155,7 +156,14 @@ public partial class MainWindow : Window
 
     private void OpenGameLocationButtonPressed(object? sender, RoutedEventArgs e)
     {
-        CommonUtils.OpenFolder(CommonFilePaths.AppStart);
+        if (!string.IsNullOrEmpty(Configuration.Instance.RomLocation))
+        {
+            var directoryName = Path.GetDirectoryName(Configuration.Instance.RomLocation);
+            if (!string.IsNullOrEmpty(directoryName))
+            {
+                CommonUtils.OpenFolder(directoryName);
+            }
+        }
     }
     
     private void OpenLauncherLocationButtonPressed(object? sender, RoutedEventArgs e)
@@ -174,11 +182,11 @@ public partial class MainWindow : Window
         }
     }
 
-    private void SettingsButton_Click(object? sender, EventArgs e)
+    private async void SettingsButton_Click(object? sender, EventArgs e)
     {
         EnableButtons(false);
         var settingsDialog = new SettingsWindow();
-        settingsDialog.ShowDialog(this);
+        await settingsDialog.ShowDialog(this);
         EnableButtons(true);
     }
     

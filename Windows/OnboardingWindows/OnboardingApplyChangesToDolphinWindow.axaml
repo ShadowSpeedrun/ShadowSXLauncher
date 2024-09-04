@@ -17,6 +17,7 @@
             <CheckBox Name="GraphicsCheckBox">Graphics Hacks</CheckBox>
             <TextBlock TextWrapping="Wrap">Turns on most Graphics Hacks to help with performance</TextBlock>
             <TextBlock TextWrapping="Wrap">Custom Textures are turned on for graphics patches and support for Custom Color Shadow</TextBlock>
+            <TextBlock TextWrapping="Wrap">Custom Textures for fixing defects in UI displays at higher internal resolutions will also be added.</TextBlock>
             <CheckBox Name="HotkeyCheckBox">Keyboard Hotkeys</CheckBox>
             <TextBlock TextWrapping="Wrap">Configures Hotkeys for enabling normally un-configured options and disable options that would invalidate a speedrun if used.</TextBlock>
             <TextBlock TextWrapping="Wrap">* Disables Save State Hotkeys (Can be manually reconfigured if wanted for practice).</TextBlock>

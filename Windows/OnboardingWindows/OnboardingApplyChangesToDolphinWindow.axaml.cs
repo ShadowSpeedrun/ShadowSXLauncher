@@ -109,6 +109,24 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
                 }
                 File.Copy(Path.Combine(CommonFilePaths.SxResourcesDolphinConfigFilesFolderPath, "GFX.ini"),graphicsSettingsPath);
             }
+            
+            //Apply UI Fix Textures
+            var dolphinCustomTexturePath = Path.Combine(CommonFilePaths.CustomTexturesPath, "UI Fix");
+            if (Directory.Exists(dolphinCustomTexturePath))
+            {
+                Directory.Delete(dolphinCustomTexturePath, true);
+            }
+
+            var uiFixFilePath = Path.Combine(CommonFilePaths.SxResourcesCustomTexturesPath, "UI Fix");
+            var uiFixFiles = Directory.EnumerateFiles(uiFixFilePath);
+            
+            Directory.CreateDirectory(dolphinCustomTexturePath);
+            
+            foreach (var uiFixFile in uiFixFiles)
+            {
+                var dest = Path.Combine(dolphinCustomTexturePath, uiFixFile.Replace(uiFixFilePath + Path.DirectorySeparatorChar, ""));
+                File.Copy(uiFixFile, dest);
+            }
         }
         if(HotkeyCheckBox.IsChecked!.Value)
         {

@@ -26,8 +26,7 @@ public partial class OnboardingWindowsDolphinPortable : OnboardingWindow
             SetPortableStackPanel.IsVisible = false;
             PortableFoundTextBlock.IsVisible = true;
             Width = 300;
-            Configuration.Instance.DolphinUserLocation =
-                Path.Combine(Configuration.Instance.DolphinBinLocation, "User");
+            PortableCheckBox.IsChecked = true;
         }
     }
 
@@ -43,7 +42,7 @@ public partial class OnboardingWindowsDolphinPortable : OnboardingWindow
             else
             {
                 //Assume Global File path
-                Configuration.Instance.DolphinUserLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Dolphin Emulator");
+                Configuration.Instance.DolphinUserLocation = CommonUtils.SetWindowsUserGlobal();
             }
             SetOnboardingPage(3);
         };
@@ -53,6 +52,10 @@ public partial class OnboardingWindowsDolphinPortable : OnboardingWindow
     private void CreatePortableFile()
     {
         //Create the portable.txt file in the bin location.
-        File.Create(Path.Combine(CommonFilePaths.DolphinBinPath, "portable.txt"));
+        var portableFilePath = Path.Combine(CommonFilePaths.DolphinBinPath, "portable.txt");
+        if (!CommonUtils.isDolphinPortable())
+        {
+            File.Create(portableFilePath);
+        }
     }
 }
