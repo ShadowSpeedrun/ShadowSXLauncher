@@ -124,34 +124,15 @@ public partial class MainWindow : Window
     
     private async Task OpenSetRomDialog()
     {
-        var result = await SetOpenFilePath("Set Path to SX ROM", 
+        var result = await CommonUtils.SetOpenFilePath("Set Path to SX ROM", 
         new FileDialogFilter()
         {
             Name = "ROM File",
             Extensions = new List<string>() {"iso", "rvz"}
-        });
+        }, this);
         
         Configuration.Instance.RomLocation = (result == null || result.Length == 0) ? "" : result.First();
         Configuration.Instance.SaveSettings();
-    }
-    
-    private async Task<string[]?> SetOpenFilePath(string title, FileDialogFilter filter)
-    {
-        var ofd = new OpenFileDialog();
-        ofd.Title = title;
-        ofd.Filters = new List<FileDialogFilter>() { filter };
-        ofd.Directory = CommonFilePaths.AppStart;
-        ofd.AllowMultiple = false;
-        return await ofd.ShowAsync(this);
-    }
-    
-    private async Task<string?> SetSaveFilePath(string title, FileDialogFilter filter)
-    {
-        var sfd = new SaveFileDialog();
-        sfd.Title = title;
-        sfd.Filters = new List<FileDialogFilter>() { filter };
-        sfd.Directory = CommonFilePaths.AppStart;
-        return await sfd.ShowAsync(this);
     }
 
     private void OpenGameLocationButtonPressed(object? sender, RoutedEventArgs e)
@@ -217,23 +198,23 @@ public partial class MainWindow : Window
             var baseIdLocation = "";
             var patchedRomDestination = "";
 
-            var resultBaseId = await SetOpenFilePath("Select Original ROM (" + patch.SelectedVariant.OriginalGameId + ")", 
+            var resultBaseId = await CommonUtils.SetOpenFilePath("Select Original ROM (" + patch.SelectedVariant.OriginalGameId + ")", 
                 new FileDialogFilter()
                 {
                     Name = "ROM File",
                     Extensions = new List<string> {"iso"}
-                });
+                }, this);
         
             baseIdLocation = resultBaseId == null ? "" : resultBaseId.First();
 
             if (!string.IsNullOrEmpty(baseIdLocation))
             {
-                var resultNewId = await SetSaveFilePath("Save Patched ROM (" + patch.SelectedVariant.NewGameId + ")", 
+                var resultNewId = await CommonUtils.SetSaveFilePath("Save Patched ROM (" + patch.SelectedVariant.NewGameId + ")", 
                     new FileDialogFilter()
                     {
                         Name = "ROM File",
                         Extensions = new List<string> {"iso"}
-                    });
+                    }, this);
                 patchedRomDestination = resultNewId ?? "";
             }
             else

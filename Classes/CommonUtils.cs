@@ -1,5 +1,6 @@
 ﻿using MsBox.Avalonia;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -115,6 +116,25 @@ public static class CommonUtils
         }
 
         return false;
+    }
+    
+    public static async Task<string[]?> SetOpenFilePath(string title, FileDialogFilter filter, Window parentWindow)
+    {
+        var ofd = new OpenFileDialog();
+        ofd.Title = title;
+        ofd.Filters = new List<FileDialogFilter>() { filter };
+        ofd.Directory = CommonFilePaths.AppStart;
+        ofd.AllowMultiple = false;
+        return await ofd.ShowAsync(parentWindow);
+    }
+    
+    public static async Task<string?> SetSaveFilePath(string title, FileDialogFilter filter, Window parentWindow)
+    {
+        var sfd = new SaveFileDialog();
+        sfd.Title = title;
+        sfd.Filters = new List<FileDialogFilter>() { filter };
+        sfd.Directory = CommonFilePaths.AppStart;
+        return await sfd.ShowAsync(parentWindow);
     }
 
     public static bool isDolphinPortable()
