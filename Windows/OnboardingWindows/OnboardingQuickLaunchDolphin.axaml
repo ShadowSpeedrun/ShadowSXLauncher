@@ -1,0 +1,21 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Width="445"
+        SizeToContent="Height"
+        x:Class="ShadowSXLauncher.Windows.OnboardingWindows.OnboardingQuickLaunchDolphin"
+        Title="Initial Setup"
+        WindowStartupLocation="CenterOwner">
+    <Grid RowDefinitions="Auto, Auto" Margin="10">
+        <StackPanel Grid.Row="0" Margin="0,0,0,10" Spacing="10">
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">To ensure configuration files are available for the next step. We'll need to launch Dolphin to allow it to generate them.  You can close it shortly after it opens to continue with the next step.</TextBlock>
+        </StackPanel>
+        <Grid Grid.Row="1" ColumnDefinitions="*, *">
+            <Button Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,5,0" Name="ContinueButton">Continue</Button>
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5,0,0,0" Name="BackButton">Back</Button>
+        </Grid>
+    </Grid>
+</Window>
+

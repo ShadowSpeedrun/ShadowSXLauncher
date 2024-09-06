@@ -5,7 +5,8 @@
         mc:Ignorable="d" d:DesignWidth="488" d:DesignHeight="468"
         x:Class="ShadowSXLauncher.Windows.MainWindow"
         Title="Shadow SX Launcher"
-        Width="488" Height="468" CanResize="False">
+        Width="488" Height="468" CanResize="False"
+        WindowStartupLocation="CenterScreen">
     <Grid RowDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto" Margin="10">
         <Image Grid.Row="0" Source="/Assets/S_SX_Launcher_Logo.png"/>
         <Button Grid.Row="1" HorizontalAlignment="Stretch" Margin="0,5,0,5"
@@ -16,10 +17,16 @@
                 Name="CreateROMButton">
             <TextBlock TextAlignment="Center">Create Shadow SX ROM</TextBlock>
         </Button>
-        <Button Grid.Row="3" HorizontalAlignment="Stretch" Margin="0,5,0,5"
-                Name="OpenGameLocationButton">
-            <TextBlock TextAlignment="Center">Open Game Location</TextBlock>
-        </Button>
+        <Grid Grid.Row="3" ColumnDefinitions="*, *" Margin="0,5,0,5">
+            <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,5,0"
+                    Name="OpenGameLocationButton">
+                <TextBlock TextAlignment="Center">Open Game Location</TextBlock>
+            </Button>
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,0,0,0"
+                    Name="OpenLauncherLocationButton">
+                <TextBlock TextAlignment="Center">Open Launcher Location</TextBlock>
+            </Button>
+        </Grid>
         <Button Grid.Row="4" HorizontalAlignment="Stretch" Margin="0,5,0,5"
                 Name="OpenSaveFileLocationButton">
             <TextBlock TextAlignment="Center">Save File Management</TextBlock>

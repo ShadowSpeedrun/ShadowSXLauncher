@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Width="500"
+        SizeToContent="Height"
+        x:Class="ShadowSXLauncher.Windows.OnboardingWindows.OnboardingLinuxDolphinPortable"
+        Title="Initial Setup"
+        WindowStartupLocation="CenterOwner">
+    <Grid RowDefinitions="Auto, Auto" Margin="10">
+        <StackPanel Grid.Row="0" Margin="0,0,0,10" Spacing="10" Name="SetPortableStackPanel">
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">If the Dolphin Instance Selected was a local build, the next recommended step is to make the provided Dolphin "Portable"</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">By making the chosen Dolphin portable, we can make adjustments to the emulator settings without affecting settings used for other games. If the Dolphin you selected is not a local build you should not make it a portable build.</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">You can skip this step, but then the next set of settings will apply to your global Dolphin Settings and Configuration</TextBlock>
+            <CheckBox HorizontalAlignment="Center" Name="PortableCheckBox">Make provided Dolphin Portable</CheckBox>
+        </StackPanel>
+        <TextBlock Grid.Row="0" TextWrapping="Wrap" Margin="0,0,0,10" Name="PortableFoundTextBlock">
+            The Dolphin Instance you selected is already in Portable Mode, which is the recommended mode for Shadow SX.
+        </TextBlock>
+        <Grid Grid.Row="1" ColumnDefinitions="*, *">
+            <Button Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,5,0" Name="ContinueButton">Continue</Button>
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5,0,0,0" Name="BackButton">Back</Button>
+        </Grid>
+    </Grid>
+</Window>
+

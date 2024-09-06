@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Width="800"
+        SizeToContent="Height"
+        x:Class="ShadowSXLauncher.Windows.OnboardingWindows.OnboardingIntroWindow"
+        Title="Initial Setup"
+        WindowStartupLocation="CenterOwner">
+    <Grid RowDefinitions="Auto, Auto" Margin="10">
+        <StackPanel Grid.Row="0" Margin="0,0,0,10" Spacing="10">
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">Thanks for using Shadow SX Launcher!</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">This launcher's purpose is to help with quick configuration and launching of Shadow SX using the Dolphin Emulator.</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">If you are planning on simply creating the ROM to play on console hardware, you may close out this window now.</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">If you are planning to play with Dolphin Emulator, please follow the steps for the recommended configuration.</TextBlock>
+        </StackPanel>
+        <Grid Grid.Row="1" ColumnDefinitions="*, *">
+            <Button Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,5,0" Name="ContinueButton">Continue</Button>
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5,0,0,0" Name="CloseButton">Close</Button>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Width="550"
+        SizeToContent="Height"
+        x:Class="ShadowSXLauncher.Windows.OnboardingWindows.OnboardingSetDolphinPathsLinux"
+        Title="Initial Setup"
+        WindowStartupLocation="CenterOwner">
+    <Grid RowDefinitions="Auto, *" Margin="10">
+        <StackPanel Grid.Row="0" Margin="0,0,0,10" Spacing="10">
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">First step is to setup the executable path for Dolphin.</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">Version 2407 or higher is recommended. older builds can have issues.</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">For Linux, the Flatpak version is recommended for it's ease of setup and configuration. You could also use a native executable if you have one ready for use. This program assumes Flatpak is already configured if selected. Native assumes the typical path for a package download.</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">The next steps will allow changing configuration settings, but keep in mind these changes will apply for all games played with the picked dolphin instance.</TextBlock>
+        </StackPanel>
+        <Grid Grid.Row="1" ColumnDefinitions="*, *, *, *">
+            <Button Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="48" Margin="0,0,5,0" Name="SetFlatpakPathButton">
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center">Use Flatpak</TextBlock>
+            </Button>
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="48" Margin="5,0,5,0" Name="SetNativePathButton">
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center">Use Native</TextBlock>
+            </Button>
+            <Button Grid.Column="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="48" Margin="5,0,5,0" Name="SetCustomPathButton">
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center">Use Custom Build Path</TextBlock>
+            </Button>
+            <Button Grid.Column="3" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="48" Margin="5,0,0,0" Name="BackButton">
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center">Back</TextBlock>
+            </Button>
+        </Grid>
+    </Grid>
+</Window>
+

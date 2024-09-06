@@ -7,10 +7,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using ShadowSXLauncher.Classes;
+using ShadowSXLauncher.Windows.OnboardingWindows;
 
 namespace ShadowSXLauncher.Windows;
 
@@ -23,9 +25,8 @@ public partial class MainWindow : Window
 #if DEBUG
         this.AttachDevTools();
 #endif
-        
-        Configuration.Instance.LoadSettings();
         RegisterEvents();
+        EnableButtons(true);
     }
 
     private void RegisterEvents()
@@ -33,16 +34,35 @@ public partial class MainWindow : Window
         PlayButton.Click += OnPlayButtonPressed;
         CreateROMButton.Click += CreateRomButton_Click;
         OpenGameLocationButton.Click += OpenGameLocationButtonPressed;
+        OpenLauncherLocationButton.Click += OpenLauncherLocationButtonPressed;
         OpenSaveFileLocationButton.Click += OnSaveFileButtonPressed;
         SettingsButton.Click += SettingsButton_Click;
         ExitButton.Click += (sender, args) => { Close(); };
+        this.Loaded += OnLoaded;
+    }
+
+    private void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        Configuration.Instance.LoadSettings();
+        if (!Configuration.Instance.OnboardingCompleted)
+        {
+            RunOnboading();
+        }
+    }
+
+    private async void RunOnboading()
+    {
+        EnableButtons(false);
+        await OnboardingManager.RunOnboarding(this);
+        EnableButtons(true);
     }
 
     private void EnableButtons(bool enable)
     {
         PlayButton.IsEnabled = enable;
         CreateROMButton.IsEnabled = enable;
-        OpenGameLocationButton.IsEnabled = enable;
+        OpenGameLocationButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.RomLocation);
+        OpenLauncherLocationButton.IsEnabled = enable;
         OpenSaveFileLocationButton.IsEnabled = enable;
         SettingsButton.IsEnabled = enable;
         ExitButton.IsEnabled = enable;
@@ -61,12 +81,12 @@ public partial class MainWindow : Window
         // On Windows only, if the paths don't exist, we prompt for manual paths. We don't do this on Linux due to differences in bin handling
         if (OperatingSystem.IsWindows() && !Directory.Exists(Configuration.Instance.DolphinBinLocation))
         {
-            await OpenSetDolphinBinDialog();
+            await CommonUtils.OpenSetDolphinBinDialog(this);
         }
         
         if (OperatingSystem.IsWindows() && (string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation) || !Directory.Exists(Configuration.Instance.DolphinUserLocation)))
         {
-            await OpenSetDolphinUserDialog();
+            await CommonUtils.OpenSetDolphinUserDialog(this);
         }
 
         // Check if Rom Location has been set, and if the file is accessible.
@@ -104,66 +124,37 @@ public partial class MainWindow : Window
     
     private async Task OpenSetRomDialog()
     {
-        var result = await SetOpenFilePath("Set Path to SX ROM", 
+        var result = await CommonUtils.SetOpenFilePath("Set Path to SX ROM", 
         new FileDialogFilter()
         {
             Name = "ROM File",
             Extensions = new List<string>() {"iso", "rvz"}
-        });
+        }, this);
         
         Configuration.Instance.RomLocation = (result == null || result.Length == 0) ? "" : result.First();
         Configuration.Instance.SaveSettings();
     }
-    
-    private async Task<string[]?> SetOpenFilePath(string title, FileDialogFilter filter)
-    {
-        var ofd = new OpenFileDialog();
-        ofd.Title = title;
-        ofd.Filters = new List<FileDialogFilter>() { filter };
-        ofd.Directory = CommonFilePaths.AppStart;
-        ofd.AllowMultiple = false;
-        return await ofd.ShowAsync(this);
-    }
-    
-    private async Task<string?> SetSaveFilePath(string title, FileDialogFilter filter)
-    {
-        var sfd = new SaveFileDialog();
-        sfd.Title = title;
-        sfd.Filters = new List<FileDialogFilter>() { filter };
-        sfd.Directory = CommonFilePaths.AppStart;
-        return await sfd.ShowAsync(this);
-    }
-
-    private async Task OpenSetDolphinBinDialog()
-    {
-        var result = await SetFolderPath("Set Path to Dolphin Executable");
-        Configuration.Instance.DolphinBinLocation = String.IsNullOrEmpty(result) ? "" : result;
-        Configuration.Instance.SaveSettings();
-    }
-    
-    private async Task OpenSetDolphinUserDialog()
-    {
-        var result = await SetFolderPath("Set Path to Dolphin User Folder");
-        Configuration.Instance.DolphinUserLocation = String.IsNullOrEmpty(result) ? "" : result;
-        Configuration.Instance.SaveSettings();
-    }
-
-    private async Task<string?> SetFolderPath(string title)
-    {
-        var ofd = new OpenFolderDialog();
-        ofd.Title = title;
-        ofd.Directory = CommonFilePaths.AppStart; 
-        return await ofd.ShowAsync(this);
-    }
 
     private void OpenGameLocationButtonPressed(object? sender, RoutedEventArgs e)
     {
-        OpenFolder(CommonFilePaths.AppStart);
+        if (!string.IsNullOrEmpty(Configuration.Instance.RomLocation))
+        {
+            var directoryName = Path.GetDirectoryName(Configuration.Instance.RomLocation);
+            if (!string.IsNullOrEmpty(directoryName))
+            {
+                CommonUtils.OpenFolder(directoryName);
+            }
+        }
+    }
+    
+    private void OpenLauncherLocationButtonPressed(object? sender, RoutedEventArgs e)
+    {
+        CommonUtils.OpenFolder(CommonFilePaths.AppStart);
     }
 
     private async void OnSaveFileButtonPressed(object? sender, RoutedEventArgs e)
     {
-        var success = OpenFolder(CommonFilePaths.SavePath);
+        var success = CommonUtils.OpenFolder(CommonFilePaths.SavePath);
         if (!success)
         {
             var message = MessageBoxManager
@@ -172,33 +163,11 @@ public partial class MainWindow : Window
         }
     }
 
-    /// <summary>
-    /// Open the provided folder path in the file explorer of the current operating system.
-    /// </summary>
-    /// <param name="folderPath"></param>
-    /// <returns>Returns True if File Path Exists.</returns>
-    private bool OpenFolder(string folderPath)
-    {
-        if (Directory.Exists(folderPath))
-        {
-            ProcessStartInfo psi = new ProcessStartInfo
-            {
-                FileName = CommonFilePaths.GetExplorerPath,
-                Arguments = "\"" + folderPath + "\"",
-                UseShellExecute = true
-            };
-            Process.Start(psi);
-            return true;
-        }
-
-        return false;
-    }
-
-    private void SettingsButton_Click(object? sender, EventArgs e)
+    private async void SettingsButton_Click(object? sender, EventArgs e)
     {
         EnableButtons(false);
         var settingsDialog = new SettingsWindow();
-        settingsDialog.ShowDialog(this);
+        await settingsDialog.ShowDialog(this);
         EnableButtons(true);
     }
     
@@ -229,23 +198,23 @@ public partial class MainWindow : Window
             var baseIdLocation = "";
             var patchedRomDestination = "";
 
-            var resultBaseId = await SetOpenFilePath("Select Original ROM (" + patch.SelectedVariant.OriginalGameId + ")", 
+            var resultBaseId = await CommonUtils.SetOpenFilePath("Select Original ROM (" + patch.SelectedVariant.OriginalGameId + ")", 
                 new FileDialogFilter()
                 {
                     Name = "ROM File",
                     Extensions = new List<string> {"iso"}
-                });
+                }, this);
         
             baseIdLocation = resultBaseId == null ? "" : resultBaseId.First();
 
             if (!string.IsNullOrEmpty(baseIdLocation))
             {
-                var resultNewId = await SetSaveFilePath("Save Patched ROM (" + patch.SelectedVariant.NewGameId + ")", 
+                var resultNewId = await CommonUtils.SetSaveFilePath("Save Patched ROM (" + patch.SelectedVariant.NewGameId + ")", 
                     new FileDialogFilter()
                     {
                         Name = "ROM File",
                         Extensions = new List<string> {"iso"}
-                    });
+                    }, this);
                 patchedRomDestination = resultNewId ?? "";
             }
             else

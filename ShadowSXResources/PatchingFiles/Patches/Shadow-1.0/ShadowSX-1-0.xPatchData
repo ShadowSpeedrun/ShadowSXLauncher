@@ -2,7 +2,7 @@
 	<Description>Expects CleanRip of the original Shadow the Hedgehog NTSC ROM.<br/>CRC32 - F582CF1E</Description>
 	<Variants>
 		<Variant Name="4:3">
-			<PatchFileName>ShadowSX-4-3.vcdiff</PatchFileName>
+			<PatchFileName>ShadowSX.vcdiff</PatchFileName>
 			<OriginalGameID>GUPE8P</OriginalGameID>
 			<NewGameID>GUPX8P</NewGameID>
 			<ExpectedBaseCRC>F582CF1E</ExpectedBaseCRC>

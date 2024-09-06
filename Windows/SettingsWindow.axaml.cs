@@ -24,18 +24,32 @@ public partial class SettingsWindow : Window
         
         Configuration.Instance.LoadSettings();
         InitializeOptions();
+        QuickSetButtons.IsVisible = OperatingSystem.IsLinux();
     }
 
     private void InitializeOptions()
     {
-        RomLocationTextBox.Text = Configuration.Instance.RomLocation;
-        DolphinBinLocationTextBox.Text = Configuration.Instance.DolphinBinLocation;
-        DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
+        RefreshPaths();
         InitializeUiButtonOptions();
         GlossLevelComboBox.SelectedIndex = Configuration.Instance.GlossAdjustmentIndex;
         SetPathsFlatpakAndPortableButtonTextBlock.Text = OperatingSystem.IsLinux() ? "Flatpak" : "Portable";
         SetPathsNativeAndGlobalButtonTextBlock.Text = OperatingSystem.IsWindows() ? "Global" : "Native";
+        SetHeights(OperatingSystem.IsLinux() ? 490 : 450);
         RegisterEvents();
+    }
+
+    private void RefreshPaths()
+    {
+        RomLocationTextBox.Text = Configuration.Instance.RomLocation;
+        DolphinBinLocationTextBox.Text = Configuration.Instance.DolphinBinLocation;
+        DolphinUserLocationTextBox.Text = Configuration.Instance.DolphinUserLocation;
+    }
+
+    private void SetHeights(int value)
+    {
+        Height = value;
+        MinHeight = value;
+        MaxHeight = value;
     }
 
     private void InitializeUiButtonOptions()
@@ -59,8 +73,16 @@ public partial class SettingsWindow : Window
         OpenDolphinButton.Click += OpenDolphinButtonOnClick;
         CustomShadowColorButton.Click += CustomShadowColorButtonOnClick;
         SaveSettingsButton.Click += SaveSettingsButtonOnClick;
-        HighRezUiFixButton.Click += HighRezUiFixButtonOnClick;
+        OnboardingButton.Click += OnboardingButtonOnClick;
         BackButton.Click += (sender, args) => { Close(); };
+    }
+
+    private async void OnboardingButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        EnableUI(false);
+        await OnboardingManager.RunOnboarding(this);
+        EnableUI(true);
+        RefreshPaths();
     }
 
     /// <summary>
@@ -79,8 +101,8 @@ public partial class SettingsWindow : Window
         OpenDolphinButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinBinLocation);
         CustomShadowColorButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
         SaveSettingsButton.IsEnabled = enable;
-        HighRezUiFixButton.IsEnabled = enable && !string.IsNullOrEmpty(Configuration.Instance.DolphinUserLocation);
         BackButton.IsEnabled = enable;
+        OnboardingButton.IsEnabled = enable;
     }
 
     private async Task<string[]?> GetFilePath(string title, FileDialogFilter filter)
@@ -176,25 +198,5 @@ public partial class SettingsWindow : Window
         Configuration.Instance.UiButtonDisplayAssetFolderName = CustomButtonComboBox.SelectedIndex != 0 ? CustomButtonComboBox.SelectedItem.ToString() : string.Empty;
         Configuration.Instance.GlossAdjustmentIndex = GlossLevelComboBox.SelectedIndex;
         Configuration.Instance.SaveSettings();
-    }
-    
-    private void HighRezUiFixButtonOnClick(object? sender, RoutedEventArgs e)
-    {
-        var dolphinCustomTexturePath = Path.Combine(CommonFilePaths.CustomTexturesPath, "UI Fix");
-        if (Directory.Exists(dolphinCustomTexturePath))
-        {
-            Directory.Delete(dolphinCustomTexturePath, true);
-        }
-
-        var uiFixFilePath = Path.Combine(CommonFilePaths.SxResourcesCustomTexturesPath, "UI Fix");
-        var uiFixFiles = Directory.EnumerateFiles(uiFixFilePath);
-            
-        Directory.CreateDirectory(dolphinCustomTexturePath);
-            
-        foreach (var uiFixFile in uiFixFiles)
-        {
-            var dest = Path.Combine(dolphinCustomTexturePath, uiFixFile.Replace(uiFixFilePath + Path.DirectorySeparatorChar, ""));
-            File.Copy(uiFixFile, dest);
-        }
     }
 }

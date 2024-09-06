@@ -1,8 +1,12 @@
 ﻿using MsBox.Avalonia;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Microsoft.Win32;
 
 namespace ShadowSXLauncher.Classes;
 
@@ -67,6 +71,106 @@ public static class CommonUtils
                 .GetMessageBoxStandard("Dolphin not found", "Could not find Dolphin. Please double check directory files.");
             var result = await message.ShowAsync();
             return false;
+        }
+    }
+    
+    public static async Task OpenSetDolphinBinDialog(Window parentWindow)
+    {
+        var result = await SetFolderPath("Set Path to Dolphin Executable", parentWindow);
+        Configuration.Instance.DolphinBinLocation = String.IsNullOrEmpty(result) ? "" : result;
+        Configuration.Instance.SaveSettings();
+    }
+    
+    public static async Task OpenSetDolphinUserDialog(Window parentWindow)
+    {
+        var result = await SetFolderPath("Set Path to Dolphin User Folder", parentWindow);
+        Configuration.Instance.DolphinUserLocation = String.IsNullOrEmpty(result) ? "" : result;
+        Configuration.Instance.SaveSettings();
+    }
+
+    private static async Task<string?> SetFolderPath(string title, Window parentWindow)
+    {
+        var ofd = new OpenFolderDialog();
+        ofd.Title = title;
+        ofd.Directory = CommonFilePaths.AppStart; 
+        return await ofd.ShowAsync(parentWindow);
+    }
+    
+    /// <summary>
+    /// Open the provided folder path in the file explorer of the current operating system.
+    /// </summary>
+    /// <param name="folderPath"></param>
+    /// <returns>Returns True if File Path Exists.</returns>
+    public static bool OpenFolder(string folderPath)
+    {
+        if (Directory.Exists(folderPath))
+        {
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = CommonFilePaths.GetExplorerPath,
+                Arguments = "\"" + folderPath + "\"",
+                UseShellExecute = true
+            };
+            Process.Start(psi);
+            return true;
+        }
+
+        return false;
+    }
+    
+    public static async Task<string[]?> SetOpenFilePath(string title, FileDialogFilter filter, Window parentWindow)
+    {
+        var ofd = new OpenFileDialog();
+        ofd.Title = title;
+        ofd.Filters = new List<FileDialogFilter>() { filter };
+        ofd.Directory = CommonFilePaths.AppStart;
+        ofd.AllowMultiple = false;
+        return await ofd.ShowAsync(parentWindow);
+    }
+    
+    public static async Task<string?> SetSaveFilePath(string title, FileDialogFilter filter, Window parentWindow)
+    {
+        var sfd = new SaveFileDialog();
+        sfd.Title = title;
+        sfd.Filters = new List<FileDialogFilter>() { filter };
+        sfd.Directory = CommonFilePaths.AppStart;
+        return await sfd.ShowAsync(parentWindow);
+    }
+
+    public static bool isDolphinPortable()
+    {
+        if (CommonFilePaths.DolphinBinPath == "flatpak")
+        {
+            //Hackaround as we assume flatpack is not portable.
+            return false;
+        }
+        return Directory.GetFiles(CommonFilePaths.DolphinBinPath, "*.*", SearchOption.TopDirectoryOnly)
+            .Any(file => Path.GetFileName(file).Equals("portable.txt", StringComparison.OrdinalIgnoreCase));
+    }
+
+    public static string SetWindowsUserGlobal()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            var docsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "Dolphin Emulator");
+            var appdataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "Dolphin Emulator");
+            
+            var dolphinEmuKey = Registry.CurrentUser.OpenSubKey("Software", true)?.OpenSubKey("Dolphin Emulator", true);
+            var dolphinUserPathRegistryValue = dolphinEmuKey.GetValue("UserConfigPath");
+            
+            if (dolphinUserPathRegistryValue != null)
+            {
+                return ((string)dolphinUserPathRegistryValue);
+            }
+
+            //Dolphin will first check if the docs path exists, if not, will then make a directory in AppData.
+            return Directory.Exists(docsPath) ? docsPath : appdataPath;
+        }
+        else
+        {
+            throw new PlatformNotSupportedException();
         }
     }
 }

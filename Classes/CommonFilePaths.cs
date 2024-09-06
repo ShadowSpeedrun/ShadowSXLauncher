@@ -64,6 +64,11 @@ public static class CommonFilePaths
     {
         get { return Path.Combine(SxResourcesISOPatchingPath, "PatchingScriptsAndBins"); }
     }
+    
+    public static string SxResourcesDolphinConfigFilesFolderPath
+    {
+        get { return Path.Combine(SxResourcesPath, "DolphinConfigFiles"); }
+    }
 
     public static string DolphinBinFile
     {
@@ -155,6 +160,35 @@ public static class CommonFilePaths
             }
             
             throw new Exception("Unsupported Operating System");
+        }
+    }
+
+    public static string FlatpakAppPath()
+    {
+        return Path.Combine($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}", ".var", "app", "org.DolphinEmu.dolphin-emu");
+    }
+
+    public static string LinuxConfigPath()
+    {
+        if (DolphinBinPath == "flatpak")
+        {
+            return Path.Combine(FlatpakAppPath(), "config", "dolphin-emu");
+        }
+        else
+        {
+            return Path.Combine($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}",".config", "dolphin-emu");
+        }
+    }
+    
+    public static string LinuxDataPath()
+    {
+        if (DolphinBinPath == "flatpak")
+        {
+            return Path.Combine(FlatpakAppPath(), "data", "dolphin-emu");
+        }
+        else
+        {
+            return Path.Combine($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}",".local", "share", "dolphin-emu");
         }
     }
 }
