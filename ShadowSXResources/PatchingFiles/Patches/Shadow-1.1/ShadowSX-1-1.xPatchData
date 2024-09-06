@@ -23,14 +23,14 @@ Z + A = Turbo A input</Description>
 			<OriginalGameID>GUPE8P</OriginalGameID>
 			<NewGameID>GUPX8P</NewGameID>
 			<ExpectedBaseCRC>F582CF1E</ExpectedBaseCRC>
-			<ExpectedOutputCRC>22269822</ExpectedOutputCRC>
+			<ExpectedOutputCRC>013E30C6</ExpectedOutputCRC>
 		</Variant>
 		<Variant Name="16:9">
 			<PatchFileName>ShadowSX-v1.1-16x9.vcdiff</PatchFileName>
 			<OriginalGameID>GUPE8P</OriginalGameID>
 			<NewGameID>GUPX8P</NewGameID>
 			<ExpectedBaseCRC>F582CF1E</ExpectedBaseCRC>
-			<ExpectedOutputCRC>1A8ABAC7</ExpectedOutputCRC>
+			<ExpectedOutputCRC>2BA3ABBC</ExpectedOutputCRC>
 		</Variant>
 	</Variants>
 </PatchData>
