@@ -18,10 +18,6 @@ public class Configuration
     public string UiButtonDisplayAssetFolderName;
     public int GlossAdjustmentIndex;
     
-    // TODO: When the 'copy recommended config' option is implemented, we need to use these paths:
-    // Flatpak: Flatpak Dir + data/dolphin-emu/ and config/dolphin-emu/
-    // Non Flatpak: ~/.local/share/dolphin-emu/ and ~/.config/dolphin-emu
-    
     public static readonly Dictionary<string, string> GlossAdjustmentOptions = new()
     {
         {"", "Original"},

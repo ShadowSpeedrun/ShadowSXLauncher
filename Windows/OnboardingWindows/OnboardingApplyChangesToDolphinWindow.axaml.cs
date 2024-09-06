@@ -138,7 +138,6 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
                 //Data was found, so we will modify the file.
                 hotkeySettings.SetSetting("Hotkeys", "General/Reset", "PAUSE");
                 hotkeySettings.SetSetting("Hotkeys", "Graphics Toggles/Toggle Aspect Ratio", "F12");
-                //TODO: Test preventing settings for savestates and speedup.
                 hotkeySettings.RemoveSetting("Hotkeys", "Emulation Speed/Disable Emulation Speed Limit");
                 hotkeySettings.RemoveSetting("Hotkeys", "Load State/Load State Slot 1");
                 hotkeySettings.RemoveSetting("Hotkeys", "Load State/Load State Slot 2");

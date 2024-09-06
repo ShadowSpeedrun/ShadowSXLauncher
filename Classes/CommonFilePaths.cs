@@ -73,21 +73,15 @@ public static class CommonFilePaths
     public static string DolphinBinFile
     {
         get
-        {   
+        {
             if(OperatingSystem.IsWindows())
             {
                 return "Dolphin.exe";
             }
-            
+
             if (OperatingSystem.IsLinux())
             {
                 return "dolphin-emu";
-            }
-            
-            if (OperatingSystem.IsMacOS())
-            {
-                //TODO: What extension is used once it's extracted?
-                return "Dolphin";
             }
 
             return string.Empty;
@@ -102,15 +96,10 @@ public static class CommonFilePaths
             {
                 return Path.Combine(SxResourcesPatchBinsFolderPath, "xdelta-3.1.0-x86_64.exe");
             }
-            
+
             if (OperatingSystem.IsLinux())
             {
                 return Path.Combine(SxResourcesPatchBinsFolderPath, "xdelta3");
-            }
-            
-            if (OperatingSystem.IsMacOS())
-            {
-                return Path.Combine(SxResourcesPatchBinsFolderPath, "xdelta3_mac");
             }
 
             return string.Empty;
@@ -130,11 +119,6 @@ public static class CommonFilePaths
             {
                 return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch-ISO.sh");
             }
-            
-            if (OperatingSystem.IsMacOS())
-            {
-                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch-ISO.command");
-            }
 
             return string.Empty;
         }
@@ -152,11 +136,6 @@ public static class CommonFilePaths
             if (OperatingSystem.IsLinux())
             {
                 return "xdg-open";
-            }
-            
-            if (OperatingSystem.IsMacOS())
-            {
-                return "open";
             }
             
             throw new Exception("Unsupported Operating System");
