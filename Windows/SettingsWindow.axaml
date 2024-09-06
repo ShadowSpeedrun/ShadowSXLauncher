@@ -51,17 +51,19 @@
             <Canvas Grid.Row="0" Height="3" Background="#DD181818" Margin="0,5,0,5"></Canvas>
             <Label Grid.Row="1" Margin="-3,0,0,10">Dolphin Graphics Settings</Label>
             <Grid Grid.Row="2" ColumnDefinitions="Auto,*" Margin="0,0,0,5">
-                <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">UI Button Display</TextBlock>
+                <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center" Name="CustomButtonComboBoxLabel">UI Button Display</TextBlock>
                 <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" SelectedIndex="0" Name="CustomButtonComboBox"/>
             </Grid>
             <Grid Grid.Row="3" ColumnDefinitions="*, *" Margin="0,5,0,5">
-                <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center">Glossy Effect on Characters</TextBlock>
+                <TextBlock Grid.Column="0" Padding="0, 0, 10,0" VerticalAlignment="Center" Name="GlossLevelComboBoxLabel">Glossy Effect on Characters</TextBlock>
                 <ComboBox Grid.Column="1"  HorizontalAlignment="Stretch" SelectedIndex="0" Name="GlossLevelComboBox">
                     <ComboBoxItem>Original</ComboBoxItem>
                     <ComboBoxItem>Reduced</ComboBoxItem>
                     <ComboBoxItem>Removed</ComboBoxItem>
                 </ComboBox>
             </Grid>
+            <Button Grid.Row="2" Margin="0,0,0,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Name="UISteamDeckButton">UI Button Display</Button>
+            <Button Grid.Row="3" Margin="0,5,0,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Name="GlossySteamDeckButton">Glossy Effect on Characters</Button>
             <Canvas Grid.Row="5" Height="3" Background="#DD181818" Margin="0,5,0,0"></Canvas>
         </Grid>
         <Grid Grid.Row="5" ColumnDefinitions="*, *" Margin="0,0,0,10">

@@ -27,6 +27,10 @@ public partial class MainWindow : Window
 #endif
         RegisterEvents();
         EnableButtons(true);
+        CreateROMButton.IsVisible = !Configuration.Instance.SteamDeckMode;
+        OpenGameLocationButton.IsVisible = !Configuration.Instance.SteamDeckMode;
+        OpenLauncherLocationButton.IsVisible = !Configuration.Instance.SteamDeckMode;
+        OpenSaveFileLocationButton.IsVisible = !Configuration.Instance.SteamDeckMode;
     }
 
     private void RegisterEvents()

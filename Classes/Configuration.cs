@@ -48,6 +48,8 @@ public class Configuration
         }
     }
 
+    public bool SteamDeckMode { get; set; }
+
     /// <summary>
     /// Load data from XML file to commands.
     /// </summary>

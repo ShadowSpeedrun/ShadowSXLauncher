@@ -13,6 +13,12 @@ namespace ShadowSXLauncher.Windows;
 public partial class SettingsWindow : Window
 {
     private List<string> uiButtonOptions = new List<string>();
+    private List<string> glossOptions = new List<string>()
+    {
+        "Original",
+        "Reduced",
+        "Removed",
+    };
     
     public SettingsWindow()
     {
@@ -35,6 +41,13 @@ public partial class SettingsWindow : Window
         SetPathsFlatpakAndPortableButtonTextBlock.Text = OperatingSystem.IsLinux() ? "Flatpak" : "Portable";
         SetPathsNativeAndGlobalButtonTextBlock.Text = OperatingSystem.IsWindows() ? "Global" : "Native";
         SetHeights(OperatingSystem.IsLinux() ? 490 : 450);
+        OnboardingButton.IsVisible = !Configuration.Instance.SteamDeckMode;
+        GlossLevelComboBoxLabel.IsVisible = !Configuration.Instance.SteamDeckMode;
+        CustomButtonComboBoxLabel.IsVisible = !Configuration.Instance.SteamDeckMode;
+        GlossLevelComboBox.IsVisible = !Configuration.Instance.SteamDeckMode;
+        CustomButtonComboBox.IsVisible = !Configuration.Instance.SteamDeckMode;
+        UISteamDeckButton.IsVisible = Configuration.Instance.SteamDeckMode;
+        GlossySteamDeckButton.IsVisible = Configuration.Instance.SteamDeckMode;
         RegisterEvents();
     }
 
@@ -74,7 +87,23 @@ public partial class SettingsWindow : Window
         CustomShadowColorButton.Click += CustomShadowColorButtonOnClick;
         SaveSettingsButton.Click += SaveSettingsButtonOnClick;
         OnboardingButton.Click += OnboardingButtonOnClick;
+        UISteamDeckButton.Click += UISteamDeckButtonOnClick;
+        GlossySteamDeckButton.Click += GlossySteamDeckButtonOnClick;
         BackButton.Click += (sender, args) => { Close(); };
+    }
+
+    private async void GlossySteamDeckButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        var dropdownWindow = new SteamDeckDropDownWindow(glossOptions);
+        var result = await dropdownWindow.ShowDialog<int>(this);
+        Configuration.Instance.GlossAdjustmentIndex = result;
+    }
+
+    private async void UISteamDeckButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        var dropdownWindow = new SteamDeckDropDownWindow(uiButtonOptions);
+        var result = await dropdownWindow.ShowDialog<int>(this);
+        Configuration.Instance.UiButtonDisplayAssetFolderName = (result != 0) ? uiButtonOptions[result]: string.Empty;
     }
 
     private async void OnboardingButtonOnClick(object? sender, RoutedEventArgs e)
