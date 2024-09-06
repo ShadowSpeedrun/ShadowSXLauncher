@@ -22,9 +22,9 @@
             <TextBlock TextWrapping="Wrap">Configures Hotkeys for enabling normally un-configured options and disable options that would invalidate a speedrun if used.</TextBlock>
             <TextBlock TextWrapping="Wrap">* Disables Save State Hotkeys (Can be manually reconfigured if wanted for practice).</TextBlock>
             <TextBlock TextWrapping="Wrap">* Disables Emulation Fast Forward.</TextBlock>
-            <TextBlock TextWrapping="Wrap">* Enables Console Reset and Aspect Ratio Toggle, "Pause" Key and F12 Respectively. (Crashes still require shutting down the game.)</TextBlock>
+            <TextBlock TextWrapping="Wrap">* Enables Console Reset and Aspect Ratio Toggle, "Pause" Key and F12 Respectively. (Crashes still require shutting down the game).</TextBlock>
             <CheckBox Name="GameCheckBox">Game Specific Settings</CheckBox>
-            <TextBlock TextWrapping="Wrap">Configures the game to enforce certain emulator settings and provides the Graphics Patch in the form of a Gecko Code. (The patch is only needed to make bloom effects better on dolphin.)</TextBlock>
+            <TextBlock TextWrapping="Wrap">Configures the game to enforce certain emulator settings and provides the Graphics Patch in the form of a Gecko Code. (The patch is only needed to make bloom effects better on Dolphin).</TextBlock>
         </StackPanel>
         <Grid Grid.Row="1" ColumnDefinitions="*, *">
             <Button Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,5,0" Name="ApplyButton">Apply and Continue</Button>

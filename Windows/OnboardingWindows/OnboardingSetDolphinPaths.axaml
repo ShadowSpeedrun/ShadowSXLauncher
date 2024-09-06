@@ -11,7 +11,7 @@
     <Grid RowDefinitions="Auto, Auto" Margin="10">
         <StackPanel Grid.Row="0" Margin="0,0,0,10" Spacing="10">
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">First step is to setup the executable path for Dolphin.</TextBlock>
-            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">Version 2407 or higher is recommended. older builds can have issues.</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">Version 2409 or newer is recommended. older builds can have issues.</TextBlock>
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">It is highly recommended this is a separate download compared to what is used for other games. Preferably in the same folder as this launcher. This will be further explained in the next step.</TextBlock>
         </StackPanel>
         <Grid Grid.Row="1" ColumnDefinitions="*, *">
