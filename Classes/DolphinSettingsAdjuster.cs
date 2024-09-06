@@ -91,10 +91,10 @@ namespace ShadowSXLauncher
             {
                 Sections.Add(section, new List<string>());
             }
-            var foundSetting = Sections[section].Find(s => s.Contains(setting));
-            if (foundSetting != null)
+            var foundSettingIndex = Sections[section].FindIndex(s => s.Contains(setting));
+            if (foundSettingIndex != -1)
             {
-                foundSetting = setting + " = " + value;
+                Sections[section][foundSettingIndex] = setting + " = " + value;
             }
             else
             {
