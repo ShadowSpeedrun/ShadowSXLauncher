@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Avalonia;
@@ -43,9 +44,39 @@ public partial class ShadowColorAdjuster : Window
         accentColorPicker.SetRGBColor(Color.FromRgb(222,0,0)); //0xDE0000
         accentColorPicker.ColorChanged += (sender, args) => { GeneratePreview(); };
         GeneratePreview();
+        OpenButton.Click += OpenButtonOnClick;
+        SaveButton.Click += SaveButtonOnClick;
         ExportButton.Click += OnExportButtonPressed;
         OpenTextureFolderButton.Click += OpenTextureFolderButtonOnClick;
         CloseButton.Click += (sender, args) => { Close(); };
+    }
+    
+    private async void OpenButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        //TODO Add cancel handling
+        var filePath = await CommonUtils.SetOpenFilePath("Open Saved Colors", new FileDialogFilter()
+        {
+            Name = "xShadowColorsFile File",
+            Extensions = new List<string>() {"xShadowColorsFile"}
+        }, this);
+        var newColors = new xShadowColorsFile();
+        newColors.LoadSettings(filePath[0]);
+        MainColorPicker.PickedColorHexString.Text = newColors.MainColorHexString;
+        AccentColorPicker.PickedColorHexString.Text = newColors.AccentColorHexString;
+    }
+    
+    private async void SaveButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        //TODO Add cancel handling
+        var saveFilePath = await CommonUtils.SetSaveFilePath("Save Current Colors", new FileDialogFilter()
+        {
+            Name = "xShadowColorsFile File",
+            Extensions = new List<string>() {"xShadowColorsFile"}
+        }, this);
+        var colorsToSave = new xShadowColorsFile();
+        colorsToSave.MainColorHexString = MainColorPicker.PickedColorHexString.Text;
+        colorsToSave.AccentColorHexString = AccentColorPicker.PickedColorHexString.Text;
+        colorsToSave.SaveSettings(saveFilePath);
     }
 
     private void OnExportButtonPressed(object? sender, RoutedEventArgs e)

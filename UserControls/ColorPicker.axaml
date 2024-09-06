@@ -3,12 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:userControls="clr-namespace:ShadowSXLauncher.UserControls"
-             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="200"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="150"
+             Width="900" Height="150"
              x:Class="ShadowSXLauncher.UserControls.ColorPicker">
     <Grid ColumnDefinitions="Auto,*,*">
         <Grid Grid.Column="0" RowDefinitions="Auto, *"> <!--Background="Red"-->
             <TextBlock Grid.Row="0" Height="20" Name="PickerLabel">Label</TextBlock>
-            <Canvas Grid.Row="1"  Width="180" Height="180" Name="PickedColor"></Canvas>
+            <Canvas Grid.Row="1"  Width="130" Height="130" Name="PickedColor"></Canvas>
         </Grid>
         <Grid Grid.Column="1" RowDefinitions="*,Auto" Margin="10,0,0,0"><!--Background="Green"-->
             <Grid Grid.Row="0" RowDefinitions="*,*,*">
