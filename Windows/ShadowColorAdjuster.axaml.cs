@@ -53,12 +53,15 @@ public partial class ShadowColorAdjuster : Window
     
     private async void OpenButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        //TODO Add cancel handling
         var filePath = await CommonUtils.SetOpenFilePath("Open Saved Colors", new FileDialogFilter()
         {
             Name = "xShadowColorsFile File",
             Extensions = new List<string>() {"xShadowColorsFile"}
         }, this);
+        if (filePath == null || filePath.Length == 0)
+        {
+            return;
+        }
         var newColors = new xShadowColorsFile();
         newColors.LoadSettings(filePath[0]);
         MainColorPicker.PickedColorHexString.Text = newColors.MainColorHexString;
@@ -67,12 +70,15 @@ public partial class ShadowColorAdjuster : Window
     
     private async void SaveButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        //TODO Add cancel handling
         var saveFilePath = await CommonUtils.SetSaveFilePath("Save Current Colors", new FileDialogFilter()
         {
             Name = "xShadowColorsFile File",
             Extensions = new List<string>() {"xShadowColorsFile"}
         }, this);
+        if (string.IsNullOrEmpty(saveFilePath))
+        {
+            return;
+        }
         var colorsToSave = new xShadowColorsFile();
         colorsToSave.MainColorHexString = MainColorPicker.PickedColorHexString.Text;
         colorsToSave.AccentColorHexString = AccentColorPicker.PickedColorHexString.Text;
