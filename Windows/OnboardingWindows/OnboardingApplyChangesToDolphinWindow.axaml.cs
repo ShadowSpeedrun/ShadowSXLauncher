@@ -39,12 +39,10 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
         
         if (OperatingSystem.IsLinux() && !CommonUtils.isDolphinPortable())
         {
-            var linuxConfigPath = Path.Combine($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}",".config", "dolphin-emu");
-            var linuxLocalPath = Path.Combine($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}",".local", "share", "dolphin-emu");
-            coreSettingsPath = Path.Combine(linuxConfigPath, "Dolphin.ini");
-            graphicsSettingsPath = Path.Combine(linuxConfigPath, "GFX.ini");
-            hotkeySettingsPath = Path.Combine(linuxConfigPath, "Hotkeys.ini");
-            gameSettingsPath = Path.Combine(linuxLocalPath, "GameSettings", "GUPX8P.ini");
+            coreSettingsPath = Path.Combine(CommonFilePaths.LinuxConfigPath(), "Dolphin.ini");
+            graphicsSettingsPath = Path.Combine(CommonFilePaths.LinuxConfigPath(), "GFX.ini");
+            hotkeySettingsPath = Path.Combine(CommonFilePaths.LinuxConfigPath(), "Hotkeys.ini");
+            gameSettingsPath = Path.Combine(CommonFilePaths.LinuxDataPath(), "GameSettings", "GUPX8P.ini");
         }
         
         if(CoreCheckBox.IsChecked!.Value)
@@ -112,6 +110,10 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
             
             //Apply UI Fix Textures
             var dolphinCustomTexturePath = Path.Combine(CommonFilePaths.CustomTexturesPath, "UI Fix");
+            if (OperatingSystem.IsLinux() && !CommonUtils.isDolphinPortable())
+            {
+                dolphinCustomTexturePath = Path.Combine(CommonFilePaths.LinuxDataPath(), "Load", "Textures", "GUP", "UI Fix");
+            }
             if (Directory.Exists(dolphinCustomTexturePath))
             {
                 Directory.Delete(dolphinCustomTexturePath, true);
