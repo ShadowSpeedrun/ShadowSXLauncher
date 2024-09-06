@@ -105,25 +105,7 @@ public static class CommonFilePaths
             return string.Empty;
         }
     }
-    
-    public static string PatchingScriptPath
-    {
-        get
-        {
-            if (OperatingSystem.IsWindows())
-            {
-                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch-ISO.bat");
-            }
-            
-            if (OperatingSystem.IsLinux())
-            {
-                return Path.Combine(SxResourcesPatchBinsFolderPath, "Patch-ISO.sh");
-            }
 
-            return string.Empty;
-        }
-    }
-    
     public static string GetExplorerPath
     {
         get

@@ -187,11 +187,9 @@ public partial class MainWindow : Window
     {
         var vcdiffPath = patch.SelectedPatchFilePath;
         var xdeltaBinPath = CommonFilePaths.xdeltaBinPath;
-        var patchScriptPath = CommonFilePaths.PatchingScriptPath;
                 
         var allPatchFilesFound = File.Exists(xdeltaBinPath);
         allPatchFilesFound &= File.Exists(vcdiffPath);
-        allPatchFilesFound &= File.Exists(patchScriptPath);
         
         if (allPatchFilesFound)
         {
@@ -225,21 +223,22 @@ public partial class MainWindow : Window
                 return;
             }
             
-            //We can assume that gupe8pLocation is not empty or null. 
             if (!string.IsNullOrEmpty(patchedRomDestination))
             {
-                var batArguments = string.Format("\"{0}\" \"{1}\" \"{2}\" \"{3}\"", baseIdLocation, patchedRomDestination,
-                        xdeltaBinPath, vcdiffPath);
-                    
-                var processResult = Process.Start(patchScriptPath, batArguments);
+                var processResult = new Process();
+                processResult.StartInfo.FileName = xdeltaBinPath;
+                processResult.StartInfo.Arguments = $"-v -d -s {baseIdLocation} {vcdiffPath} {patchedRomDestination}";
+                processResult.StartInfo.RedirectStandardOutput = true;
+                processResult.Start();
+                
                 if (processResult != null)
                 {
-                    processResult.WaitForExit();
+                    await processResult.WaitForExitAsync();
 
                     switch (processResult.ExitCode)
                     {
                         case 0:
-                            //MessageBox by default doesn't have alignment options. Hack it to look nice to avoid needing to create a new control dialog.
+                            //MessageBox by default does not have alignment options. Hack it to look nice to avoid needing to create a new control dialog.
                             var messageSuccess = MessageBoxManager
                                 .GetMessageBoxStandard("ROM Patch Successful",
                                     "ROM Created Successfully." + Environment.NewLine + Environment.NewLine
@@ -253,7 +252,7 @@ public partial class MainWindow : Window
                             }
                             break;
                         default:
-                            //MessageBox by default doesnt have alignment options. Hack it to look nice to avoid needing to create a new control dialog.
+                            //MessageBox by default does not have alignment options. Hack it to look nice to avoid needing to create a new control dialog.
                             var messageFailed = MessageBoxManager
                                 .GetMessageBoxStandard("ROM Patch Failed",
                                     "ROM Patching Failed." + Environment.NewLine + Environment.NewLine
