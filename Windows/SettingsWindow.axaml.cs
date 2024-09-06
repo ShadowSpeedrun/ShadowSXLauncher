@@ -86,7 +86,7 @@ public partial class SettingsWindow : Window
     }
 
     /// <summary>
-    /// Needed to lock and unlock the UI when the current action doesn't do it for use (i.e. Dialogs)
+    /// Needed to lock and unlock the UI when the current action does not do it for use (i.e. Dialogs)
     /// </summary>
     /// <param name="enable"></param>
     private void EnableUI(bool enable)
