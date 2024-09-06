@@ -119,6 +119,11 @@ public static class CommonUtils
 
     public static bool isDolphinPortable()
     {
+        if (CommonFilePaths.DolphinBinPath == "flatpak")
+        {
+            //Hackaround as we assume flatpack is not portable.
+            return false;
+        }
         return Directory.GetFiles(CommonFilePaths.DolphinBinPath, "*.*", SearchOption.TopDirectoryOnly)
             .Any(file => Path.GetFileName(file).Equals("portable.txt", StringComparison.OrdinalIgnoreCase));
     }
