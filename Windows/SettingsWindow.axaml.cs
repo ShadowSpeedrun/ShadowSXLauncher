@@ -199,9 +199,4 @@ public partial class SettingsWindow : Window
         Configuration.Instance.GlossAdjustmentIndex = GlossLevelComboBox.SelectedIndex;
         Configuration.Instance.SaveSettings();
     }
-    
-    private void HighRezUiFixButtonOnClick(object? sender, RoutedEventArgs e)
-    {
-        
-    }
 }
