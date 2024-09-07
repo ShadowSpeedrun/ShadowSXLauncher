@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Avalonia.Controls.Selection;
 
 namespace ShadowSXLauncher
 {
@@ -151,16 +152,29 @@ namespace ShadowSXLauncher
             {
                 EnableGeckoCode(name, false);
                 
-                //Delete all lines from found index down until $ is hit or end of list.
-                //$ indicates a new code.
+                //Delete all lines from found index down until a new code is hit or it's end of list.
+                //After the code title, we can assume any non Hex character is the end of the code if it's not '*'
+                //After the comment is dectected, we assume any charcter that is not the comment character is a different config item.
                 var endFound = false;
                 var linesToRemove = 1;
+                var commentDetected = false;
+                //Start after title
                 for (int i = foundIndex + 1; i < Sections[section].Count && !endFound; i++)
                 {
+                    var line = Sections[section][i];
                     //Check first character for $, which will only appear for a new code.
-                    if (Sections[section][i][0] == '$')
+                    if (!commentDetected && Regex.Matches(line[0].ToString(), "^[0-9A-Fa-f]$").Count != 0)
                     {
                         linesToRemove++;
+                    }
+                    else if(line[0] == '*')
+                    {
+                        commentDetected = true;
+                        linesToRemove++;
+                    }
+                    else
+                    {
+                        endFound = true;
                     }
                 }
                 Sections[section].RemoveRange(foundIndex, linesToRemove);
