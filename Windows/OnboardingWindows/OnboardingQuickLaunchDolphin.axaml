@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterOwner">
     <Grid RowDefinitions="Auto, Auto" Margin="10">
         <StackPanel Grid.Row="0" Margin="0,0,0,10" Spacing="10">
-            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">To ensure configuration files are available for the next step. We'll need to launch Dolphin to allow it to generate them.  You can close it shortly after it opens to continue with the next step.</TextBlock>
+            <TextBlock Name="QuickLaunchDolphinStepsTextBlock" HorizontalAlignment="Center" TextWrapping="Wrap">To ensure configuration files are available for the next step, Dolphin will be launched. Press Continue to launch Dolphin.</TextBlock>
         </StackPanel>
         <Grid Grid.Row="1" ColumnDefinitions="*, *">
             <Button Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,5,0" Name="ContinueButton">Continue</Button>

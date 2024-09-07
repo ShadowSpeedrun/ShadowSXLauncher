@@ -12,7 +12,7 @@
         <StackPanel Grid.Row="0" Margin="0,0,0,5" Spacing="10">
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">You should be all set now!</TextBlock>
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">Time to make the ROM and begin playing the game!</TextBlock>
-            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">You also may need to make manual adjustments within dolphin for general graphics and controller settings.</TextBlock>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">You also may need to make manual adjustments within Dolphin for general graphics and controller settings.</TextBlock>
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap">You can make adjustments to some of these settings in the settings menu or re-run this setup process if needed.</TextBlock>
         </StackPanel>
         <Button Grid.Row="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,5,5,5" Name="OpenDolphinButton">Open Dolphin</Button>
