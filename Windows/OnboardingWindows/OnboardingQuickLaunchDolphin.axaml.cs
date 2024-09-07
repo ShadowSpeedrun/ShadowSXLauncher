@@ -1,14 +1,13 @@
 using System;
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using ShadowSXLauncher.Classes;
 
 namespace ShadowSXLauncher.Windows.OnboardingWindows;
 
 public partial class OnboardingQuickLaunchDolphin : OnboardingWindow
 {
+
+    private int continueTimesPressed = 0;
     public OnboardingQuickLaunchDolphin() : base()
     {
         InitializeComponent();
@@ -23,7 +22,13 @@ public partial class OnboardingQuickLaunchDolphin : OnboardingWindow
 
     private void ContinueButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        CommonUtils.LaunchDolphin(true);
+        if (continueTimesPressed == 0)
+        {
+            _ = CommonUtils.LaunchDolphin(true);
+            QuickLaunchDolphinStepsTextBlock.Text = $"Dolphin has been launched successfully.{Environment.NewLine}You need to close Dolphin before you continue.";
+            continueTimesPressed++;
+            return;
+        }
         SetOnboardingPage(4);
     }
     
