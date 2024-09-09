@@ -231,7 +231,7 @@ public partial class MainWindow : Window
             {
                 var processResult = new Process();
                 processResult.StartInfo.FileName = xdeltaBinPath;
-                processResult.StartInfo.Arguments = $"-v -d -s {baseIdLocation} {vcdiffPath} {patchedRomDestination}";
+                processResult.StartInfo.Arguments = $"-v -d -s \"{baseIdLocation}\" \"{vcdiffPath}\" \"{patchedRomDestination}\"";
                 processResult.StartInfo.RedirectStandardOutput = true;
                 processResult.Start();
                 
