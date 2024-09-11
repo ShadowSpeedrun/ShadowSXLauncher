@@ -58,6 +58,8 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
                 coreSettings.SetSetting("Core", "OverclockEnable", true);
                 coreSettings.SetSetting("Interface", "OnScreenDisplayMessages", false);
                 coreSettings.SetSetting("Interface", "PauseOnFocusLost", false);
+                coreSettings.SetSetting("Input", "BackgroundInput", true);
+                coreSettings.SetSetting("DSP", "Backend", "Cubeb");
                 coreSettings.SaveSettings();
             }
             else
@@ -89,8 +91,8 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
                 graphicsSettings.SetSetting("Settings", "BackendMultithreading", true);
                 graphicsSettings.SetSetting("Settings", "FastDepthCalc", true);
                 graphicsSettings.SetSetting("Settings", "SaveTextureCacheToState", true);
-                graphicsSettings.SetSetting("Settings", "CacheHiresTextures", true);
                 graphicsSettings.SetSetting("Settings", "HiresTextures", true);
+                graphicsSettings.SetSetting("Settings", "CacheHiresTextures", true);
                 graphicsSettings.SetSetting("Settings", "EnableGPUTextureDecoding", true);
                 graphicsSettings.SetSetting("Settings", "SafeTextureCacheColorSamples", 512);
                 graphicsSettings.SetSetting("Settings", "WaitForShadersBeforeStarting", true);
@@ -136,7 +138,15 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
             if (hotkeySettings.Sections.Count > 0)
             {
                 //Data was found, so we will modify the file.
-                hotkeySettings.SetSetting("Hotkeys", "General/Reset", "PAUSE");
+                if (OperatingSystem.IsLinux())
+                {
+                    hotkeySettings.SetSetting("Hotkeys", "General/Reset", "Pause");
+                }
+                else
+                {
+                    hotkeySettings.SetSetting("Hotkeys", "General/Reset", "PAUSE");
+                }
+
                 hotkeySettings.SetSetting("Hotkeys", "Graphics Toggles/Toggle Aspect Ratio", "F12");
                 hotkeySettings.RemoveSetting("Hotkeys", "Emulation Speed/Disable Emulation Speed Limit");
                 hotkeySettings.RemoveSetting("Hotkeys", "Load State/Load State Slot 1");
@@ -166,7 +176,13 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
                 {
                     File.Delete(hotkeySettingsPath);
                 }
-                File.Copy(Path.Combine(CommonFilePaths.SxResourcesDolphinConfigFilesFolderPath, "Hotkeys.ini"),hotkeySettingsPath);
+
+                var hotkeysFile = "Hotkeys_WINDOWS.ini";
+                if (OperatingSystem.IsLinux())
+                {
+                    hotkeysFile = "Hotkeys_LINUX.ini";
+                }
+                File.Copy(Path.Combine(CommonFilePaths.SxResourcesDolphinConfigFilesFolderPath, hotkeysFile),hotkeySettingsPath);
             }
         }
         if(GameCheckBox.IsChecked!.Value)
