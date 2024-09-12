@@ -58,6 +58,7 @@ public partial class OnboardingApplyChangesToDolphinWindow : OnboardingWindow
                 coreSettings.SetSetting("Core", "OverclockEnable", true);
                 coreSettings.SetSetting("Interface", "OnScreenDisplayMessages", false);
                 coreSettings.SetSetting("Interface", "PauseOnFocusLost", false);
+                coreSettings.SetSetting("Interface", "CursorVisibility", 1);
                 coreSettings.SetSetting("Input", "BackgroundInput", true);
                 coreSettings.SetSetting("DSP", "Backend", "Cubeb");
                 coreSettings.SaveSettings();

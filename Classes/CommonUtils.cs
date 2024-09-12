@@ -77,14 +77,14 @@ public static class CommonUtils
     public static async Task OpenSetDolphinBinDialog(Window parentWindow)
     {
         var result = await SetFolderPath("Set Path to Dolphin Executable", parentWindow);
-        Configuration.Instance.DolphinBinLocation = String.IsNullOrEmpty(result) ? "" : result;
+        Configuration.Instance.DolphinBinLocation = string.IsNullOrEmpty(result) ? "" : result;
         Configuration.Instance.SaveSettings();
     }
     
     public static async Task OpenSetDolphinUserDialog(Window parentWindow)
     {
         var result = await SetFolderPath("Set Path to Dolphin User Folder", parentWindow);
-        Configuration.Instance.DolphinUserLocation = String.IsNullOrEmpty(result) ? "" : result;
+        Configuration.Instance.DolphinUserLocation = string.IsNullOrEmpty(result) ? "" : result;
         Configuration.Instance.SaveSettings();
     }
 
