@@ -12,29 +12,29 @@ public static class OnboardingManager
     {
         Configuration.Instance.OnboardingCompleted = false;
         var currentOnboardingPage = 0;
-        List<Type> onboardingPages = null;
+        List<Func<OnboardingWindow>> onboardingPages = null;
         if (OperatingSystem.IsWindows())
         {
-            onboardingPages = new List<Type>()
+            onboardingPages = new List<Func<OnboardingWindow>>()
             {
-                typeof(OnboardingIntroWindow),
-                typeof(OnboardingSetDolphinPaths),
-                typeof(OnboardingWindowsDolphinPortable),
-                typeof(OnboardingQuickLaunchDolphin),
-                typeof(OnboardingApplyChangesToDolphinWindow),
-                typeof(OnboardingCompleteWindow)
+                () => new OnboardingIntroWindow(),
+                () => new OnboardingSetDolphinPaths(),
+                () => new OnboardingWindowsDolphinPortable(),
+                () => new OnboardingQuickLaunchDolphin(),
+                () => new OnboardingApplyChangesToDolphinWindow(),
+                () => new OnboardingCompleteWindow()
             };
         }
         else if(OperatingSystem.IsLinux())
         {
-            onboardingPages = new List<Type>()
+            onboardingPages = new List<Func<OnboardingWindow>>()
             {
-                typeof(OnboardingIntroWindow),
-                typeof(OnboardingSetDolphinPathsLinux),
-                typeof(OnboardingLinuxDolphinPortable),
-                typeof(OnboardingQuickLaunchDolphin),
-                typeof(OnboardingApplyChangesToDolphinWindow),
-                typeof(OnboardingCompleteWindow)
+                () => new OnboardingIntroWindow(),
+                () => new OnboardingSetDolphinPathsLinux(),
+                () => new OnboardingLinuxDolphinPortable(),
+                () => new OnboardingQuickLaunchDolphin(),
+                () => new OnboardingApplyChangesToDolphinWindow(),
+                () => new OnboardingCompleteWindow()
             };
         }
         else
@@ -47,10 +47,7 @@ public static class OnboardingManager
         //OnboardingComplete flag is set when completed, or exiting early.
         while (onboardingPages != null && onboardingPages.Count > 0 && !Configuration.Instance.OnboardingCompleted)
         {
-            //To avoid the "Cannot re-show a closed window." Error, we are going to get fancy with
-            //how we create and show our dialogs.
-            var pageToShow = Activator.CreateInstance(onboardingPages[currentOnboardingPage]) as OnboardingWindow;
-            
+            var pageToShow = onboardingPages[currentOnboardingPage]();
             try
             {
                 //Register callback event to change pages or exit onboarding.
