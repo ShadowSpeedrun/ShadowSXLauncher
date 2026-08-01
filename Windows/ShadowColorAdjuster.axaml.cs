@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -28,7 +29,14 @@ public partial class ShadowColorAdjuster : Window
 
         return colorPicker;
     }
-    
+
+    private bool _previewAssetsLoaded;
+    private int _previewWidth, _previewHeight, _previewLen;
+    private Vector _previewDpi;
+    private byte[]? _previewBase;
+    private byte[]? _previewMainMask;
+    private byte[]? _previewAccentMask;
+
     public ShadowColorAdjuster()
     {
         InitializeComponent();
@@ -160,14 +168,88 @@ public partial class ShadowColorAdjuster : Window
     
     private void GeneratePreview()
     {
-        var baseImage = bitmapToWriteable(new Bitmap(AssetLoader.Open(new Uri("avares://ShadowSXLauncher/Assets/ShadowColorReferences/ShadowPreviewBase.png"))));
-        var mainMaskImage = bitmapToWriteable(new Bitmap(AssetLoader.Open(new Uri("avares://ShadowSXLauncher/Assets/ShadowColorReferences/ShadowPreviewMainMask.png"))));
-        var accentMaskImage = bitmapToWriteable(new Bitmap(AssetLoader.Open(new Uri("avares://ShadowSXLauncher/Assets/ShadowColorReferences/ShadowPreviewAccentMask.png"))));
-        
-        var preview = ApplyColorMaskToBitmap(baseImage, mainMaskImage, mainColorPicker.GetColor, true);
-        preview = ApplyColorMaskToBitmap(preview, accentMaskImage, accentColorPicker.GetColor, true);
+        EnsurePreviewAssetsLoaded();
+        PreviewImage.Source = RenderPreview(mainColorPicker.GetColor, accentColorPicker.GetColor);
+    }
 
-        PreviewImage.Source = preview;
+    private void EnsurePreviewAssetsLoaded()
+    {
+        if (_previewAssetsLoaded) return;
+
+        using var baseBmp = LoadPreviewBitmap("ShadowPreviewBase.png");
+        using var mainMaskBmp = LoadPreviewBitmap("ShadowPreviewMainMask.png");
+        using var accentMaskBmp = LoadPreviewBitmap("ShadowPreviewAccentMask.png");
+
+        _previewDpi = baseBmp.Dpi;
+        _previewBase = CopyToBuffer(baseBmp, out _previewWidth, out _previewHeight);
+        _previewLen = _previewWidth * 4 * _previewHeight;
+        _previewMainMask = CopyToBuffer(mainMaskBmp, out _, out _);
+        _previewAccentMask = CopyToBuffer(accentMaskBmp, out _, out _);
+        _previewAssetsLoaded = true;
+    }
+
+    private static Bitmap LoadPreviewBitmap(string name)
+        => new Bitmap(AssetLoader.Open(new Uri($"avares://ShadowSXLauncher/Assets/ShadowColorReferences/{name}")));
+
+    private static byte[] CopyToBuffer(Bitmap bmp, out int width, out int height)
+    {
+        width = bmp.PixelSize.Width;
+        height = bmp.PixelSize.Height;
+        int stride = width * 4;
+        var buffer = new byte[stride * height];
+        var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+        try
+        {
+            bmp.CopyPixels(new PixelRect(new PixelSize(width, height)), handle.AddrOfPinnedObject(), buffer.Length, stride);
+        }
+        finally
+        {
+            handle.Free();
+        }
+        return buffer;
+    }
+
+    // Single-pass, single-lock replacement for the old GeneratePreview pipeline.
+    // Both masks apply in colorize (multiply) mode, matching the previous chained calls:
+    //   output = base; if mainMask: output *= mainColor; if accentMask: output *= accentColor.
+    private WriteableBitmap RenderPreview(Color mainColor, Color accentColor)
+    {
+        var output = new WriteableBitmap(new PixelSize(_previewWidth, _previewHeight), _previewDpi, PixelFormat.Bgra8888);
+
+        var buffer = new byte[_previewLen];
+        Array.Copy(_previewBase!, buffer, _previewLen);
+
+        double mR = mainColor.R / 255.0, mG = mainColor.G / 255.0, mB = mainColor.B / 255.0;
+        double aR = accentColor.R / 255.0, aG = accentColor.G / 255.0, aB = accentColor.B / 255.0;
+        var mainMask = _previewMainMask!;
+        var accentMask = _previewAccentMask!;
+
+        for (int i = 0; i < _previewLen; i += 4)
+        {
+            bool touched = false;
+            if (mainMask[i + 2] > 0) // mask R channel gates the pixel
+            {
+                buffer[i]     = (byte)(mB * buffer[i]);
+                buffer[i + 1] = (byte)(mG * buffer[i + 1]);
+                buffer[i + 2] = (byte)(mR * buffer[i + 2]);
+                touched = true;
+            }
+            if (accentMask[i + 2] > 0)
+            {
+                buffer[i]     = (byte)(aB * buffer[i]);
+                buffer[i + 1] = (byte)(aG * buffer[i + 1]);
+                buffer[i + 2] = (byte)(aR * buffer[i + 2]);
+                touched = true;
+            }
+            // Color.FromRgb in the original forced alpha to 255 on touched pixels.
+            if (touched) buffer[i + 3] = 255;
+        }
+
+        using (var fb = output.Lock())
+        {
+            Marshal.Copy(buffer, 0, fb.Address, _previewLen);
+        }
+        return output;
     }
     
     public void SaveBitmapAsPng(WriteableBitmap bitmap, string filePath)
