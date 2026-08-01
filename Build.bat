@@ -1,3 +1,3 @@
-dotnet publish --os win --self-contained -p:PublishSingleFile=True -p:TrimMode=CopyUsed -p:PublishReadyToRun=True
-dotnet publish --os linux --self-contained -p:PublishSingleFile=True -p:TrimMode=CopyUsed -p:PublishReadyToRun=True
+dotnet publish --os win
+dotnet publish --os linux
 start "" "%~dp0bin\Release\net10.0"
