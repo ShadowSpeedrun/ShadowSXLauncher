@@ -159,7 +159,7 @@ public partial class SettingsWindow : Window
         var result = await GetFilePath("Set SX ROM Location", new FileDialogFilter()
         {
             Name = "ROM File",
-            Extensions = new List<string>() {"iso"}
+            Extensions = new List<string>() {"iso", "rvz"}
         });
         RomLocationTextBox.Text = result != null && result.Length > 0 && !string.IsNullOrEmpty(result[0]) ? result[0] : string.Empty;
         
