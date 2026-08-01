@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using Microsoft.Win32;
 
 namespace ShadowSXLauncher.Classes;
@@ -88,12 +89,19 @@ public static class CommonUtils
         Configuration.Instance.SaveSettings();
     }
 
+    private static async Task<IStorageFolder?> GetStartLocation(Window parentWindow)
+    {
+        return await parentWindow.StorageProvider.TryGetFolderFromPathAsync(CommonFilePaths.AppStart);
+    }
+
     private static async Task<string?> SetFolderPath(string title, Window parentWindow)
     {
-        var ofd = new OpenFolderDialog();
-        ofd.Title = title;
-        ofd.Directory = CommonFilePaths.AppStart; 
-        return await ofd.ShowAsync(parentWindow);
+        var folders = await parentWindow.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+        {
+            Title = title,
+            SuggestedStartLocation = await GetStartLocation(parentWindow),
+        });
+        return folders.Count > 0 ? folders[0].Path.LocalPath : null;
     }
     
     /// <summary>
@@ -118,23 +126,27 @@ public static class CommonUtils
         return false;
     }
     
-    public static async Task<string[]?> SetOpenFilePath(string title, FileDialogFilter filter, Window parentWindow)
+    public static async Task<string[]?> SetOpenFilePath(string title, FilePickerFileType filter, Window parentWindow)
     {
-        var ofd = new OpenFileDialog();
-        ofd.Title = title;
-        ofd.Filters = new List<FileDialogFilter>() { filter };
-        ofd.Directory = CommonFilePaths.AppStart;
-        ofd.AllowMultiple = false;
-        return await ofd.ShowAsync(parentWindow);
+        var files = await parentWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = title,
+            FileTypeFilter = new List<FilePickerFileType> { filter },
+            SuggestedStartLocation = await GetStartLocation(parentWindow),
+            AllowMultiple = false,
+        });
+        return files.Count > 0 ? files.Select(f => f.Path.LocalPath).ToArray() : null;
     }
-    
-    public static async Task<string?> SetSaveFilePath(string title, FileDialogFilter filter, Window parentWindow)
+
+    public static async Task<string?> SetSaveFilePath(string title, FilePickerFileType filter, Window parentWindow)
     {
-        var sfd = new SaveFileDialog();
-        sfd.Title = title;
-        sfd.Filters = new List<FileDialogFilter>() { filter };
-        sfd.Directory = CommonFilePaths.AppStart;
-        return await sfd.ShowAsync(parentWindow);
+        var file = await parentWindow.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            Title = title,
+            FileTypeChoices = new List<FilePickerFileType> { filter },
+            SuggestedStartLocation = await GetStartLocation(parentWindow),
+        });
+        return file?.Path.LocalPath;
     }
 
     public static bool isDolphinPortable()

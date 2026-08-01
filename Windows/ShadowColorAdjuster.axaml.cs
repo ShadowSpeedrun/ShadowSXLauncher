@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Avalonia;
@@ -8,6 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Platform.Storage;
 using ShadowSXLauncher.Classes;
 using ColorPicker = ShadowSXLauncher.UserControls.ColorPicker;
 
@@ -53,10 +53,9 @@ public partial class ShadowColorAdjuster : Window
     
     private async void OpenButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        var filePath = await CommonUtils.SetOpenFilePath("Open Saved Colors", new FileDialogFilter()
+        var filePath = await CommonUtils.SetOpenFilePath("Open Saved Colors", new FilePickerFileType("xShadowColorsFile File")
         {
-            Name = "xShadowColorsFile File",
-            Extensions = new List<string>() {"xShadowColorsFile"}
+            Patterns = new[] { "*.xShadowColorsFile" }
         }, this);
         if (filePath == null || filePath.Length == 0)
         {
@@ -70,10 +69,9 @@ public partial class ShadowColorAdjuster : Window
     
     private async void SaveButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        var saveFilePath = await CommonUtils.SetSaveFilePath("Save Current Colors", new FileDialogFilter()
+        var saveFilePath = await CommonUtils.SetSaveFilePath("Save Current Colors", new FilePickerFileType("xShadowColorsFile File")
         {
-            Name = "xShadowColorsFile File",
-            Extensions = new List<string>() {"xShadowColorsFile"}
+            Patterns = new[] { "*.xShadowColorsFile" }
         }, this);
         if (string.IsNullOrEmpty(saveFilePath))
         {

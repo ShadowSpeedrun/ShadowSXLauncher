@@ -1,13 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using ShadowSXLauncher.Classes;
 
 namespace ShadowSXLauncher.Windows.OnboardingWindows;

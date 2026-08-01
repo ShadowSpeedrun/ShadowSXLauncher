@@ -1,18 +1,16 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using ShadowSXLauncher.Classes;
-using ShadowSXLauncher.Windows.OnboardingWindows;
 
 namespace ShadowSXLauncher.Windows;
 
@@ -21,10 +19,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        
-#if DEBUG
-        this.AttachDevTools();
-#endif
+
         RegisterEvents();
         EnableButtons(true);
         CreateROMButton.IsVisible = !Configuration.Instance.SteamDeckMode;
@@ -129,10 +124,9 @@ public partial class MainWindow : Window
     private async Task OpenSetRomDialog()
     {
         var result = await CommonUtils.SetOpenFilePath("Set Path to SX ROM", 
-        new FileDialogFilter()
+        new FilePickerFileType("ROM File")
         {
-            Name = "ROM File",
-            Extensions = new List<string>() {"iso", "rvz"}
+            Patterns = new[] { "*.iso", "*.rvz" }
         }, this);
         
         Configuration.Instance.RomLocation = (result == null || result.Length == 0) ? "" : result.First();
@@ -201,10 +195,9 @@ public partial class MainWindow : Window
             var patchedRomDestination = "";
 
             var resultBaseId = await CommonUtils.SetOpenFilePath("Select Original ROM (" + patch.SelectedVariant.OriginalGameId + ")", 
-                new FileDialogFilter()
+                new FilePickerFileType("ROM File")
                 {
-                    Name = "ROM File",
-                    Extensions = new List<string> {"iso"}
+                    Patterns = new[] { "*.iso" }
                 }, this);
         
             baseIdLocation = resultBaseId == null ? "" : resultBaseId.First();
@@ -212,10 +205,9 @@ public partial class MainWindow : Window
             if (!string.IsNullOrEmpty(baseIdLocation))
             {
                 var resultNewId = await CommonUtils.SetSaveFilePath("Save Patched ROM (" + patch.SelectedVariant.NewGameId + ")", 
-                    new FileDialogFilter()
+                    new FilePickerFileType("ROM File")
                     {
-                        Name = "ROM File",
-                        Extensions = new List<string> {"iso"}
+                        Patterns = new[] { "*.iso" }
                     }, this);
                 patchedRomDestination = resultNewId ?? "";
             }

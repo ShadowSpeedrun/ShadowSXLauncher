@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using ShadowSXLauncher.Classes;
 
 namespace ShadowSXLauncher.Windows;
@@ -23,11 +23,6 @@ public partial class SettingsWindow : Window
     public SettingsWindow()
     {
         InitializeComponent();
-        
-#if DEBUG
-        this.AttachDevTools();
-#endif
-        
         Configuration.Instance.LoadSettings();
         InitializeOptions();
         QuickSetButtons.IsVisible = OperatingSystem.IsLinux();
@@ -134,32 +129,35 @@ public partial class SettingsWindow : Window
         OnboardingButton.IsEnabled = enable;
     }
 
-    private async Task<string[]?> GetFilePath(string title, FileDialogFilter filter)
+    private async Task<string[]?> GetFilePath(string title, FilePickerFileType filter)
     {
-        var ofd = new OpenFileDialog();
-        ofd.Title = title;
-        ofd.Filters = new List<FileDialogFilter>() { filter };
-        ofd.Directory = CommonFilePaths.AppStart;
-        ofd.AllowMultiple = false;
-        return await ofd.ShowAsync(this);
+        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = title,
+            FileTypeFilter = new List<FilePickerFileType> { filter },
+            SuggestedStartLocation = await StorageProvider.TryGetFolderFromPathAsync(CommonFilePaths.AppStart),
+            AllowMultiple = false,
+        });
+        return files.Count > 0 ? files.Select(f => f.Path.LocalPath).ToArray() : null;
     }
     
     private async Task<string?> SetFolderPath(string title)
     {
-        var ofd = new OpenFolderDialog();
-        ofd.Title = title;
-        ofd.Directory = CommonFilePaths.AppStart; 
-        return await ofd.ShowAsync(this);
+        var folders = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+        {
+            Title = title,
+            SuggestedStartLocation = await StorageProvider.TryGetFolderFromPathAsync(CommonFilePaths.AppStart),
+        });
+        return folders.Count > 0 ? folders[0].Path.LocalPath : null;
     }
 
     private async void SetRomLocationButtonOnClick(object? sender, RoutedEventArgs e)
     {
         EnableUI(false);
         
-        var result = await GetFilePath("Set SX ROM Location", new FileDialogFilter()
+        var result = await GetFilePath("Set SX ROM Location", new FilePickerFileType("ROM File")
         {
-            Name = "ROM File",
-            Extensions = new List<string>() {"iso", "rvz"}
+            Patterns = new[] { "*.iso", "*.rvz" }
         });
         RomLocationTextBox.Text = result != null && result.Length > 0 && !string.IsNullOrEmpty(result[0]) ? result[0] : string.Empty;
         
